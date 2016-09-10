@@ -9,16 +9,39 @@
 import Foundation
 import MediaPlayer
 
-struct MusicPlayer {
+class MusicPlayer {
     
-    var currentSong: MPMediaItem
-    var nextSong: MPMediaItem
-    var previousSong: MPMediaItem
-    var musicCollection: MPMediaItemCollection
-    var randomizedCollection: MPMediaItemCollection
+    let player: MPMusicPlayerController
+    var currentSong: MPMediaItem?
+    var nextSong: MPMediaItem?
+    var previousSong: MPMediaItem?
+//    var musicCollection: MPMediaItemCollection
+//    var randomizedCollection: MPMediaItemCollection
+    var shuffleMode: MPMusicShuffleMode
     
+    init() {
+        
+        self.player = MPMusicPlayerController.systemMusicPlayer()
+        let query = MPMediaQuery.songsQuery()
+        print("Number of songs: \(String(query.items!.count))")
+        self.player.setQueueWithQuery(MPMediaQuery.songsQuery())
+//        self.currentSong = player.nowPlayingItem
+//        self.previousSong = player.ne
+        self.shuffleMode = MusicPlayer.shuffleModeFromDefaults()
+        
+    }
+    
+    private class func shuffleModeFromDefaults() -> MPMusicShuffleMode {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if let shuffleMode: Int = defaults.integerForKey("shuffleMode") {
+            return MPMusicShuffleMode(rawValue: shuffleMode)!
+        } else {
+            return MPMusicShuffleMode.Off
+        }
+    }
 
 func play() {
+    self.player.play()
     
 }
 

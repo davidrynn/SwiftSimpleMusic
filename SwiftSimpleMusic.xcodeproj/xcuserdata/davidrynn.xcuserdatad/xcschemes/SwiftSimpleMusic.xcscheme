@@ -28,6 +28,16 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2236936F1D0C8E6D003F0359"
+               BuildableName = "SwiftSimpleMusicTests.xctest"
+               BlueprintName = "SwiftSimpleMusicTests"
+               ReferencedContainer = "container:SwiftSimpleMusic.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

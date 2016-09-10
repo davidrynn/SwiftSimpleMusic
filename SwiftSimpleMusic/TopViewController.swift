@@ -1,14 +1,16 @@
 //
-//  ViewController.swift
+//  TopViewController.swift
 //  SwiftSimpleMusic
 //
-//  Created by David Rynn on 11/20/15.
-//  Copyright © 2015 David Rynn. All rights reserved.
+//  Created by David Rynn on 9/10/16.
+//  Copyright © 2016 David Rynn. All rights reserved.
 //
 
 import UIKit
 
-class ViewController: UIViewController {
+class TopViewController: UIViewController {
+    
+    @IBOutlet weak var container: MusicTableViewController!
     @IBOutlet weak var playbackControlView: UIView!
     
     let popUpViewController = PopUpViewController()
@@ -18,9 +20,10 @@ class ViewController: UIViewController {
         return self.view.frame.size.height*4/5
         
     }()
+    let player: MusicPlayer = MusicPlayer()
     
     override func viewDidLoad() {
-        
+        container.player = player
         super.viewDidLoad()
         self.addChildViewController(popUpViewController)
         self.view.addSubview(popUpViewController.view)
@@ -28,13 +31,14 @@ class ViewController: UIViewController {
         
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(ViewController.detectPan(_:)))
         popUpViewController.view.gestureRecognizers = [panRecognizer]
+        
     }
     
     //put viewdidlayout so that we know everything else is formatted correctly before subviews are layed out.
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         popUpViewController.view.frame = CGRectMake(0, self.popUpViewY, self.view.frame.size.width, self.view.height)
-        playbackControlView.frame = CGRectMake(0, self.view.height*7/8, self.view.width, self.view.height*7/8)
+//        playbackControlView.frame = CGRectMake(0, self.view.height*7/8, self.view.width, self.view.height*7/8)
         self.view.bringSubviewToFront(playbackControlView)
         
     }
@@ -71,16 +75,6 @@ class ViewController: UIViewController {
         popUpViewController.willMoveToParentViewController(nil)
         popUpViewController.removeFromParentViewController()
     }
-    
-    
-
-    
-    
-    
-    
-    
-
 
 
 }
-
