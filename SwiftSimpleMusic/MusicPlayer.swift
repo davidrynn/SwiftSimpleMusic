@@ -15,18 +15,21 @@ class MusicPlayer {
     var currentSong: MPMediaItem?
     var nextSong: MPMediaItem?
     var previousSong: MPMediaItem?
-//    var musicCollection: MPMediaItemCollection
-//    var randomizedCollection: MPMediaItemCollection
+    //    var musicCollection: MPMediaItemCollection
+    //    var randomizedCollection: MPMediaItemCollection
     var shuffleMode: MPMusicShuffleMode
+    var collection: MediaCollection
+    
     
     init() {
         
         self.player = MPMusicPlayerController.systemMusicPlayer()
         let query = MPMediaQuery.songsQuery()
         print("Number of songs: \(String(query.items!.count))")
+        self.collection = MediaCollection(items: query.items!)
         self.player.setQueueWithQuery(MPMediaQuery.songsQuery())
-//        self.currentSong = player.nowPlayingItem
-//        self.previousSong = player.ne
+        self.currentSong = player.nowPlayingItem
+        //        self.previousSong = player.ne
         self.shuffleMode = MusicPlayer.shuffleModeFromDefaults()
         
     }
@@ -39,30 +42,51 @@ class MusicPlayer {
             return MPMusicShuffleMode.Off
         }
     }
-
-func play() {
-    self.player.play()
     
-}
-
-func stop() {
+    func play() {
+        self.player.play()
+        
+    }
     
-}
-
-func pause() {
+    func playItem(item: MPMediaItem) {
+        
+        player.nowPlayingItem = item
+        player.play()
+    }
     
-}
-
-func forward() {
-    //fast forward on long press
-    //next on one press
-}
-
-func rewind() {
-    //rewind on long press
-    //to beginning of song on one press
-    //to previous on double tap
-}
-
+    func stop() {
+        player.stop()
+        
+    }
+    
+    func nowPlayingSong() -> MPMediaItem? {
+        return player.nowPlayingItem
+    }
+    
+    func playingStatus() -> MPMusicPlaybackState {
+        return player.playbackState
+    }
+    
+    func pause() {
+        
+        player.pause()
+        
+    }
+    
+    func forward() {
+        
+        player.skipToNextItem()
+        //fast forward on long press
+        //next on one press
+    }
+    
+    func rewind() {
+        
+        player.skipToPreviousItem()
+        //rewind on long press
+        //to beginning of song on one press
+        //to previous on double tap
+    }
+    
     
 }

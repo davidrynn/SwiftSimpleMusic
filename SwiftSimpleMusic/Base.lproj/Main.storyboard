@@ -39,7 +39,7 @@
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9fG-h3-ycH">
                                 <rect key="frame" x="0.0" y="20" width="600" height="468"/>
                                 <connections>
-                                    <segue destination="26v-5j-zIP" kind="embed" id="vzJ-8o-Jff"/>
+                                    <segue destination="26v-5j-zIP" kind="embed" identifier="toMusicTableViewController" id="vzJ-8o-Jff"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -79,7 +79,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="nnj-kX-mOT">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="nnj-kX-mOT">
                                 <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nnj-kX-mOT" id="b9t-6l-Gfm">

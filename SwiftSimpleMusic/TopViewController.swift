@@ -23,7 +23,7 @@ class TopViewController: UIViewController {
     let player: MusicPlayer = MusicPlayer()
     
     override func viewDidLoad() {
-        container.player = player
+ 
         super.viewDidLoad()
         self.addChildViewController(popUpViewController)
         self.view.addSubview(popUpViewController.view)
@@ -76,5 +76,12 @@ class TopViewController: UIViewController {
         popUpViewController.removeFromParentViewController()
     }
 
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "toMusicTableViewController" {
+            let dVC = segue.destinationViewController as? MusicTableViewController
+            dVC?.inject(player)
+        }
+    }
 
 }
