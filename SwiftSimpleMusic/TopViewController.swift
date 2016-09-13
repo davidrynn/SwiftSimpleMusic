@@ -42,6 +42,7 @@ class TopViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         popUpViewController.view.frame = CGRectMake(0, self.popUpViewY, self.view.frame.size.width, self.view.height)
+
         //        playbackControlView.frame = CGRectMake(0, self.view.height*7/8, self.view.width, self.view.height*7/8)
         self.view.bringSubviewToFront(playbackControlView)
         
@@ -50,8 +51,16 @@ class TopViewController: UIViewController {
     
     func detectPan(recognizer: UIPanGestureRecognizer){
         
+        let view = popUpViewController.view as? PopUpView
+        let imageView = view?.imageView
+        
+        
         let translation = recognizer.translationInView(self.view)
-        self.popUpViewController.view.center.y = lastLocation.y + translation.y
+        popUpViewController.view.center.y = lastLocation.y + translation.y
+        let transationalY = popUpViewController.view.center.y
+        
+        imageView?.frame = CGRectMake(0, 0, transationalY, transationalY)
+        print("image view center: \(imageView?.center)")
         
         if recognizer.state == UIGestureRecognizerState.Ended {
             UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseInOut, animations: {
@@ -70,6 +79,7 @@ class TopViewController: UIViewController {
     
     
     @IBAction func playButtonTapped(sender: AnyObject) {
+        
         if player.playingStatus() == MPMusicPlaybackState.Playing {
             player.pause()
         } else {

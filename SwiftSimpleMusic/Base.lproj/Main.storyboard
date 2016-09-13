@@ -21,16 +21,14 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xih-1v-GnH">
                                 <rect key="frame" x="0.0" y="540" width="600" height="60"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJg-oP-G78">
-                                        <rect key="frame" x="472" y="15" width="106" height="30"/>
-                                        <state key="normal" title="Forward Button"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJg-oP-G78" userLabel="Forward Button" customClass="ForwardButton" customModule="SwiftSimpleMusic" customModuleProvider="target">
+                                        <rect key="frame" x="510" y="15" width="30" height="30"/>
                                         <connections>
                                             <action selector="forwardButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="t3Q-jn-yxL"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dII-fZ-MtB" userLabel="Previous Button">
-                                        <rect key="frame" x="52" y="15" width="46" height="30"/>
-                                        <state key="normal" title="Button"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dII-fZ-MtB" userLabel="Back Button" customClass="BackButton" customModule="SwiftSimpleMusic" customModuleProvider="target">
+                                        <rect key="frame" x="60" y="15" width="30" height="30"/>
                                         <connections>
                                             <action selector="backButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fnT-Fu-kiS"/>
                                         </connections>

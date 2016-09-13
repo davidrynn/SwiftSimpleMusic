@@ -21,6 +21,8 @@
 		22DED0B71D85BCC700F9C7FA /* InjectableObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DED0B61D85BCC700F9C7FA /* InjectableObjects.swift */; };
 		22DED0BA1D85BD3600F9C7FA /* MediaCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DED0B91D85BD3600F9C7FA /* MediaCollection.swift */; };
 		22DED0BC1D87B59D00F9C7FA /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DED0BB1D87B59C00F9C7FA /* PlayButton.swift */; };
+		22DED0C01D8884A300F9C7FA /* ForwardButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DED0BF1D8884A300F9C7FA /* ForwardButton.swift */; };
+		22DED0C21D8884AF00F9C7FA /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DED0C11D8884AF00F9C7FA /* BackButton.swift */; };
 		22F4F48E1BFF92520050FE2B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F4F48D1BFF92520050FE2B /* AppDelegate.swift */; };
 		22F4F4931BFF92520050FE2B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22F4F4911BFF92520050FE2B /* Main.storyboard */; };
 		22F4F4951BFF92520050FE2B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22F4F4941BFF92520050FE2B /* Assets.xcassets */; };
@@ -55,6 +57,8 @@
 		22DED0B61D85BCC700F9C7FA /* InjectableObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InjectableObjects.swift; sourceTree = "<group>"; };
 		22DED0B91D85BD3600F9C7FA /* MediaCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaCollection.swift; path = ../MediaCollection.swift; sourceTree = "<group>"; };
 		22DED0BB1D87B59C00F9C7FA /* PlayButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
+		22DED0BF1D8884A300F9C7FA /* ForwardButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForwardButton.swift; sourceTree = "<group>"; };
+		22DED0C11D8884AF00F9C7FA /* BackButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		22F4F48A1BFF92520050FE2B /* SwiftSimpleMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftSimpleMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22F4F48D1BFF92520050FE2B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		22F4F4921BFF92520050FE2B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -128,6 +132,16 @@
 			name = PopUpView;
 			sourceTree = "<group>";
 		};
+		22DED0BE1D88840400F9C7FA /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				22DED0BF1D8884A300F9C7FA /* ForwardButton.swift */,
+				22DED0C11D8884AF00F9C7FA /* BackButton.swift */,
+				22DED0BB1D87B59C00F9C7FA /* PlayButton.swift */,
+			);
+			name = Buttons;
+			sourceTree = "<group>";
+		};
 		22F4F4811BFF92520050FE2B = {
 			isa = PBXGroup;
 			children = (
@@ -155,7 +169,7 @@
 				22F4F4A71C064F8C0050FE2B /* DRMusicPlayer.swift */,
 				224946981CC7E23400D5104C /* UIView+Layout.swift */,
 				22F4F4A21C0644BA0050FE2B /* Supporting Files */,
-				22F4F4A01C0644760050FE2B /* View Controllers */,
+				22F4F4A01C0644760050FE2B /* Views/ Controllers */,
 				22F4F4911BFF92520050FE2B /* Main.storyboard */,
 				22F4F4941BFF92520050FE2B /* Assets.xcassets */,
 				22F4F4961BFF92520050FE2B /* LaunchScreen.storyboard */,
@@ -164,15 +178,15 @@
 			path = SwiftSimpleMusic;
 			sourceTree = "<group>";
 		};
-		22F4F4A01C0644760050FE2B /* View Controllers */ = {
+		22F4F4A01C0644760050FE2B /* Views/ Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				22DED0BE1D88840400F9C7FA /* Buttons */,
 				22DED0AA1D849C1A00F9C7FA /* MusicTableViewController.swift */,
 				22DED0BD1D88252100F9C7FA /* PopUpView */,
-				22DED0BB1D87B59C00F9C7FA /* PlayButton.swift */,
 				22DED0AE1D84A26B00F9C7FA /* TopViewController.swift */,
 			);
-			name = "View Controllers";
+			name = "Views/ Controllers";
 			sourceTree = "<group>";
 		};
 		22F4F4A21C0644BA0050FE2B /* Supporting Files */ = {
@@ -324,6 +338,8 @@
 				2249468F1CC7D2C900D5104C /* MusicPlayer.swift in Sources */,
 				22F4F48E1BFF92520050FE2B /* AppDelegate.swift in Sources */,
 				22DED0B71D85BCC700F9C7FA /* InjectableObjects.swift in Sources */,
+				22DED0C01D8884A300F9C7FA /* ForwardButton.swift in Sources */,
+				22DED0C21D8884AF00F9C7FA /* BackButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
