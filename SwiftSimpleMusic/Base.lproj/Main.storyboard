@@ -21,20 +21,36 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xih-1v-GnH">
                                 <rect key="frame" x="0.0" y="540" width="600" height="60"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJg-oP-G78">
-                                        <rect key="frame" x="63" y="31" width="46" height="30"/>
-                                        <state key="normal" title="Button"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJg-oP-G78">
+                                        <rect key="frame" x="472" y="15" width="106" height="30"/>
+                                        <state key="normal" title="Forward Button"/>
+                                        <connections>
+                                            <action selector="forwardButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="t3Q-jn-yxL"/>
+                                        </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dII-fZ-MtB">
-                                        <rect key="frame" x="486" y="31" width="46" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dII-fZ-MtB" userLabel="Previous Button">
+                                        <rect key="frame" x="52" y="15" width="46" height="30"/>
                                         <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="backButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fnT-Fu-kiS"/>
+                                        </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O32-5w-fn0">
-                                        <rect key="frame" x="277" y="36" width="46" height="30"/>
-                                        <state key="normal" title="Button"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O32-5w-fn0" customClass="PlayButton" customModule="SwiftSimpleMusic" customModuleProvider="target">
+                                        <rect key="frame" x="285" y="15" width="30" height="30"/>
+                                        <connections>
+                                            <action selector="playButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Lu7-Q7-UHJ"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="dII-fZ-MtB" firstAttribute="centerX" secondItem="Xih-1v-GnH" secondAttribute="centerX" multiplier="0.25" id="IYp-b0-oer"/>
+                                    <constraint firstItem="sJg-oP-G78" firstAttribute="centerX" secondItem="Xih-1v-GnH" secondAttribute="centerX" multiplier="1.75" id="K5B-k1-vbE"/>
+                                    <constraint firstItem="dII-fZ-MtB" firstAttribute="centerY" secondItem="Xih-1v-GnH" secondAttribute="centerY" id="TQx-cz-Az8"/>
+                                    <constraint firstItem="O32-5w-fn0" firstAttribute="centerY" secondItem="Xih-1v-GnH" secondAttribute="centerY" id="UYD-sA-qXg"/>
+                                    <constraint firstItem="sJg-oP-G78" firstAttribute="centerY" secondItem="Xih-1v-GnH" secondAttribute="centerY" id="ZXj-Vc-deS"/>
+                                    <constraint firstItem="O32-5w-fn0" firstAttribute="centerX" secondItem="Xih-1v-GnH" secondAttribute="centerX" id="iyS-Mw-ITZ"/>
+                                </constraints>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9fG-h3-ycH">
                                 <rect key="frame" x="0.0" y="20" width="600" height="468"/>
@@ -63,6 +79,8 @@
                     </view>
                     <connections>
                         <outlet property="container" destination="9fG-h3-ycH" id="B2X-Ko-MWa"/>
+                        <outlet property="forwardButton" destination="ZXj-Vc-deS" id="z5f-p1-SGo"/>
+                        <outlet property="playButton" destination="O32-5w-fn0" id="AhG-mj-C75"/>
                         <outlet property="playbackControlView" destination="Xih-1v-GnH" id="beY-82-RIB"/>
                     </connections>
                 </viewController>

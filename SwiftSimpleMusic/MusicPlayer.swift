@@ -12,7 +12,6 @@ import MediaPlayer
 class MusicPlayer {
     
     let player: MPMusicPlayerController
-    var currentSong: MPMediaItem?
     var nextSong: MPMediaItem?
     var previousSong: MPMediaItem?
     //    var musicCollection: MPMediaItemCollection
@@ -28,9 +27,8 @@ class MusicPlayer {
         print("Number of songs: \(String(query.items!.count))")
         self.collection = MediaCollection(items: query.items!)
         self.player.setQueueWithQuery(MPMediaQuery.songsQuery())
-        self.currentSong = player.nowPlayingItem
-        //        self.previousSong = player.ne
         self.shuffleMode = MusicPlayer.shuffleModeFromDefaults()
+        player.beginGeneratingPlaybackNotifications()
         
     }
     
@@ -43,9 +41,18 @@ class MusicPlayer {
         }
     }
     
+    func setPlayerQueue(query: MPMediaQuery) {
+        player.setQueueWithQuery(query)
+        collection = MediaCollection(items: query.items!)
+    }
+
     func play() {
         self.player.play()
         
+    }
+    
+    func currentSong() -> MPMediaItem? {
+        return player.nowPlayingItem
     }
     
     func playItem(item: MPMediaItem) {
@@ -81,11 +88,16 @@ class MusicPlayer {
     }
     
     func rewind() {
-        
-        player.skipToPreviousItem()
+        if player.indexOfNowPlayingItem > 0 {
+            player.skipToPreviousItem()
+        }
         //rewind on long press
         //to beginning of song on one press
         //to previous on double tap
+    }
+    
+    deinit{
+        player.endGeneratingPlaybackNotifications()
     }
     
     

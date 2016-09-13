@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import MediaPlayer
 
 class PopUpViewController: UIViewController {
+    
+    var player: MusicPlayer!
+    
     override func loadView() {
         super.loadView()
         self.view = PopUpView.instanceFromNib()
@@ -17,6 +21,22 @@ class PopUpViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+    }
+    
+    func handleNotifications() {
+        
+        let notificationCenter: NSNotificationCenter = NSNotificationCenter.defaultCenter()
+        notificationCenter.addObserver(self, selector: <#T##Selector#>, name: <#T##String?#>, object: <#T##AnyObject?#>)
+            [NSNotificationCenter   defaultCenter];
+        [notificationCenter addObserver:self
+            selector:@selector(handleNowPlayingItemChanged:)
+        name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+        object:self.musicPlayer];
+    NSNotificationCenter.defaultCenter().addObserver(
+    self,
+    selector: #selector(batteryLevelChanged),
+    name: UIDeviceBatteryLevelDidChangeNotification,
+    object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -28,6 +48,19 @@ class PopUpViewController: UIViewController {
         return self.view as! PopUpView
     }
     
+    func updateArtworkImage(item: MPMediaItem) {
+        if let view = view as? PopUpView {
+            let newImage: UIImage
+            if let artwork = item.artwork {
+                newImage = (artwork.imageWithSize(view.imageView.size))!
+            } else {
+                newImage = UIImage(named: "noteSml.png")!
+            }
+            view.imageView.image = newImage
+            reloadInputViews()
+            view.setNeedsLayout()
+        }
+    }
 
     /*
     // MARK: - Navigation
@@ -38,5 +71,8 @@ class PopUpViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
 
 }

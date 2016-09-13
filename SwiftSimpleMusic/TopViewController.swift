@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import MediaPlayer
 
 class TopViewController: UIViewController {
+    @IBOutlet weak var forwardButton: NSLayoutConstraint!
     
+    @IBOutlet weak var playButton: PlayButton!
     @IBOutlet weak var container: MusicTableViewController!
     @IBOutlet weak var playbackControlView: UIView!
     
@@ -23,14 +26,15 @@ class TopViewController: UIViewController {
     let player: MusicPlayer = MusicPlayer()
     
     override func viewDidLoad() {
- 
+        
         super.viewDidLoad()
         self.addChildViewController(popUpViewController)
         self.view.addSubview(popUpViewController.view)
         popUpViewController.didMoveToParentViewController(self)
         
-        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(ViewController.detectPan(_:)))
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.detectPan(_:)))
         popUpViewController.view.gestureRecognizers = [panRecognizer]
+        popUpViewController.player = player
         
     }
     
@@ -38,10 +42,11 @@ class TopViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         popUpViewController.view.frame = CGRectMake(0, self.popUpViewY, self.view.frame.size.width, self.view.height)
-//        playbackControlView.frame = CGRectMake(0, self.view.height*7/8, self.view.width, self.view.height*7/8)
+        //        playbackControlView.frame = CGRectMake(0, self.view.height*7/8, self.view.width, self.view.height*7/8)
         self.view.bringSubviewToFront(playbackControlView)
         
     }
+    //    MARK: Actions
     
     func detectPan(recognizer: UIPanGestureRecognizer){
         
@@ -64,9 +69,41 @@ class TopViewController: UIViewController {
     }
     
     
+    @IBAction func playButtonTapped(sender: AnyObject) {
+        if player.playingStatus() == MPMusicPlaybackState.Playing {
+            player.pause()
+        } else {
+            player.play()
+        }
+    }
+    
+    @IBAction private func forwardButtonTapped(sender: AnyObject) {
+        
+        player.forward()
+        if let currentSong = player.currentSong() {
+            popUpViewController.updateArtworkImage(currentSong)
+        }
+    }
+    
+    @IBAction private func backButtonTapped(sender: AnyObject) {
+        
+        player.rewind()
+    }
+    
+    //    MARK: Navigation
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "toMusicTableViewController" {
+            let dVC = segue.destinationViewController as? MusicTableViewController
+            dVC?.inject(player)
+        }
+    }
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        print("Memory warning dude")
         // Dispose of any resources that can be recreated.
     }
     
@@ -75,13 +112,5 @@ class TopViewController: UIViewController {
         popUpViewController.willMoveToParentViewController(nil)
         popUpViewController.removeFromParentViewController()
     }
-
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "toMusicTableViewController" {
-            let dVC = segue.destinationViewController as? MusicTableViewController
-            dVC?.inject(player)
-        }
-    }
-
 }

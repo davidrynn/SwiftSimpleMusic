@@ -43,35 +43,47 @@ class MusicTableViewController: UITableViewController {
         return collection.count
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        let item = collection.items[indexPath.row]
-        
-        if let nowPlayingItem = player.nowPlayingSong() {
-
-        if (nowPlayingItem.title == item.title){
-            if player.playingStatus() == MPMusicPlaybackState.Playing {
-                player.stop()
-            } else {
-                let item = collection.items[indexPath.row]
-                player.playItem(item)
-            }
-            }
-        } else {
-            player.playItem(item)
-        }
-        
-    }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
         let item = collection.items[indexPath.row]
         
         cell.textLabel?.text = item.title
+        let cellImage: UIImage?
+        let imageViewModifier = CGFloat(0.25)
+        let cellImageSize = CGSizeMake(cell.imageView!.size.width*imageViewModifier, cell.imageView!.size.height*imageViewModifier)
+        if let itemImage = item.artwork {
+            cellImage = itemImage.imageWithSize(cellImageSize)
+        } else {
+            cellImage = UIImage(named: "noteSml.png")
+        }
+        cell.imageView!.image = cellImage
         
         return cell
     }
     
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        let item = collection.items[indexPath.row]
+        
+        if let nowPlayingItem = player.nowPlayingSong() {
+            
+            if (nowPlayingItem.title == item.title){
+                if player.playingStatus() == MPMusicPlaybackState.Playing {
+                    player.pause()
+                } else {
+                    player.playItem(item)
+                }
+                
+            } else {
+                player.stop()
+                player.playItem(item)
+            }
+        } else {
+            player.playItem(item)
+        }
+        
+    }
     
     /*
      // MARK: - Navigation

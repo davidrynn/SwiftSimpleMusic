@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -15,8 +16,8 @@
                     <rect key="frame" x="0.0" y="0.0" width="600" height="128"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="noteSml.png" translatesAutoresizingMaskIntoConstraints="NO" id="IHy-1Y-7Wc">
-                    <rect key="frame" x="180" y="236" width="240" height="128"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="noteSml.png" translatesAutoresizingMaskIntoConstraints="NO" id="IHy-1Y-7Wc">
+                    <rect key="frame" x="250" y="175" width="100" height="100"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CQ6-7P-63b">
                     <rect key="frame" x="202" y="458" width="42" height="21"/>
@@ -32,11 +33,20 @@
                     <rect key="frame" x="427" y="454" width="46" height="30"/>
                     <state key="normal" title="Button"/>
                 </button>
-                <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="900-PH-wHg">
-                    <rect key="frame" x="266" y="400" width="118" height="31"/>
+                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="900-PH-wHg">
+                    <rect key="frame" x="241" y="285" width="118" height="31"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="114" id="e5H-eD-cuE"/>
+                    </constraints>
                 </slider>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="IHy-1Y-7Wc" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="0Bm-il-EQU"/>
+                <constraint firstItem="900-PH-wHg" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="UWx-ft-wn8"/>
+                <constraint firstItem="900-PH-wHg" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="cs8-dZ-Cgy"/>
+                <constraint firstItem="IHy-1Y-7Wc" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" multiplier="0.75" id="mfZ-4T-Yqj"/>
+            </constraints>
             <connections>
                 <outlet property="imageView" destination="IHy-1Y-7Wc" id="Reu-Ol-Eom"/>
                 <outlet property="label" destination="CQ6-7P-63b" id="MDe-QG-e64"/>
