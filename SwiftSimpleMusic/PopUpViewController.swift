@@ -16,29 +16,21 @@ class PopUpViewController: UIViewController {
     override func loadView() {
         super.loadView()
         self.view = PopUpView.instanceFromNib()
+        setupNotifications()
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
     }
     
-    func handleNotifications() {
+    func setupNotifications() {
         
         let notificationCenter: NSNotificationCenter = NSNotificationCenter.defaultCenter()
-        notificationCenter.addObserver(self, selector: <#T##Selector#>, name: <#T##String?#>, object: <#T##AnyObject?#>)
-            [NSNotificationCenter   defaultCenter];
-        [notificationCenter addObserver:self
-            selector:@selector(handleNowPlayingItemChanged:)
-        name:MPMusicPlayerControllerNowPlayingItemDidChangeNotification
-        object:self.musicPlayer];
-    NSNotificationCenter.defaultCenter().addObserver(
-    self,
-    selector: #selector(batteryLevelChanged),
-    name: UIDeviceBatteryLevelDidChangeNotification,
-    object: nil)
+        notificationCenter.addObserver(self, selector: #selector(updateArtworkImage), name: MPMusicPlayerControllerNowPlayingItemDidChangeNotification, object: player)
+        
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -48,31 +40,33 @@ class PopUpViewController: UIViewController {
         return self.view as! PopUpView
     }
     
-    func updateArtworkImage(item: MPMediaItem) {
-        if let view = view as? PopUpView {
-            let newImage: UIImage
-            if let artwork = item.artwork {
-                newImage = (artwork.imageWithSize(view.imageView.size))!
-            } else {
-                newImage = UIImage(named: "noteSml.png")!
+    func updateArtworkImage() {
+        if let item = player.currentSong() {
+            if let view = view as? PopUpView {
+                let newImage: UIImage
+                if let artwork = item.artwork {
+                    newImage = (artwork.imageWithSize(view.imageView.bounds.size))!
+                } else {
+                    newImage = UIImage(named: "noteSml.png")!
+                }
+                view.imageView.image = newImage
+                reloadInputViews()
+                view.setNeedsLayout()
             }
-            view.imageView.image = newImage
-            reloadInputViews()
-            view.setNeedsLayout()
         }
     }
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
-
+    
 }

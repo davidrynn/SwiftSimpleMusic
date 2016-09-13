@@ -80,9 +80,9 @@ class TopViewController: UIViewController {
     @IBAction private func forwardButtonTapped(sender: AnyObject) {
         
         player.forward()
-        if let currentSong = player.currentSong() {
-            popUpViewController.updateArtworkImage(currentSong)
-        }
+//        if let currentSong = player.currentSong() {
+//            popUpViewController.updateArtworkImage(currentSong)
+//        }
     }
     
     @IBAction private func backButtonTapped(sender: AnyObject) {
