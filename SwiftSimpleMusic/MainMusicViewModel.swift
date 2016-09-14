@@ -29,13 +29,14 @@ struct MainMusicViewModel {
         let data = collection.items
         letters = data.map { (song) -> String in
             if let title = song.title {
-                let char: Character = title.characters.first!
+                let char: Character = filterOutNonAlphaChar(title.characters.first!)
                 return String(char).capitalizedString
             }
             return ""
         }
         
         letters = letters.sort()
+
         
         letters = letters.reduce([], combine: { (list, song) -> [String] in
             if !list.contains(song) {
@@ -44,10 +45,13 @@ struct MainMusicViewModel {
             return list
         })
         
+        let pound = letters.removeAtIndex(0)
+        letters.append(pound)
+        
         for letter in letters {
             
             let songArray: [MPMediaItem] = data.filter({ (song) -> Bool in
-                if song.title?.characters.first == letter.characters.first {
+                if filterOutNonAlphaChar((song.title?.characters.first)!) == letter.characters.first {
                     return true
                 }
                 return false
@@ -56,6 +60,21 @@ struct MainMusicViewModel {
             sections.append(SectionStruct(letter: letter, songs: songArray))
         }
         return sections
+    }
+    
+    func filterOutNonAlphaChar(character: Character) -> Character {
+        let charactersToRemove = NSCharacterSet.letterCharacterSet().invertedSet
+        if charset(charactersToRemove, containsCharacter: character) {
+            return Character("#") }
+        else {
+            return character
+        }
+    }
+    
+    private func charset(cset:NSCharacterSet, containsCharacter c:Character) -> Bool {
+        let s = String(c)
+        let result = s.rangeOfCharacterFromSet(cset)
+        return result != nil
     }
     
 //    func alphabeticalLetterHeaders() -> [Character : [MPMediaItem]] {
