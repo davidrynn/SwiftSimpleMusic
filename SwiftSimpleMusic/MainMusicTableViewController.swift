@@ -1,4 +1,13 @@
 //
+//  MainMusicTableViewController.swift
+//  SwiftSimpleMusic
+//
+//  Created by David Rynn on 9/13/16.
+//  Copyright © 2016 David Rynn. All rights reserved.
+//
+
+import UIKit
+//
 //  MusicTableViewController.swift
 //  SwiftSimpleMusic
 //
@@ -9,14 +18,17 @@
 import UIKit
 import MediaPlayer
 
-class MusicTableViewController: UITableViewController {
+class MainMusicTableViewController: UITableViewController {
     
     private var player: MusicPlayer!
     private var collection: MediaCollection!
+    private var viewModel: MainMusicViewModel!
+    private var sectionStructs: [SectionStruct]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         assertDependencies()
+
         
         
         // Uncomment the following line to preserve selection between presentations
@@ -35,19 +47,40 @@ class MusicTableViewController: UITableViewController {
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        
+        return sectionStructs.count
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return collection.count
+
+        let sectionStruct: SectionStruct = sectionStructs[section]
+        
+        return sectionStruct.songs.count
     }
     
+    override func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
+        var indexArray: [String] = []
+        for section in sectionStructs {
+            
+            indexArray.append(section.letter)
+        }
+//        var sectionTitles = []
+//        let querysection: MPMediaQuerySection
+//        for (MPMediaQuerySection *querySection in sectionsArray) {
+//            [sectionTitles addObject:querySection.title];
+//        }
+//        return [sectionTitles copy];
+        return indexArray
+    }
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sectionStructs[section].letter
+    }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
-        let item = collection.items[indexPath.row]
-        
+        let sectionStruct = sectionStructs[indexPath.section]
+        let item = sectionStruct.songs[indexPath.row]
         cell.textLabel?.text = item.title
         let cellImage: UIImage?
         let imageViewModifier = CGFloat(0.25)
@@ -63,8 +96,8 @@ class MusicTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        let item = collection.items[indexPath.row]
+        let sectionStruct = sectionStructs[indexPath.section]
+        let item = sectionStruct.songs[indexPath.row]
         
         if let nowPlayingItem = player.nowPlayingSong() {
             
@@ -96,11 +129,13 @@ class MusicTableViewController: UITableViewController {
      */
     
 }
-extension MusicTableViewController: Injectable {
+extension MainMusicTableViewController: Injectable {
     
     func inject(item: MusicPlayer) {
         player = item
         collection = item.collection
+        viewModel = MainMusicViewModel(collection: collection)
+        sectionStructs = viewModel.getSectionStructArray()
     }
     
     func assertDependencies() {
@@ -108,3 +143,4 @@ extension MusicTableViewController: Injectable {
     }
     
 }
+

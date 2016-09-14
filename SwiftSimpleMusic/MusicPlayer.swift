@@ -25,7 +25,8 @@ class MusicPlayer {
         self.player = MPMusicPlayerController.systemMusicPlayer()
         let query = MPMediaQuery.songsQuery()
         print("Number of songs: \(String(query.items!.count))")
-        self.collection = MediaCollection(items: query.items!)
+        let items = query.items!
+        self.collection = MediaCollection(items: items)
         self.player.setQueueWithQuery(MPMediaQuery.songsQuery())
         self.shuffleMode = MusicPlayer.shuffleModeFromDefaults()
         player.beginGeneratingPlaybackNotifications()

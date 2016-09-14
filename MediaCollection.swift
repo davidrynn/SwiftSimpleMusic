@@ -15,7 +15,7 @@ struct MediaCollection {
         self.mpMediaCollection = MPMediaItemCollection(items: items)
         self.items = items
         self.representativeItem = self.mpMediaCollection.representativeItem
-        self.count = self.mpMediaCollection.count
+        self.count = items.count
         self.mediaTypes = self.mpMediaCollection.mediaTypes
     }
     

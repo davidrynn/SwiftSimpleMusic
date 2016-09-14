@@ -13,7 +13,7 @@ class TopViewController: UIViewController {
     @IBOutlet weak var forwardButton: NSLayoutConstraint!
     
     @IBOutlet weak var playButton: PlayButton!
-    @IBOutlet weak var container: MusicTableViewController!
+    @IBOutlet weak var container: MainMusicTableViewController!
     @IBOutlet weak var playbackControlView: UIView!
     
     let popUpViewController = PopUpViewController()
@@ -104,7 +104,7 @@ class TopViewController: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "toMusicTableViewController" {
-            let dVC = segue.destinationViewController as? MusicTableViewController
+            let dVC = segue.destinationViewController as? MainMusicTableViewController
             dVC?.inject(player)
         }
     }

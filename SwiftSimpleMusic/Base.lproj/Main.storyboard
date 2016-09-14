@@ -86,10 +86,10 @@
             </objects>
             <point key="canvasLocation" x="340" y="360"/>
         </scene>
-        <!--Music Table View Controller-->
+        <!--Main Music Table View Controller-->
         <scene sceneID="017-H5-6UQ">
             <objects>
-                <tableViewController id="26v-5j-zIP" customClass="MusicTableViewController" customModule="SwiftSimpleMusic" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="26v-5j-zIP" customClass="MainMusicTableViewController" customModule="SwiftSimpleMusic" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="pYM-Kr-cJU">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="468"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
