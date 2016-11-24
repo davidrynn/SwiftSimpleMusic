@@ -26,8 +26,8 @@ class PopUpViewController: UIViewController {
     
     func setupNotifications() {
         
-        let notificationCenter: NSNotificationCenter = NSNotificationCenter.defaultCenter()
-        notificationCenter.addObserver(self, selector: #selector(updateArtworkImage), name: MPMusicPlayerControllerNowPlayingItemDidChangeNotification, object: player)
+        let notificationCenter: NotificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(updateArtworkImage), name: NSNotification.Name.MPMusicPlayerControllerNowPlayingItemDidChange, object: player)
         
     }
     
@@ -36,7 +36,7 @@ class PopUpViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    private func getView() -> PopUpView {
+    fileprivate func getView() -> PopUpView {
         return self.view as! PopUpView
     }
     
@@ -45,7 +45,7 @@ class PopUpViewController: UIViewController {
             if let view = view as? PopUpView {
                 let newImage: UIImage
                 if let artwork = item.artwork {
-                    newImage = (artwork.imageWithSize(view.imageView.bounds.size))!
+                    newImage = (artwork.image(at: view.imageView.bounds.size))!
                 } else {
                     newImage = UIImage(named: "noteSml.png")!
                 }
@@ -66,7 +66,7 @@ class PopUpViewController: UIViewController {
      }
      */
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
 }

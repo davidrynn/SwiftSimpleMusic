@@ -10,28 +10,28 @@ import UIKit
 
 class ForwardButton: UIButton {
 
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         let width: CGFloat = rect.size.width/4;
         let height = rect.size.height/4;
         let x = rect.size.width/2 - width/2;
         let y = rect.size.height/2 - height/2;
-        let small = CGRectMake(x, y, width, height);
+        let small = CGRect(x: x, y: y, width: width, height: height);
         
         
         let bezierPath = UIBezierPath()
-        bezierPath.moveToPoint(CGPointMake(CGRectGetMinX(small), CGRectGetMinY(small)))
-        bezierPath.addLineToPoint(CGPointMake(CGRectGetMinX(small), CGRectGetMaxY(small)))
-        bezierPath.addLineToPoint(CGPointMake(CGRectGetMidX(small), CGRectGetMidY(small)))
-        bezierPath.closePath()
+        bezierPath.move(to: CGPoint(x: small.minX, y: small.minY))
+        bezierPath.addLine(to: CGPoint(x: small.minX, y: small.maxY))
+        bezierPath.addLine(to: CGPoint(x: small.midX, y: small.midY))
+        bezierPath.close()
         tintColor.setFill()
         bezierPath.lineWidth = 1
         bezierPath.fill()
  
         let bezierPath2 = UIBezierPath()
-        bezierPath2.moveToPoint(CGPointMake(CGRectGetMidX(small), CGRectGetMinY(small)))
-        bezierPath2.addLineToPoint(CGPointMake(CGRectGetMidX(small), CGRectGetMaxY(small)))
-        bezierPath2.addLineToPoint(CGPointMake(CGRectGetMaxX(small), CGRectGetMidY(small)))
-        bezierPath2.closePath()
+        bezierPath2.move(to: CGPoint(x: small.midX, y: small.minY))
+        bezierPath2.addLine(to: CGPoint(x: small.midX, y: small.maxY))
+        bezierPath2.addLine(to: CGPoint(x: small.maxX, y: small.midY))
+        bezierPath2.close()
         tintColor.setFill()
         bezierPath2.lineWidth = 1
         bezierPath2.fill()

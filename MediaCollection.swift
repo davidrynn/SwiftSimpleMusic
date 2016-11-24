@@ -19,7 +19,7 @@ struct MediaCollection {
         self.mediaTypes = self.mpMediaCollection.mediaTypes
     }
     
-    private var mpMediaCollection: MPMediaItemCollection
+    fileprivate var mpMediaCollection: MPMediaItemCollection
 
 
     var items: [MPMediaItem]

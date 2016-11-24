@@ -17,7 +17,7 @@ class TopViewController: UIViewController {
     @IBOutlet weak var playbackControlView: UIView!
     
     let popUpViewController = PopUpViewController()
-    var lastLocation: CGPoint = CGPointMake(0, 0)
+    var lastLocation: CGPoint = CGPoint(x: 0, y: 0)
     lazy var popUpViewY: CGFloat = {
         
         return self.view.frame.size.height*4/5
@@ -30,7 +30,7 @@ class TopViewController: UIViewController {
         super.viewDidLoad()
         self.addChildViewController(popUpViewController)
         self.view.addSubview(popUpViewController.view)
-        popUpViewController.didMoveToParentViewController(self)
+        popUpViewController.didMove(toParentViewController: self)
         
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.detectPan(_:)))
         popUpViewController.view.gestureRecognizers = [panRecognizer]
@@ -41,29 +41,29 @@ class TopViewController: UIViewController {
     //put viewdidlayout so that we know everything else is formatted correctly before subviews are layed out.
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        popUpViewController.view.frame = CGRectMake(0, self.popUpViewY, self.view.frame.size.width, self.view.height)
+        popUpViewController.view.frame = CGRect(x: 0, y: self.popUpViewY, width: self.view.frame.size.width, height: self.view.height)
 
         //        playbackControlView.frame = CGRectMake(0, self.view.height*7/8, self.view.width, self.view.height*7/8)
-        self.view.bringSubviewToFront(playbackControlView)
+        self.view.bringSubview(toFront: playbackControlView)
         
     }
     //    MARK: Actions
     
-    func detectPan(recognizer: UIPanGestureRecognizer){
+    func detectPan(_ recognizer: UIPanGestureRecognizer){
         
         let view = popUpViewController.view as? PopUpView
         let imageView = view?.imageView
         
         
-        let translation = recognizer.translationInView(self.view)
+        let translation = recognizer.translation(in: self.view)
         popUpViewController.view.center.y = lastLocation.y + translation.y
         let transationalY = popUpViewController.view.center.y
         
-        imageView?.frame = CGRectMake(0, 0, transationalY, transationalY)
+        imageView?.frame = CGRect(x: 0, y: 0, width: transationalY, height: transationalY)
         print("image view center: \(imageView?.center)")
         
-        if recognizer.state == UIGestureRecognizerState.Ended {
-            UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseInOut, animations: {
+        if recognizer.state == UIGestureRecognizerState.ended {
+            UIView.animate(withDuration: 0.1, delay: 0.0, options: UIViewAnimationOptions(), animations: {
                 if self.popUpViewController.view.center.y >= self.view.height {
                     self.popUpViewController.view.y = self.popUpViewY
                 } else {
@@ -73,21 +73,21 @@ class TopViewController: UIViewController {
         }
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         lastLocation = self.popUpViewController.view.center
     }
     
     
-    @IBAction func playButtonTapped(sender: AnyObject) {
+    @IBAction func playButtonTapped(_ sender: AnyObject) {
         
-        if player.playingStatus() == MPMusicPlaybackState.Playing {
+        if player.playingStatus() == MPMusicPlaybackState.playing {
             player.pause()
         } else {
             player.play()
         }
     }
     
-    @IBAction private func forwardButtonTapped(sender: AnyObject) {
+    @IBAction fileprivate func forwardButtonTapped(_ sender: AnyObject) {
         
         player.forward()
 //        if let currentSong = player.currentSong() {
@@ -95,17 +95,21 @@ class TopViewController: UIViewController {
 //        }
     }
     
-    @IBAction private func backButtonTapped(sender: AnyObject) {
+    @IBAction fileprivate func backButtonTapped(_ sender: AnyObject) {
         
         player.rewind()
     }
     
     //    MARK: Navigation
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toMusicTableViewController" {
-            let dVC = segue.destinationViewController as? MainMusicTableViewController
-            dVC?.inject(player)
+            let dVC = segue.destination as? UINavigationController
+            if let mainVC = dVC?.topViewController as? MainMusicTableViewController {
+                mainVC.inject(player)
+            } else {
+                
+            }
         }
     }
     
@@ -119,7 +123,7 @@ class TopViewController: UIViewController {
     
     deinit {
         //remove observer eg
-        popUpViewController.willMoveToParentViewController(nil)
+        popUpViewController.willMove(toParentViewController: nil)
         popUpViewController.removeFromParentViewController()
     }
     

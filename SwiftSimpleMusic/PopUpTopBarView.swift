@@ -10,7 +10,7 @@ import UIKit
 
 class PopUpTopBarView: UIView {
 
-    @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet fileprivate weak var imageView: UIImageView!
     var image: UIImage {
         get {
             return imageView.image!
@@ -20,7 +20,7 @@ class PopUpTopBarView: UIView {
         }
     }
     
-    @IBOutlet private weak var label: UILabel!
+    @IBOutlet fileprivate weak var label: UILabel!
     var text: String {
         get {
             return label.text!
@@ -36,7 +36,7 @@ class PopUpTopBarView: UIView {
     
     
     class func instanceFromNib() -> PopUpTopBarView {
-        return UINib(nibName: "PopUpBar", bundle: nil).instantiateWithOwner(nil, options: nil)[0] as! PopUpTopBarView
+        return UINib(nibName: "PopUpBar", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! PopUpTopBarView
     }
     
 //NOT NECESSARY?

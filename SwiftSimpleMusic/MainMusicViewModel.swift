@@ -14,6 +14,7 @@ struct SectionStruct {
     var songs: [MPMediaItem]
 }
 
+
 struct MainMusicViewModel {
     var collection: MediaCollection!
     
@@ -30,22 +31,21 @@ struct MainMusicViewModel {
         letters = data.map { (song) -> String in
             if let title = song.title {
                 let char: Character = filterOutNonAlphaChar(title.characters.first!)
-                return String(char).capitalizedString
+                return String(char).capitalized
             }
             return ""
         }
         
-        letters = letters.sort()
+        letters = letters.sorted()
 
-        
-        letters = letters.reduce([], combine: { (list, song) -> [String] in
+        letters = letters.reduce([], { (list, song) -> [String] in
             if !list.contains(song) {
                 return list + [song]
             }
             return list
         })
         
-        let pound = letters.removeAtIndex(0)
+        let pound = letters.remove(at: 0)
         letters.append(pound)
         
         for letter in letters {
@@ -62,8 +62,8 @@ struct MainMusicViewModel {
         return sections
     }
     
-    func filterOutNonAlphaChar(character: Character) -> Character {
-        let charactersToRemove = NSCharacterSet.letterCharacterSet().invertedSet
+    func filterOutNonAlphaChar(_ character: Character) -> Character {
+        let charactersToRemove = CharacterSet.letters.inverted
         if charset(charactersToRemove, containsCharacter: character) {
             return Character("#") }
         else {
@@ -71,9 +71,9 @@ struct MainMusicViewModel {
         }
     }
     
-    private func charset(cset:NSCharacterSet, containsCharacter c:Character) -> Bool {
+    fileprivate func charset(_ cset:CharacterSet, containsCharacter c:Character) -> Bool {
         let s = String(c)
-        let result = s.rangeOfCharacterFromSet(cset)
+        let result = s.rangeOfCharacter(from: cset)
         return result != nil
     }
     

@@ -97,11 +97,11 @@ extension UIView {
     }
     
     /** Pass in an array of subviews, and the group will be placed in the vertical center of this view. */
-    func centerSubviewsVertically(subviews: [UIView]) {
+    func centerSubviewsVertically(_ subviews: [UIView]) {
         if subviews.count == 0 { return }
         
-        let minY: CGFloat = subviews.map{$0.y}.minElement()!
-        let maxY: CGFloat = subviews.map{$0.maxY}.maxElement()!
+        let minY: CGFloat = subviews.map{$0.y}.min()!
+        let maxY: CGFloat = subviews.map{$0.maxY}.max()!
         let groupHeight = maxY - minY
         
         let topMargin = (self.height - groupHeight) / 2

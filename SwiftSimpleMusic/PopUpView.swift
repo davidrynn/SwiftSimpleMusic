@@ -21,7 +21,7 @@ class PopUpView: UIView {
     
     @IBOutlet weak var slider: UISlider!
     
-    @IBOutlet private weak var label: UILabel!
+    @IBOutlet fileprivate weak var label: UILabel!
     var labelText: String {
         get {
             return label.text ?? ""
@@ -32,7 +32,7 @@ class PopUpView: UIView {
     }
     
     
-    var lastLocation: CGPoint = CGPointMake(0,0)
+    var lastLocation: CGPoint = CGPoint(x: 0,y: 0)
     
     var blurView: UIVisualEffectView = UIVisualEffectView()
     
@@ -50,27 +50,27 @@ class PopUpView: UIView {
     
     
     class func instanceFromNib() -> PopUpView {
-        return UINib(nibName: "PopUpView", bundle: nil).instantiateWithOwner(nil, options: nil)[0] as! PopUpView
+        return UINib(nibName: "PopUpView", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! PopUpView
     }
     
-    private func transparencySetup() {
+    fileprivate func transparencySetup() {
         if !UIAccessibilityIsReduceTransparencyEnabled() {
-            self.backgroundColor = UIColor.clearColor()
-            let blurEffect = UIBlurEffect(style: .Light)
+            self.backgroundColor = UIColor.clear
+            let blurEffect = UIBlurEffect(style: .light)
             blurView = UIVisualEffectView(effect: blurEffect)
             blurView.frame = self.bounds
-            blurView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+            blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             self.addSubview(blurView)
             
         } else {
-            self.backgroundColor = UIColor.whiteColor()
+            self.backgroundColor = UIColor.white
         }
         
         
     }
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.sendSubviewToBack(blurView)
+        self.sendSubview(toBack: blurView)
     }
 
 

@@ -22,9 +22,7 @@ class MainMusicViewModelTest: XCTestCase {
         super.setUp()
         let song1: MediaItemProtocol = testMediaItem(title: "Albert", artwork: nil)
         let song2: MediaItemProtocol = testMediaItem(title: "Ahaaa", artwork: nil)
-        let sectionHeader1: SectionHeaderInfo = SectionHeaderInfo(letter: "A", song: <#T##MPMediaItem#>)
-
-
+//        let sectionHeader1: SectionHeaderInfo = SectionHeaderInfo(letter: "A", song: <#T##MPMediaItem#>)
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
@@ -32,8 +30,6 @@ class MainMusicViewModelTest: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    
-    func test
 
     func testExample() {
         // This is an example of a functional test case.
@@ -42,7 +38,7 @@ class MainMusicViewModelTest: XCTestCase {
 
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measureBlock {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }
