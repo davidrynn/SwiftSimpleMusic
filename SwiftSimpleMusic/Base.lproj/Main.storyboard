@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,14 +27,18 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJg-oP-G78" userLabel="Forward Button" customClass="ForwardButton" customModule="SwiftSimpleMusic" customModuleProvider="target">
                                         <rect key="frame" x="313" y="18.5" width="30" height="30"/>
+                                        <gestureRecognizers/>
                                         <connections>
-                                            <action selector="forwardButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="t3Q-jn-yxL"/>
+                                            <outletCollection property="gestureRecognizers" destination="jE3-OQ-k7f" appends="YES" id="JyK-dN-slB"/>
+                                            <outletCollection property="gestureRecognizers" destination="YU3-vq-WaP" appends="YES" id="PWp-OK-4zy"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dII-fZ-MtB" userLabel="Back Button" customClass="BackButton" customModule="SwiftSimpleMusic" customModuleProvider="target">
                                         <rect key="frame" x="32" y="18.5" width="30" height="30"/>
+                                        <gestureRecognizers/>
                                         <connections>
-                                            <action selector="backButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fnT-Fu-kiS"/>
+                                            <outletCollection property="gestureRecognizers" destination="6br-8e-tfw" appends="YES" id="Qv8-82-yyS"/>
+                                            <outletCollection property="gestureRecognizers" destination="Fqm-Y7-xqD" appends="YES" id="b86-6v-HBZ"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O32-5w-fn0" customClass="PlayButton" customModule="SwiftSimpleMusic" customModuleProvider="target">
@@ -87,8 +91,28 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="jE3-OQ-k7f">
+                    <connections>
+                        <action selector="forwardButtonLongPressed:" destination="BYZ-38-t0r" id="KdJ-wa-bCT"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+                <tapGestureRecognizer id="YU3-vq-WaP">
+                    <connections>
+                        <action selector="forwardButtonTapped:" destination="BYZ-38-t0r" id="Z0d-Fe-jIF"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="6br-8e-tfw">
+                    <connections>
+                        <action selector="backButtonTapped:" destination="BYZ-38-t0r" id="W9Z-7C-xzz"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Fqm-Y7-xqD">
+                    <connections>
+                        <action selector="backButtonLongPressed:" destination="BYZ-38-t0r" id="V4b-Hc-Z2g"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="382" y="196"/>
+            <point key="canvasLocation" x="381.60000000000002" y="195.6521739130435"/>
         </scene>
         <!--Main Music Table View Controller-->
         <scene sceneID="017-H5-6UQ">
@@ -103,7 +127,7 @@
                                 <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nnj-kX-mOT" id="b9t-6l-Gfm">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>

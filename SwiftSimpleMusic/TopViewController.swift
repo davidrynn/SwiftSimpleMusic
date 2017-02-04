@@ -47,21 +47,26 @@ class TopViewController: UIViewController {
         self.view.bringSubview(toFront: playbackControlView)
         
     }
+    func setupButtons(){
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TopViewController.backButtonTapped(_:))  //Tap function will call when user tap on button
+//        let longGesture = UILongPressGestureRecognizer(target: self, action: "Long") //Long function will call when user long press on button.
+//        tapGesture.numberOfTapsRequired = 1
+//        .addGestureRecognizer(tapGesture)
+//        btn.addGestureRecognizer(longGesture)
+    }
+    
+    
     //    MARK: Actions
     
     func detectPan(_ recognizer: UIPanGestureRecognizer){
         
         let view = popUpViewController.view as? PopUpView
         let imageView = view?.imageView
-        
-        
+                
         let translation = recognizer.translation(in: self.view)
         popUpViewController.view.center.y = lastLocation.y + translation.y
         let transationalY = popUpViewController.view.center.y
-        
-        imageView?.frame = CGRect(x: 0, y: 0, width: transationalY, height: transationalY)
-        print("image view center: \(imageView?.center)")
-        
+
         if recognizer.state == UIGestureRecognizerState.ended {
             UIView.animate(withDuration: 0.1, delay: 0.0, options: UIViewAnimationOptions(), animations: {
                 if self.popUpViewController.view.center.y >= self.view.height {
@@ -80,25 +85,68 @@ class TopViewController: UIViewController {
     
     @IBAction func playButtonTapped(_ sender: AnyObject) {
         
-        if player.playingStatus() == MPMusicPlaybackState.playing {
+        if player.currentPlaybackState() == MPMusicPlaybackState.playing {
             player.pause()
         } else {
             player.play()
         }
     }
     
-    @IBAction fileprivate func forwardButtonTapped(_ sender: AnyObject) {
-        
-        player.forward()
-//        if let currentSong = player.currentSong() {
-//            popUpViewController.updateArtworkImage(currentSong)
+
+//    @IBAction func forwardButtonLongPressed(_ sender: UILongPressGestureRecognizer) {
+//        player.seekForward { () -> (Bool) in
+//            if sender.state == UIGestureRecognizerState.ended {
+//                return true
+//            }
+//            return false
 //        }
+//    }
+    
+//    @IBAction func forwardButtonLongPressed(_ sender: UILongPressGestureRecognizer) {
+//        sender.minimumPressDuration = 1.0
+//        if sender.state == UIGestureRecognizerState.ended {
+//print("longpress ended")
+//        }
+//        if sender.state == UIGestureRecognizerState.began {
+//            print("longpress began")
+//        }
+//                player.seekForward { () -> (Bool) in
+//                    if sender.state == UIGestureRecognizerState.ended {
+//                        return true
+//                    }
+//                    return false
+//                }
+//    }
+    @IBAction func forwardButtonLongPressed(_ sender: UILongPressGestureRecognizer) {
+                sender.minimumPressDuration = 1.0
+                if sender.state == UIGestureRecognizerState.ended {
+                    player.endSeeking()
+                }
+                if sender.state == UIGestureRecognizerState.began {
+                    player.beginSeekingForward()
+                }
+    }
+    @IBAction func forwardButtonTapped(_ sender: UITapGestureRecognizer) {
+        player.skipToNextItem()
     }
     
-    @IBAction fileprivate func backButtonTapped(_ sender: AnyObject) {
+    @IBAction func backButtonLongPressed(_ sender: UILongPressGestureRecognizer) {
+        sender.minimumPressDuration = 1.0
+        if sender.state == UIGestureRecognizerState.ended {
+            player.endSeeking()
+        }
+        if sender.state == UIGestureRecognizerState.began {
+            player.beginRewind()
+        }
         
-        player.rewind()
     }
+
+
+    @IBAction fileprivate func backButtonTapped(_ sender: UITapGestureRecognizer) {
+        player.playPreviousItem()
+    }
+
+
     
     //    MARK: Navigation
     

@@ -41,17 +41,19 @@ class PopUpViewController: UIViewController {
     }
     
     func updateArtworkImage() {
-        if let item = player.currentSong() {
-            if let view = view as? PopUpView {
-                let newImage: UIImage
-                if let artwork = item.artwork {
-                    newImage = (artwork.image(at: view.imageView.bounds.size))!
-                } else {
-                    newImage = UIImage(named: "noteSml.png")!
+        if (player.currentSong != nil) {
+            if let item = player.currentSong {
+                if let view = view as? PopUpView {
+                    let newImage: UIImage
+                    if let artwork = item.artwork {
+                        newImage = (artwork.image(at: view.imageView.bounds.size))!
+                    } else {
+                        newImage = UIImage(named: "noteSml.png")!
+                    }
+                    view.imageView.image = newImage
+                    reloadInputViews()
+                    view.setNeedsLayout()
                 }
-                view.imageView.image = newImage
-                reloadInputViews()
-                view.setNeedsLayout()
             }
         }
     }

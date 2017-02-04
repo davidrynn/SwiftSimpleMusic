@@ -1,4 +1,4 @@
-//
+  //
 //  MainMusicTableViewController.swift
 //  SwiftSimpleMusic
 //
@@ -40,12 +40,13 @@ class MainMusicTableViewController: UITableViewController {
     fileprivate var collection: MediaCollection!
     fileprivate var viewModel: MainMusicViewModel!
     fileprivate var sectionStructs: [SectionStruct]!
-    @IBOutlet weak var loopButton: UIBarButtonItem!
+    fileprivate var musicLists: MusicLists!
+    fileprivate var currentSort: String!
     
+    fileprivate var sortButton: UIButton = UIButton(type: UIButtonType.custom)
+    @IBOutlet weak var loopButton: UIBarButtonItem!
     @IBOutlet weak var shuffleButton: UIBarButtonItem!
 
-    fileprivate var sortButton: UIButton = UIButton(type: UIButtonType.custom)
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         assertDependencies()
@@ -57,6 +58,7 @@ class MainMusicTableViewController: UITableViewController {
         
         sortButton.frame = CGRect(x: 0, y: 0, width: 100, height: 30);
         sortButton.setTitle(sortDisplay.songs.description, for: UIControlState())
+        currentSort = sortDisplay.songs.description
         sortButton.layer.borderColor = UIColor.lightGray.cgColor
         sortButton.layer.borderWidth = 1
         sortButton.layer.cornerRadius = 10
@@ -89,12 +91,11 @@ class MainMusicTableViewController: UITableViewController {
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         var indexArray: [String] = []
         for section in sectionStructs {
-            
             indexArray.append(section.letter)
         }
-
         return indexArray
     }
+    
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sectionStructs[section].letter
     }
@@ -104,7 +105,6 @@ class MainMusicTableViewController: UITableViewController {
         let sectionStruct = sectionStructs[(indexPath as NSIndexPath).section]
         
         let item = sectionStruct.songs[(indexPath as NSIndexPath).row]
-        
         
         cell.textLabel?.text = item.title
         let cellImage: UIImage?
@@ -124,10 +124,10 @@ class MainMusicTableViewController: UITableViewController {
         let sectionStruct = sectionStructs[(indexPath as NSIndexPath).section]
         let item = sectionStruct.songs[(indexPath as NSIndexPath).row]
         
-        if let nowPlayingItem = player.nowPlayingSong() {
+        if let nowPlayingItem = player.currentSong {
             
             if (nowPlayingItem.title == item.title){
-                if player.playingStatus() == MPMusicPlaybackState.playing {
+                if player.currentPlaybackState() == MPMusicPlaybackState.playing {
                     player.pause()
                 } else {
                     player.playItem(item)
@@ -140,7 +140,6 @@ class MainMusicTableViewController: UITableViewController {
         } else {
             player.playItem(item)
         }
-        
     }
     
     /*
@@ -181,19 +180,26 @@ class MainMusicTableViewController: UITableViewController {
         switch text {
         case sortDisplay.albums.description:
             sender.setTitle(sortDisplay.artists.description, for: UIControlState.normal)
+            sectionStructs = musicLists.artists
         case sortDisplay.artists.description:
             sender.setTitle(sortDisplay.genres.description, for: UIControlState.normal)
+            sectionStructs = musicLists.genres
         case sortDisplay.genres.description:
             sender.setTitle(sortDisplay.playlists.description, for: UIControlState.normal)
+            sectionStructs = musicLists.playlists
         case sortDisplay.playlists.description:
             sender.setTitle(sortDisplay.songs.description, for: UIControlState.normal)
+            sectionStructs = musicLists.songs
         case sortDisplay.songs.description:
             sender.setTitle(sortDisplay.albums.description, for: UIControlState.normal)
+            sectionStructs = musicLists.albums
         default:
             sender.setTitle(sortDisplay.songs.description, for: UIControlState.normal)
+            sectionStructs = musicLists.songs
         }
         
         view.reloadInputViews()
+        tableView.reloadData()
     }
     
 }
@@ -203,7 +209,8 @@ extension MainMusicTableViewController: Injectable {
         player = item
         collection = item.collection
         viewModel = MainMusicViewModel(collection: collection)
-        sectionStructs = viewModel.getSectionStructArray()
+        musicLists = viewModel.fullCollections()
+        sectionStructs = musicLists.songs
     }
     
     func assertDependencies() {

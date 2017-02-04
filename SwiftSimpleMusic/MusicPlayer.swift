@@ -9,11 +9,52 @@
 import Foundation
 import MediaPlayer
 
-class MusicPlayer {
+protocol MusicPlayerProtocol {
+    var currentSong: MPMediaItem? { get }
+    var nextSong: MPMediaItem? { get }
+    var previousSong: MPMediaItem? { get }
+    func play()
+    func beginSeekingForward()
+    func endSeeking()
+    func beginRewind()
+    func skipToNextItem()
+    func playPreviousItem()
+    func pause()
+    func stop()
+    func toggleShuffleMode()
+    func currentPlaybackState()-> MPMusicPlaybackState
+    
+}
+
+class MusicPlayer: MusicPlayerProtocol {
     
     let player: MPMusicPlayerController
-    var nextSong: MPMediaItem?
-    var previousSong: MPMediaItem?
+    var nextSong: MPMediaItem? {
+        get {
+            let indexNextSong = player.indexOfNowPlayingItem + 1
+            let songCollection = self.collection.items
+            if indexNextSong < songCollection.count {
+                return self.collection.items[indexNextSong]
+            } else {
+                return nil
+            }
+        }
+    }
+    var previousSong: MPMediaItem? {
+        get {
+            let indexPreviousSong = player.indexOfNowPlayingItem - 1
+            if indexPreviousSong >= 0 {
+                return self.collection.items[indexPreviousSong]
+            } else {
+                return nil
+            }
+        }
+    }
+    var currentSong: MPMediaItem? {
+        get {
+            return self.player.nowPlayingItem
+        }
+    }
     //    var musicCollection: MPMediaItemCollection
     //    var randomizedCollection: MPMediaItemCollection
     var shuffleMode: MPMusicShuffleMode {
@@ -23,12 +64,11 @@ class MusicPlayer {
     }
     var collection: MediaCollection
     
-    
     init() {
         
         self.player = MPMusicPlayerController.systemMusicPlayer()
         let query = MPMediaQuery.songs()
-        print("Number of songs: \(String(query.items!.count))")
+        
         let items = query.items!
         self.collection = MediaCollection(items: items)
         self.player.setQueue(with: MPMediaQuery.songs())
@@ -37,10 +77,15 @@ class MusicPlayer {
         
     }
     
+    //    fileprivate func collection(query: MPMediaQuery) -> MediaCollection {
+    //        let items = query.items!
+    //        return MediaCollection(items: items)
+    //    }
+    
     fileprivate class func shuffleModeFromDefaults() -> MPMusicShuffleMode {
         let defaults = UserDefaults.standard
-        if let shuffleMode: Int = defaults.integer(forKey: "shuffleMode") {
-            return MPMusicShuffleMode(rawValue: shuffleMode)!
+        if let shuffleModeRaw: Int = defaults.integer(forKey: "shuffleMode") {
+            return MPMusicShuffleMode(rawValue: shuffleModeRaw)!
         } else {
             return MPMusicShuffleMode.off
         }
@@ -50,18 +95,13 @@ class MusicPlayer {
         player.setQueue(with: query)
         collection = MediaCollection(items: query.items!)
     }
-
+    
     func play() {
         self.player.play()
         
     }
     
-    func currentSong() -> MPMediaItem? {
-        return player.nowPlayingItem
-    }
-    
     func playItem(_ item: MPMediaItem) {
-        
         player.nowPlayingItem = item
         player.play()
     }
@@ -71,11 +111,7 @@ class MusicPlayer {
         
     }
     
-    func nowPlayingSong() -> MPMediaItem? {
-        return player.nowPlayingItem
-    }
-    
-    func playingStatus() -> MPMusicPlaybackState {
+    func currentPlaybackState() -> MPMusicPlaybackState {
         return player.playbackState
     }
     
@@ -85,20 +121,32 @@ class MusicPlayer {
         
     }
     
-    func forward() {
-        
+    func skipToNextItem() {
         player.skipToNextItem()
-        //fast forward on long press
-        //next on one press
     }
     
-    func rewind() {
+    func playPreviousItem() {
         if player.indexOfNowPlayingItem > 0 {
             player.skipToPreviousItem()
         }
-        //rewind on long press
-        //to beginning of song on one press
-        //to previous on double tap
+    }
+    
+    func beginSeekingForward() {
+            player.beginSeekingForward()
+
+    }
+    
+    func endSeeking(){
+        player.endSeeking()
+    }
+    
+    func beginRewind(){
+        player.beginSeekingBackward()
+    }
+
+    
+    func toggleShuffleMode() {
+        
     }
     
     deinit{
