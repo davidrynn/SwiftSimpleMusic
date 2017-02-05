@@ -10,8 +10,31 @@ import Foundation
 import MediaPlayer
 
 struct SectionStruct {
-    let letter: String
+    let title: String
     var songs: [MPMediaItem]
+}
+
+struct MediaGroupCollection {
+    let query: MPMediaQuery
+    let items: [MPMediaItem]
+    let sections: [MPMediaQuerySection]
+    
+    init(query: MPMediaQuery) {
+        self.query = query
+        self.items = query.items ?? []
+        self.sections = query.itemSections ?? []
+
+    }
+    
+    func sectionHeaders(query: MPMediaQuery) -> [String] {
+        var returnStringArray: [String] = []
+        if let sections = query.itemSections {
+            for section in sections {
+                returnStringArray.append(section.title)
+            }
+        }
+        return returnStringArray
+    }
 }
 
 class MusicLists {
@@ -32,8 +55,7 @@ class MusicLists {
 
 struct MainMusicViewModel {
     var collection: MediaCollection!
-    
-    
+    let mediaDictionary: [MediaSortType: MediaGroupCollection]
     
     fileprivate func collection(query: MPMediaQuery) -> MediaCollection {
         let items = query.items!
@@ -42,6 +64,14 @@ struct MainMusicViewModel {
     
     init (collection: MediaCollection) {
         self.collection = collection
+        self.mediaDictionary = [ MediaSortType.songs: MediaGroupCollection(query: MPMediaQuery.songs()),
+                                 MediaSortType.albums: MediaGroupCollection(query: MPMediaQuery.albums()),
+                                 MediaSortType.artists: MediaGroupCollection(query: MPMediaQuery.artists()),
+                                 MediaSortType.playlists: MediaGroupCollection(query: MPMediaQuery.playlists()),
+                                 MediaSortType.genres: MediaGroupCollection(query: MPMediaQuery.genres()),
+                                 MediaSortType.podcasts: MediaGroupCollection(query: MPMediaQuery.podcasts()),
+                                 MediaSortType.compilations: MediaGroupCollection(query: MPMediaQuery.compilations()),
+                                 MediaSortType.audiobooks: MediaGroupCollection(query: MPMediaQuery.audiobooks())]
     }
     
     func getSectionStructArray(dataCollection: MediaCollection) -> [SectionStruct] {
@@ -78,13 +108,13 @@ struct MainMusicViewModel {
                 return false
             })
             //            ({ $0.title?.characters.first == letter.characters.first })
-            sections.append(SectionStruct(letter: letter, songs: songArray))
+            sections.append(SectionStruct(title: letter, songs: songArray))
         }
         return sections
     }
     
     func fullCollections() -> MusicLists {
-     let startTime = CFAbsoluteTimeGetCurrent()
+        let startTime = CFAbsoluteTimeGetCurrent()
         let songsStruct = getSectionStructArray(dataCollection: collection(query: MPMediaQuery.songs()))
         let albumsStruct = getSectionStructArray(dataCollection: collection(query: MPMediaQuery.albums()))
         let artistStruct = getSectionStructArray(dataCollection: collection(query: MPMediaQuery.artists()))
@@ -117,88 +147,33 @@ struct MainMusicViewModel {
         return result != nil
     }
     
-    //    func alphabeticalLetterHeaders() -> [Character : [MPMediaItem]] {
-    //        var letters: [Character]
-    //        var sectionDictionary: [String : String]
-    //
-    //
-    //        let data = collection.items
-    //        letters = data.map { (song) -> Character in
-    //            if let title = song.title {
-    //                return title[title.startIndex]
-    //            }
-    //            return Character("")
-    //        }
-    //
-    //        letters = letters.sort()
-    //
-    //        letters = letters.reduce([], combine: { (list, name) -> [Character] in
-    //            if !list.contains(name) {
-    //                return list + [name]
-    //            }
-    //            return list
-    //        })
-    //
-    //        var sections: [Character: [MediaItem]] = [:]
-    //
-    //        for item in data {
-    //            if let title = item.title {
-    //            if sections[title[title.startIndex]] == nil {
-    //                sections[title[title.startIndex]] = [MPMediaItem]()
-    //            }
-    //
-    //            sections[title[title.startIndex]]!.append(item)
-    //            }
-    //
-    //        }
-    //
-    //        for (_, list) in sections {
-    //
-    //            list.sort {
-    //                $
-    //            }
-    //        }
-    //
-    //        return sections
-    //    }
-    //
-    //    func test() {
-    //        let data = ["Anton", "Anna", "John", "Caesar"] // Example data, use your phonebook data here.
-    //
-    //        // Build letters array:
-    //
-    //        var letters: [Character]
-    //
-    //        letters = data.map { (name) -> Character in
-    //            return name[name.startIndex]
-    //        }
-    //
-    //        letters = letters.sort()
-    //
-    //        letters = letters.reduce([], combine: { (list, name) -> [Character] in
-    //            if !list.contains(name) {
-    //                return list + [name]
-    //            }
-    //            return list
-    //        })
-    //
-    //
-    //        // Build contacts array:
-    //
-    //        var contacts = [Character: [String]]()
-    //
-    //        for entry in data {
-    //
-    //            if contacts[entry[entry.startIndex]] == nil {
-    //                contacts[entry[entry.startIndex]] = [String]()
-    //            }
-    //            
-    //            contacts[entry[entry.startIndex]]!.append(entry)
-    //            
-    //        }
-    //        
-    //        for (_, list) in contacts {
-    //            list.sort()
-    //        }
-    //    }
+    func titleForSection(sortType: MediaSortType, section: Int) -> String {
+        
+        if let itemDict: MediaGroupCollection = self.mediaDictionary[sortType] {
+            let itemSections = itemDict.sections
+            if section < itemSections.count {
+                return itemSections[section].title
+            }
+        }
+        return ""
+    }
+    
+    func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int {
+        if let media = self.mediaDictionary[sortType] {
+            return media.sections[section].range.length
+        }
+        return 0
+    }
+    
+    func sectionIndexTitles(sortType: MediaSortType) -> [String] {
+        var indexTitles: [String] = []
+        if let media = self.mediaDictionary[sortType] {
+            media.sections.forEach {indexTitles.append($0.title)}
+//            for section in media.sections {
+//                indexTitles.append(section.title)
+//            }
+        }
+        return indexTitles
+    }
+    
 }

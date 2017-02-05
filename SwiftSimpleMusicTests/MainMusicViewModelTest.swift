@@ -10,6 +10,7 @@ import XCTest
 @testable import SwiftSimpleMusic
 import MediaPlayer
 
+
 class MainMusicViewModelTest: XCTestCase {
     
     struct testMediaItem: MediaItemProtocol {
@@ -17,12 +18,15 @@ class MainMusicViewModelTest: XCTestCase {
         var artwork: MPMediaItemArtwork?
         
     }
-
+    
+    var sut: MainMusicViewModel!
+    
     override func setUp() {
         super.setUp()
-        let song1: MediaItemProtocol = testMediaItem(title: "Albert", artwork: nil)
-        let song2: MediaItemProtocol = testMediaItem(title: "Ahaaa", artwork: nil)
-//        let sectionHeader1: SectionHeaderInfo = SectionHeaderInfo(letter: "A", song: <#T##MPMediaItem#>)
+        let player = MockMusicPlayer()
+        self.sut = SwiftSimpleMusic.MainMusicViewModel(collection: player.collection)
+        
+        //        let sectionHeader1: SectionHeaderInfo = SectionHeaderInfo(letter: "A", song: <#T##MPMediaItem#>)
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
@@ -30,17 +34,67 @@ class MainMusicViewModelTest: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    func testTitleForSection_ShouldReturnLetter(){
+        let title = sut.titleForSection(sortType: MediaSortType.songs, section: 0)
+        XCTAssertEqual(title, "A")
+        print(title)
+        let title2 = sut.titleForSection(sortType: MediaSortType.songs, section: 1)
+        XCTAssertEqual(title2, "B")
+        print("second title: \(title2)")
     }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    func testNumberOfRowsForSection_ShouldReturnCorrectInt(){
+        let section = 1
+        if let itemSections = MPMediaQuery.songs().itemSections {
+            let itemSection = itemSections[section]
+            let correctNumber: Int = itemSection.range.length
+            let vmNumber = sut.numberOfRowsForSection(sortType: MediaSortType.songs, section: section)
+            
+            XCTAssertEqual(vmNumber, correctNumber)
+            
         }
     }
+    func testSectionIndexTitles_ShouldReturnAllIndexTitles(){
+        var titles: [String] = []
+        if let sections = MPMediaQuery.songs().itemSections {
+            for section in sections {
+                titles.append(section.title)
+            }
+        }
+        
+        let sutTitles = sut.sectionIndexTitles(sortType: MediaSortType.songs)
+        XCTAssertEqual(sutTitles, titles)
+        XCTAssertEqual(sutTitles[2], "C")
+    }
+    
+    func testCellImage_ShouldReturnProperImage(){
+        
+    }
+    
+    func testCellLabel_ShouldReturnProperLabel(){
+        
+    }
+    
+    
+    
+}
 
+extension MainMusicViewModelTest {
+    class MockMusicPlayer: SwiftSimpleMusic.MusicPlayer {
+        //        var currentSong: MPMediaItem? { get }
+        //        var nextSong: MPMediaItem? { get }
+        //        var previousSong: MPMediaItem? { get }
+        //        var collection: MediaCollection { get }
+        //        func play()
+        //        func beginSeekingForward()
+        //        func endSeeking()
+        //        func beginRewind()
+        //        func skipToNextItem()
+        //        func playPreviousItem()
+        //        func pause()
+        //        func stop()
+        //        func toggleShuffleMode()
+        //        func currentPlaybackState()-> MPMusicPlaybackState
+    }
 }

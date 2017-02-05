@@ -13,6 +13,7 @@ protocol MusicPlayerProtocol {
     var currentSong: MPMediaItem? { get }
     var nextSong: MPMediaItem? { get }
     var previousSong: MPMediaItem? { get }
+    var collection: MediaCollection { get }
     func play()
     func beginSeekingForward()
     func endSeeking()

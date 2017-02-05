@@ -1,14 +1,14 @@
 //
-//  SwiftSimpleMusicTests.swift
-//  SwiftSimpleMusicTests
+//  MainMusicTableViewTest.swift
+//  SwiftSimpleMusic
 //
-//  Created by David Rynn on 6/11/16.
-//  Copyright © 2016 David Rynn. All rights reserved.
+//  Created by David Rynn on 2/5/17.
+//  Copyright © 2017 David Rynn. All rights reserved.
 //
 
 import XCTest
 
-class SwiftSimpleMusicTests: XCTestCase {
+class MainMusicTableViewTest: XCTestCase {
     
     override func setUp() {
         super.setUp()
