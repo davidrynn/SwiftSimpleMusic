@@ -20,11 +20,11 @@
   
   class MainMusicTableViewController: UITableViewController {
     
-    fileprivate var player: MusicPlayer!
-    fileprivate var collection: MediaCollection!
     fileprivate var viewModel: MainMusicViewModel!
-    fileprivate var sectionStructs: [SectionStruct]!
-    fileprivate var musicLists: MusicLists!
+    fileprivate var player: MusicPlayer!
+//    fileprivate var collection: MediaCollection!
+//    fileprivate var sectionStructs: [SectionStruct]!
+//    fileprivate var musicLists: MusicLists!
     fileprivate var currentSort: MediaSortType!
     
     fileprivate var sortButton: UIButton = UIButton(type: UIButtonType.custom)
@@ -81,44 +81,18 @@
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let sectionStruct = sectionStructs[(indexPath as NSIndexPath).section]
         
-        let item = sectionStruct.songs[(indexPath as NSIndexPath).row]
-        
-        cell.textLabel?.text = item.title
-        let cellImage: UIImage?
-        let imageViewModifier = CGFloat(0.25)
-        let cellImageSize = CGSize(width: cell.imageView!.size.width*imageViewModifier, height: cell.imageView!.size.height*imageViewModifier)
-        if let itemImage = item.artwork {
-            cellImage = itemImage.image(at: cellImageSize)
-        } else {
-            cellImage = UIImage(named: "noteSml.png")
-        }
-        cell.imageView!.image = cellImage
+        guard let cellLabel = cell.textLabel else { return cell }
+        guard let cellImageView = cell.imageView else { return cell }
+        cellLabel.text = viewModel.cellLabelText(sortType: currentSort, indexPath: indexPath)
+        cellImageView.image = viewModel.cellImage(sortType: currentSort, indexPath: indexPath)
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let sectionStruct = sectionStructs[(indexPath as NSIndexPath).section]
-        let item = sectionStruct.songs[(indexPath as NSIndexPath).row]
-        
-        if let nowPlayingItem = player.currentSong {
-            
-            if (nowPlayingItem.title == item.title){
-                if player.currentPlaybackState() == MPMusicPlaybackState.playing {
-                    player.pause()
-                } else {
-                    player.playItem(item)
-                }
-                
-            } else {
-                player.stop()
-                player.playItem(item)
-            }
-        } else {
-            player.playItem(item)
-        }
+    
+        viewModel.didSelectRowAt(indexPath: indexPath, sortType: currentSort)
     }
     
     /*
@@ -160,15 +134,14 @@
         case MediaSortType.albums.description:
             sender.setTitle(MediaSortType.artists.description, for: UIControlState.normal)
             currentSort = .artists
-            sectionStructs = musicLists.artists
+
         case MediaSortType.artists.description:
             sender.setTitle(MediaSortType.genres.description, for: UIControlState.normal)
             currentSort = .genres
-            sectionStructs = musicLists.genres
+
         case MediaSortType.genres.description:
             sender.setTitle(MediaSortType.playlists.description, for: UIControlState.normal)
             currentSort = .playlists
-            sectionStructs = musicLists.playlists
         case MediaSortType.playlists.description:
             sender.setTitle(MediaSortType.podcasts.description, for: UIControlState.normal)
             currentSort = .podcasts
@@ -183,10 +156,9 @@
             currentSort = .songs
         case MediaSortType.songs.description:
             sender.setTitle(MediaSortType.albums.description, for: UIControlState.normal)
-            sectionStructs = musicLists.albums
+            currentSort = .albums
         default:
             sender.setTitle(String(describing: MediaSortType.songs), for: UIControlState.normal)
-            sectionStructs = musicLists.songs
             currentSort = .songs
         }
         
@@ -199,10 +171,8 @@
     
     func inject(_ item: MusicPlayer) {
         player = item
-        collection = item.collection
-        viewModel = MainMusicViewModel(collection: collection)
-        musicLists = viewModel.fullCollections()
-        sectionStructs = musicLists.songs
+        viewModel = MainMusicViewModel(player: item)
+
     }
     
     func assertDependencies() {

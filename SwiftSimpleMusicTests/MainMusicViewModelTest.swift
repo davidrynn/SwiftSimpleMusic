@@ -69,10 +69,25 @@ class MainMusicViewModelTest: XCTestCase {
     }
     
     func testCellImage_ShouldReturnProperImage(){
-        
+                let mockIndexPath = IndexPath(row: 1, section: 0)
+        guard let mediaSongs = MPMediaQuery.songs().items else { fatalError("error loading songs") }
+            let song = mediaSongs[mockIndexPath.row]
+        guard let songArtwork: MPMediaItemArtwork = song.artwork else { fatalError("error getting song artwork")}
+        guard let songImage = songArtwork.image(at: CGSize(width: 40*0.25, height: 40*0.25)) else { fatalError("error getting image from artwork")}
+        let sutImage: UIImage = sut.cellImage(sortType: .songs, indexPath: mockIndexPath)
+        guard let data1: Data = UIImagePNGRepresentation(songImage) else { fatalError("error converting image to data") }
+        let data2: Data = UIImagePNGRepresentation(sutImage)!;
+        XCTAssertEqual(data1, data2)
     }
     
-    func testCellLabel_ShouldReturnProperLabel(){
+    func testCellLabelText_ShouldReturnProperLabel(){
+        let mockIndexPath = IndexPath(row: 1, section: 0)
+        guard let mediaSongs = MPMediaQuery.songs().items else { fatalError("error loading songs") }
+
+            let song = mediaSongs[mockIndexPath.row]
+            let songTitle = song.title
+        
+        XCTAssertEqual(sut.cellLabelText(sortType: MediaSortType.songs, indexPath: mockIndexPath), songTitle)
         
     }
     
