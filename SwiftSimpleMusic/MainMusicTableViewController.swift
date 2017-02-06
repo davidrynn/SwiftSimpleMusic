@@ -91,8 +91,11 @@
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
-        viewModel.didSelectRowAt(indexPath: indexPath, sortType: currentSort)
+        if currentSort == MediaSortType.songs {
+        viewModel.didSelectSongAtRowAt(indexPath: indexPath, sortType: currentSort)
+        } else {
+            
+        }
     }
     
     /*

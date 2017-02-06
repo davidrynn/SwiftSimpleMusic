@@ -50,14 +50,43 @@ struct AlbumsGroupCollection: GroupCollectionProtocol {
     var query: MPMediaQuery
     var sections: [MPMediaQuerySection]
     
+    init(query: MPMediaQuery){
+        self.query = query
+        self.sections = query.collectionSections ?? []
+        var returnValue: [MPMediaItem] = []
+        if let queryCollections = query.collections {
+        queryCollections.forEach {
+            guard $0.representativeItem != nil else { return }
+            returnValue.append($0.representativeItem!)
+            }
+        }
+        self.items = returnValue
+    }
+  
+    func sectionHeaders(query: MPMediaQuery) -> [String] {
+        var returnStringArray: [String] = []
+        if let sections = query.collectionSections {
+            for section in sections {
+                returnStringArray.append(section.title)
+            }
+        }
+        return returnStringArray
+    }
+}
+
+struct ArtistsGroupCollection: GroupCollectionProtocol {
+    var items: [MPMediaItem]
+    var query: MPMediaQuery
+    var sections: [MPMediaQuerySection]
+    
     init(){
-        self.query = MPMediaQuery.albums()
+        self.query = MPMediaQuery.artists()
         self.sections = query.collectionSections ?? []
         var returnValue: [MPMediaItem] = []
         query.collections?.forEach { returnValue.append($0.representativeItem!) }
         self.items = returnValue
     }
-  
+    
     func sectionHeaders(query: MPMediaQuery) -> [String] {
         var returnStringArray: [String] = []
         if let sections = query.collectionSections {
@@ -75,13 +104,13 @@ struct MainMusicViewModel {
     
     init (player: MusicPlayer) {
         self.mediaDictionary = [ MediaSortType.songs: SongsGroupCollection(query: MPMediaQuery.songs()),
-                                 MediaSortType.albums: AlbumsGroupCollection(),
-                                 MediaSortType.artists: SongsGroupCollection(query: MPMediaQuery.artists()),
+                                 MediaSortType.albums: AlbumsGroupCollection(query: MPMediaQuery.albums()),
+                                 MediaSortType.artists: AlbumsGroupCollection(query: MPMediaQuery.artists()),
                                  MediaSortType.playlists: SongsGroupCollection(query: MPMediaQuery.playlists()),
-                                 MediaSortType.genres: SongsGroupCollection(query: MPMediaQuery.genres()),
-                                 MediaSortType.podcasts: SongsGroupCollection(query: MPMediaQuery.podcasts()),
-                                 MediaSortType.compilations: SongsGroupCollection(query: MPMediaQuery.compilations()),
-                                 MediaSortType.audiobooks: SongsGroupCollection(query: MPMediaQuery.audiobooks())]
+                                 MediaSortType.genres: AlbumsGroupCollection(query: MPMediaQuery.genres()),
+                                 MediaSortType.podcasts: AlbumsGroupCollection(query: MPMediaQuery.podcasts()),
+                                 MediaSortType.compilations: AlbumsGroupCollection(query: MPMediaQuery.compilations()),
+                                 MediaSortType.audiobooks: AlbumsGroupCollection(query: MPMediaQuery.audiobooks())]
         self.player = player
     }
     
@@ -93,8 +122,6 @@ struct MainMusicViewModel {
                     return itemSections[section].title
                 }
             }
-
-        
         return ""
     }
     
@@ -127,12 +154,20 @@ struct MainMusicViewModel {
         guard let media = mediaDictionary[sortType] else { return "" }
         let section = media.sections[indexPath.section]
         let index = section.range.location + indexPath.row
-        
-        if sortType == .albums {
-            return media.items[index].albumTitle ?? ""
-        }
-        return media.items[index].title ?? ""
+        let mediaItem = media.items[index]
 
+        switch sortType {
+        case .albums, .audiobooks, .compilations:
+            return mediaItem.albumTitle ?? ""
+        case .artists:
+            return mediaItem.artist ?? ""
+        case .genres:
+            return mediaItem.genre ?? ""
+        case .songs, .playlists:
+            return mediaItem.title ?? ""
+        case .podcasts:
+            return mediaItem.podcastTitle ?? ""
+        }
         
     }
     
@@ -140,7 +175,7 @@ struct MainMusicViewModel {
     //
     //    }
     
-    func didSelectRowAt(indexPath: IndexPath, sortType: MediaSortType) {
+    func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType) {
         
         guard let media = mediaDictionary[sortType] else { return }
         let range = media.sections[indexPath.section].range
