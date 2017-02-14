@@ -14,7 +14,7 @@
 		224946931CC7D72800D5104C /* PopUpTopBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 224946921CC7D72800D5104C /* PopUpTopBar.xib */; };
 		224946951CC7D78400D5104C /* PopUpTopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224946941CC7D78400D5104C /* PopUpTopBarView.swift */; };
 		224946991CC7E23400D5104C /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224946981CC7E23400D5104C /* UIView+Layout.swift */; };
-		22AAD4651E47820C00FDE171 /* MainMusicTableViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AAD4641E47820C00FDE171 /* MainMusicTableViewTest.swift */; };
+		22AAD4651E47820C00FDE171 /* MainMusicTableViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AAD4641E47820C00FDE171 /* MainMusicTableViewControllerTest.swift */; };
 		22AAD4961E47B91B00FDE171 /* MediaSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AAD4951E47B91B00FDE171 /* MediaSortType.swift */; };
 		22DED0AF1D84A26B00F9C7FA /* TopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DED0AE1D84A26B00F9C7FA /* TopViewController.swift */; };
 		22DED0B11D84AAD500F9C7FA /* Injectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DED0B01D84AAD500F9C7FA /* Injectable.swift */; };
@@ -55,7 +55,7 @@
 		224946921CC7D72800D5104C /* PopUpTopBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopUpTopBar.xib; sourceTree = "<group>"; };
 		224946941CC7D78400D5104C /* PopUpTopBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpTopBarView.swift; sourceTree = "<group>"; };
 		224946981CC7E23400D5104C /* UIView+Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
-		22AAD4641E47820C00FDE171 /* MainMusicTableViewTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMusicTableViewTest.swift; sourceTree = "<group>"; };
+		22AAD4641E47820C00FDE171 /* MainMusicTableViewControllerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMusicTableViewControllerTest.swift; sourceTree = "<group>"; };
 		22AAD4951E47B91B00FDE171 /* MediaSortType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaSortType.swift; sourceTree = "<group>"; };
 		22DED0AE1D84A26B00F9C7FA /* TopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopViewController.swift; sourceTree = "<group>"; };
 		22DED0B01D84AAD500F9C7FA /* Injectable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Injectable.swift; sourceTree = "<group>"; };
@@ -99,7 +99,7 @@
 		223693711D0C8E6D003F0359 /* SwiftSimpleMusicTests */ = {
 			isa = PBXGroup;
 			children = (
-				22AAD4641E47820C00FDE171 /* MainMusicTableViewTest.swift */,
+				22AAD4641E47820C00FDE171 /* MainMusicTableViewControllerTest.swift */,
 				22DED0C91D88A39600F9C7FA /* MainMusicViewModelTest.swift */,
 				223693741D0C8E6D003F0359 /* Info.plist */,
 			);
@@ -342,7 +342,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22AAD4651E47820C00FDE171 /* MainMusicTableViewTest.swift in Sources */,
+				22AAD4651E47820C00FDE171 /* MainMusicTableViewControllerTest.swift in Sources */,
 				22DED0CA1D88A39600F9C7FA /* MainMusicViewModelTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

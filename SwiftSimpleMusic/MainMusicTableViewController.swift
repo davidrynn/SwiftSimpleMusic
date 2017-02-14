@@ -20,7 +20,7 @@
   
   class MainMusicTableViewController: UITableViewController {
     
-    fileprivate var viewModel: MainMusicViewModel!
+    fileprivate var viewModel: MainMusicViewModelProtocol!
     fileprivate var player: MusicPlayer!
 //    fileprivate var collection: MediaCollection!
 //    fileprivate var sectionStructs: [SectionStruct]!
@@ -59,13 +59,12 @@
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         
         return viewModel.mediaDictionary.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
+
         
         return viewModel.numberOfRowsForSection(sortType: currentSort, section: section)
     }

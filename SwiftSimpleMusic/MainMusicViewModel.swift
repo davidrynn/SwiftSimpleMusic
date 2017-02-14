@@ -9,10 +9,18 @@
 import Foundation
 import MediaPlayer
 
-//struct SectionStruct {
-//    let title: String
-//    var songs: [MPMediaItem]
-//}
+protocol MainMusicViewModelProtocol {
+    var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { get }
+    var player: MusicPlayer { get }
+    func titleForSection(sortType: MediaSortType, section: Int) -> String
+    func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int
+    func sectionIndexTitles(sortType: MediaSortType) -> [String]
+    func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage
+    func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String
+    func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
+}
+
+
 
 protocol GroupCollectionProtocol {
 
@@ -98,9 +106,9 @@ struct ArtistsGroupCollection: GroupCollectionProtocol {
     }
 }
 
-struct MainMusicViewModel {
-    let mediaDictionary: [MediaSortType: GroupCollectionProtocol]
-    let player: MusicPlayer
+struct MainMusicViewModel: MainMusicViewModelProtocol {
+    var mediaDictionary: [MediaSortType : GroupCollectionProtocol]
+    var player: MusicPlayer
     
     init (player: MusicPlayer) {
         self.mediaDictionary = [ MediaSortType.songs: SongsGroupCollection(query: MPMediaQuery.songs()),
@@ -200,3 +208,4 @@ struct MainMusicViewModel {
     }
     
 }
+

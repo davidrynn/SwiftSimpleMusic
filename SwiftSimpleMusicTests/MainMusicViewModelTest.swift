@@ -24,8 +24,7 @@ class MainMusicViewModelTest: XCTestCase {
     override func setUp() {
         super.setUp()
         let player = MockMusicPlayer()
-        self.sut = SwiftSimpleMusic.MainMusicViewModel(collection: player.collection)
-        
+        self.sut = SwiftSimpleMusic.MainMusicViewModel(player: player)
         //        let sectionHeader1: SectionHeaderInfo = SectionHeaderInfo(letter: "A", song: <#T##MPMediaItem#>)
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -39,8 +38,8 @@ class MainMusicViewModelTest: XCTestCase {
         let title = sut.titleForSection(sortType: MediaSortType.songs, section: 0)
         XCTAssertEqual(title, "A")
         print(title)
-        let title2 = sut.titleForSection(sortType: MediaSortType.songs, section: 1)
-        XCTAssertEqual(title2, "B")
+        let title2 = sut.titleForSection(sortType: MediaSortType.songs, section: 25)
+        XCTAssertEqual(title2, "Z")
         print("second title: \(title2)")
     }
     
@@ -65,7 +64,7 @@ class MainMusicViewModelTest: XCTestCase {
         
         let sutTitles = sut.sectionIndexTitles(sortType: MediaSortType.songs)
         XCTAssertEqual(sutTitles, titles)
-        XCTAssertEqual(sutTitles[2], "C")
+        XCTAssertEqual(sutTitles[25], "Z")
     }
     
     func testCellImage_ShouldReturnProperImage(){
