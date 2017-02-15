@@ -54,6 +54,7 @@ class MainMusicViewModelTest: XCTestCase {
             
         }
     }
+    
     func testSectionIndexTitles_ShouldReturnAllIndexTitles(){
         var titles: [String] = []
         if let sections = MPMediaQuery.songs().itemSections {

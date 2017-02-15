@@ -20,7 +20,7 @@
   
   class MainMusicTableViewController: UITableViewController {
     
-    fileprivate var viewModel: MainMusicViewModelProtocol!
+    var viewModel: MainMusicViewModelProtocol!
     fileprivate var player: MusicPlayer!
 //    fileprivate var collection: MediaCollection!
 //    fileprivate var sectionStructs: [SectionStruct]!
@@ -60,7 +60,7 @@
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         
-        return viewModel.mediaDictionary.count
+        return viewModel.numberOfSections(sortType: currentSort)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -12,6 +12,7 @@ import MediaPlayer
 protocol MainMusicViewModelProtocol {
     var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { get }
     var player: MusicPlayer { get }
+    func numberOfSections(sortType: MediaSortType) -> Int
     func titleForSection(sortType: MediaSortType, section: Int) -> String
     func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int
     func sectionIndexTitles(sortType: MediaSortType) -> [String]
@@ -19,8 +20,6 @@ protocol MainMusicViewModelProtocol {
     func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
 }
-
-
 
 protocol GroupCollectionProtocol {
 
@@ -132,12 +131,17 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
             }
         return ""
     }
-    
+
+    func numberOfSections(sortType: MediaSortType) -> Int{
+        guard let sortedGrouping = mediaDictionary[sortType] else { return 0 }
+        return sortedGrouping.sections.count
+    }
     func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int {
         guard let media = self.mediaDictionary[sortType] else { return 0 }
         if section < media.sections.count {
             return media.sections[section].range.length
         }
+        
         return 0
     }
     

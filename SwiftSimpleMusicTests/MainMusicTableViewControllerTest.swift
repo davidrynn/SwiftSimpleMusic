@@ -19,8 +19,8 @@ class MainMusicTableViewControllerTest: XCTestCase {
         let topViewController = storyboard.instantiateInitialViewController() as! TopViewController
         let player = MusicPlayer()
         sut = topViewController.container
-        sut.inject(item: player)
-        sut.viewModel =
+        sut.inject(player)
+        sut.viewModel = MockMainMusicTableViewModel()
         let _ = sut.view
         
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -30,17 +30,14 @@ class MainMusicTableViewControllerTest: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    
-
-    
 }
 
 extension MainMusicTableViewControllerTest {
     struct MockMainMusicTableViewModel: MainMusicViewModelProtocol {
-        var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { get }
-        var player: MusicPlayer { get set}
+        var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { return [ : ] }
+        var player: MusicPlayer { return MusicPlayer() }
         func titleForSection(sortType: MediaSortType, section: Int) -> String {
-            "A"
+            return "A"
         }
         func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int {
             return 0
@@ -52,8 +49,10 @@ extension MainMusicTableViewControllerTest {
         func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage {
             return UIImage()
         }
-        func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String {
-            retun "Zed"
+        func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String
+        {
+            let returnString = "zed"
+            return returnString
         }
         func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType) {
         }
