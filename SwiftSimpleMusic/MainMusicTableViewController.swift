@@ -26,6 +26,18 @@
 //    fileprivate var sectionStructs: [SectionStruct]!
 //    fileprivate var musicLists: MusicLists!
     fileprivate var currentSort: MediaSortType!
+    lazy var players: [String] = {
+        var temporaryPlayers = [String]()
+        temporaryPlayers.append("John Doe")
+        return temporaryPlayers
+        }()
+    var arraySetOutsideClass: [String]? {
+        didSet {
+            if let stringArray = arraySetOutsideClass {
+                players = stringArray
+            }
+        }
+    }
     
     fileprivate var sortButton: UIButton = UIButton(type: UIButtonType.custom)
     @IBOutlet weak var loopButton: UIBarButtonItem!
