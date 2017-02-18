@@ -55,41 +55,6 @@ struct SongsGroupCollection: GroupCollectionProtocol {
     }
 }
 
-struct PlaylistsGroupCollection: GroupCollectionProtocol {
-    var items: [MPMediaItem]
-    var collections: [MPMediaItemCollection]
-    var query: MPMediaQuery
-    var sections: [MPMediaQuerySection]
-    let playlists: [MPMediaPlaylist]
-    
-    
-    init(){
-        self.query = MPMediaQuery.playlists()
-        self.sections = query.collectionSections ?? []
-        //        var returnValue: [MPMediaItem] = []
-        //        if let queryCollections = query.collections {
-        //        queryCollections.forEach {
-        //            guard $0.representativeItem != nil else { return }
-        //            returnValue.append($0.representativeItem!)
-        //            }
-        //        }
-        self.items = query.items ?? []
-        self.collections = query.collections ?? []
-        self.playlists = query.collections as? [MPMediaPlaylist] ?? []
-    }
-    
-    func sectionHeaders() -> [String] {
-        
-        var returnStringArray: [String] = []
-        if let sections = query.collectionSections {
-            for section in sections {
-                returnStringArray.append(section.title)
-            }
-        }
-        return returnStringArray
-    }
-}
-
 struct GroupCollection: GroupCollectionProtocol {
     var items: [MPMediaItem]
     var collections: [MPMediaItemCollection]
@@ -99,13 +64,6 @@ struct GroupCollection: GroupCollectionProtocol {
     init(query: MPMediaQuery){
         self.query = query
         self.sections = query.collectionSections ?? []
-//        var returnValue: [MPMediaItem] = []
-//        if let queryCollections = query.collections {
-//        queryCollections.forEach {
-//            guard $0.representativeItem != nil else { return }
-//            returnValue.append($0.representativeItem!)
-//            }
-//        }
         self.items = query.items ?? []
         self.collections = query.collections ?? []
     }
@@ -130,7 +88,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         self.mediaDictionary = [ MediaSortType.songs: SongsGroupCollection(),
                                  MediaSortType.albums: GroupCollection(query: MPMediaQuery.albums()),
                                  MediaSortType.artists: GroupCollection(query: MPMediaQuery.artists()),
-                                 MediaSortType.playlists: PlaylistsGroupCollection(),
+                                 MediaSortType.playlists: GroupCollection(query: MPMediaQuery.playlists()),
                                  MediaSortType.genres: GroupCollection(query: MPMediaQuery.genres()),
                                  MediaSortType.podcasts: GroupCollection(query: MPMediaQuery.podcasts()),
                                  MediaSortType.compilations: GroupCollection(query: MPMediaQuery.compilations()),
@@ -151,6 +109,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
 
     func numberOfSections(sortType: MediaSortType) -> Int{
         guard let sortedGrouping = mediaDictionary[sortType] else { return 0 }
+        if sortType == .playlists { return 1 }
         return sortedGrouping.sections.count
     }
     func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int {
@@ -197,8 +156,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         case .songs:
             return mediaItem.title ?? ""
         case .playlists:
-            guard let playlists = media as? PlaylistsGroupCollection else { return "" }
-            let playlist = playlists.playlists[index]
+            guard let playlist = mediaCollection as? MPMediaPlaylist else { return "" }
             return playlist.name ?? ""
         case .podcasts:
             return mediaItem.podcastTitle ?? ""
