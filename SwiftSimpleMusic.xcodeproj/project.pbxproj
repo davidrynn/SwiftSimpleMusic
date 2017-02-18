@@ -14,6 +14,8 @@
 		224946931CC7D72800D5104C /* PopUpTopBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 224946921CC7D72800D5104C /* PopUpTopBar.xib */; };
 		224946951CC7D78400D5104C /* PopUpTopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224946941CC7D78400D5104C /* PopUpTopBarView.swift */; };
 		224946991CC7E23400D5104C /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224946981CC7E23400D5104C /* UIView+Layout.swift */; };
+		22A802131E58E2CA004E74A4 /* SubMediaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A802121E58E2CA004E74A4 /* SubMediaTableViewController.swift */; };
+		22A802151E58E317004E74A4 /* MediaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A802141E58E317004E74A4 /* MediaViewModel.swift */; };
 		22AAD4651E47820C00FDE171 /* MainMusicTableViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AAD4641E47820C00FDE171 /* MainMusicTableViewControllerTest.swift */; };
 		22AAD4961E47B91B00FDE171 /* MediaSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AAD4951E47B91B00FDE171 /* MediaSortType.swift */; };
 		22DED0AF1D84A26B00F9C7FA /* TopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DED0AE1D84A26B00F9C7FA /* TopViewController.swift */; };
@@ -55,6 +57,8 @@
 		224946921CC7D72800D5104C /* PopUpTopBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopUpTopBar.xib; sourceTree = "<group>"; };
 		224946941CC7D78400D5104C /* PopUpTopBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpTopBarView.swift; sourceTree = "<group>"; };
 		224946981CC7E23400D5104C /* UIView+Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
+		22A802121E58E2CA004E74A4 /* SubMediaTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubMediaTableViewController.swift; sourceTree = "<group>"; };
+		22A802141E58E317004E74A4 /* MediaViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaViewModel.swift; sourceTree = "<group>"; };
 		22AAD4641E47820C00FDE171 /* MainMusicTableViewControllerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMusicTableViewControllerTest.swift; sourceTree = "<group>"; };
 		22AAD4951E47B91B00FDE171 /* MediaSortType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaSortType.swift; sourceTree = "<group>"; };
 		22DED0AE1D84A26B00F9C7FA /* TopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopViewController.swift; sourceTree = "<group>"; };
@@ -205,6 +209,8 @@
 				22DED0BE1D88840400F9C7FA /* Buttons */,
 				22DED0C51D8894FB00F9C7FA /* MainMusicTableViewController.swift */,
 				22DED0C71D88957200F9C7FA /* MainMusicViewModel.swift */,
+				22A802121E58E2CA004E74A4 /* SubMediaTableViewController.swift */,
+				22A802141E58E317004E74A4 /* MediaViewModel.swift */,
 				22DED0BD1D88252100F9C7FA /* PopUpView */,
 				22DED0AE1D84A26B00F9C7FA /* TopViewController.swift */,
 			);
@@ -354,12 +360,14 @@
 				22DED0B11D84AAD500F9C7FA /* Injectable.swift in Sources */,
 				22DED0BC1D87B59D00F9C7FA /* PlayButton.swift in Sources */,
 				22DED0C61D8894FB00F9C7FA /* MainMusicTableViewController.swift in Sources */,
+				22A802131E58E2CA004E74A4 /* SubMediaTableViewController.swift in Sources */,
 				224946951CC7D78400D5104C /* PopUpTopBarView.swift in Sources */,
 				22DED0BA1D85BD3600F9C7FA /* MediaCollection.swift in Sources */,
 				22DED0C81D88957200F9C7FA /* MainMusicViewModel.swift in Sources */,
 				224946911CC7D5B400D5104C /* PopUpViewController.swift in Sources */,
 				22DED0AF1D84A26B00F9C7FA /* TopViewController.swift in Sources */,
 				2249468D1CC7D04700D5104C /* PopUpView.swift in Sources */,
+				22A802151E58E317004E74A4 /* MediaViewModel.swift in Sources */,
 				22AAD4961E47B91B00FDE171 /* MediaSortType.swift in Sources */,
 				224946991CC7E23400D5104C /* UIView+Layout.swift in Sources */,
 				22F4F4A81C064F8C0050FE2B /* DRMusicPlayer.swift in Sources */,

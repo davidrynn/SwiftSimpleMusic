@@ -127,7 +127,7 @@
                                 <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nnj-kX-mOT" id="b9t-6l-Gfm">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -163,6 +163,24 @@
                 </view>
             </objects>
             <point key="canvasLocation" x="2490" y="195"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="scP-Mb-y4W">
+            <objects>
+                <viewController id="VJ4-nU-Jeq" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ope-Ce-Znv"/>
+                        <viewControllerLayoutGuide type="bottom" id="AwU-yI-jjR"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="3Jx-ji-K5T">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gmb-ZQ-sN6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3689" y="216"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="kEi-US-sSY">
