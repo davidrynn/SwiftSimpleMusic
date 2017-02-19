@@ -105,19 +105,23 @@
         if currentSort == MediaSortType.songs {
         viewModel.didSelectSongAtRowAt(indexPath: indexPath, sortType: currentSort)
         } else {
-            
+            performSegue(withIdentifier: "toSubMediaVC", sender: self)
         }
     }
     
-    /*
      // MARK: - Navigation
      
      // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        
+        if segue.identifier == "toSubMediaVC" {
+            if let dVC = segue.destination as? SubMediaTableViewController {
+                 let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort)
+                dVC.inject(newViewModel)
+            }
+        }
      }
-     */
     
     //    MARK: - Actions
     

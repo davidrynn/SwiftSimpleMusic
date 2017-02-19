@@ -19,6 +19,7 @@ protocol MainMusicViewModelProtocol {
     func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage
     func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
+    func getSubViewModel(sortType: MediaSortType) -> MediaViewModel
 }
 
 protocol GroupCollectionProtocol {
@@ -190,6 +191,10 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         } else {
             player.playItem(item)
         }
+    }
+    
+    func getSubViewModel(sortType: MediaSortType) -> MediaViewModel  {
+        return MediaViewModel(mediaGroupCollection: mediaDictionary[sortType]!, sortType: sortType)
     }
     
 }

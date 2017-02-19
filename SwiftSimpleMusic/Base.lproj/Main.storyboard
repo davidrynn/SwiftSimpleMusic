@@ -152,6 +152,7 @@
                     <connections>
                         <outlet property="loopButton" destination="Kjz-tZ-yS3" id="Ot6-3N-Y5q"/>
                         <outlet property="shuffleButton" destination="S41-3b-VTx" id="h78-SR-fFB"/>
+                        <segue destination="3Wd-Xk-AWV" kind="show" identifier="toSubMediaVC" id="AKA-bG-0eZ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tki-dR-yCe" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -164,23 +165,33 @@
             </objects>
             <point key="canvasLocation" x="2490" y="195"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="scP-Mb-y4W">
+        <!--Sub Media Table View Controller-->
+        <scene sceneID="Irw-i7-0er">
             <objects>
-                <viewController id="VJ4-nU-Jeq" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Ope-Ce-Znv"/>
-                        <viewControllerLayoutGuide type="bottom" id="AwU-yI-jjR"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="3Jx-ji-K5T">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                <tableViewController id="3Wd-Xk-AWV" customClass="SubMediaTableViewController" customModule="SwiftSimpleMusic" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="Cj5-Hk-9h6">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="468"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gmb-ZQ-sN6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Hh9-x3-scO">
+                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Hh9-x3-scO" id="Fr4-Bx-qvD">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="3Wd-Xk-AWV" id="KQD-WP-4Xc"/>
+                            <outlet property="delegate" destination="3Wd-Xk-AWV" id="JKe-m2-JpY"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qmE-el-hka" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3689" y="216"/>
+            <point key="canvasLocation" x="3615" y="284"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="kEi-US-sSY">
