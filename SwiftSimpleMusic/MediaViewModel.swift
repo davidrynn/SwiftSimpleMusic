@@ -10,69 +10,87 @@ import Foundation
 import MediaPlayer
 
 struct MediaViewModel {
-    let mediaGroupCollection: GroupCollectionProtocol
+    //    let mediaGroupCollection: GroupCollectionProtocol
     let sortType: MediaSortType
+    let items: [MPMediaItem]
+    let player: MusicPlayerProtocol
+    var firstTimeTap: Bool = true
     
     func titleForSection(section: Int) -> String {
-            let itemSectionsCount = self.mediaGroupCollection.sections.count
-            if section < itemSectionsCount {
-                return mediaGroupCollection.sections[section].title
-            }
+        switch sortType {
+        case .albums, .audiobooks, .compilations:
+            return items[0].albumTitle ?? ""
+        case .artists:
+            return items[0].artist ?? ""
+        case .genres:
+            return items[0].genre ?? ""
+        case .songs:
+            return items[0].title ?? ""
+        case .playlists:
+            //         guard let playlist = mediaCollection as? MPMediaPlaylist else { return "" }
+            return  ""
+        case .podcasts:
+            return items[0].podcastTitle ?? ""
+        }
+        //            let itemSectionsCount = self.mediaGroupCollection.sections.count
+        //            if section < itemSectionsCount {
+        //                return mediaGroupCollection.sections[section].title
+        //            }
         return ""
     }
     
     func numberOfSections() -> Int{
-        return mediaGroupCollection.sections.count
+        return 1
     }
     
     func numberOfRowsForSection(section: Int) -> Int {
-        if section < mediaGroupCollection.sections.count {
-            return mediaGroupCollection.sections[section].range.length
-        }
-        return 0
+        //        if section < mediaGroupCollection.sections.count {
+        //            return mediaGroupCollection.sections[section].range.length
+        //        }
+        return items.count
     }
     
-    func sectionIndexTitles() -> [String] {
-        var indexTitles: [String] = []
-         let media = self.mediaGroupCollection
-            media.sections.forEach {indexTitles.append($0.title)}
-        
-        return indexTitles
-    }
+    //    func sectionIndexTitles() -> [String] {
+    //        var indexTitles: [String] = []
+    //         let media = self.mediaGroupCollection
+    //            media.sections.forEach {indexTitles.append($0.title)}
+    //
+    //        return indexTitles
+    //    }
     
-    func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage {
-        let media = mediaGroupCollection
-        let section = media.sections[indexPath.section]
-        let index = section.range.location + indexPath.row
+    func cellImage(indexPath: IndexPath) -> UIImage {
         let imageViewModifier = CGFloat(0.25)
         let cellImageSize = CGSize(width: 40*imageViewModifier, height: 40*imageViewModifier)
-        return media.items[index].artwork?.image(at: cellImageSize) ?? UIImage(named: "noteSml.png")!
+        return items[indexPath.row].artwork?.image(at: cellImageSize) ?? UIImage(named: "noteSml.png")!
     }
     
     func cellLabelText(indexPath: IndexPath) -> String {
-        let media = mediaGroupCollection
-        let section = media.sections[indexPath.section]
-        let index = section.range.location + indexPath.row
-        let mediaItem: MPMediaItem = media.items[index]
-        let mediaCollection: MPMediaItemCollection = media.collections[index]
-        
-        
-        switch sortType {
-        case .albums, .audiobooks, .compilations:
-            return mediaCollection.representativeItem?.albumTitle ?? ""
-        case .artists:
-            return mediaCollection.representativeItem?.artist ?? ""
-        case .genres:
-            return mediaCollection.representativeItem?.genre ?? ""
-        case .songs:
-            return mediaItem.title ?? ""
-        case .playlists:
-            guard let playlist = mediaCollection as? MPMediaPlaylist else { return "" }
-            return playlist.name ?? ""
-        case .podcasts:
-            return mediaItem.podcastTitle ?? ""
-        }
-        
+        let mediaItem: MPMediaItem = items[indexPath.row]
+        return mediaItem.title ?? ""
     }
-
+    
+    func didSelectSongAtRowAt(indexPath: IndexPath) {
+        
+        let item = items[indexPath.row]
+        if firstTimeTap {
+            player.setPlayerQueue(with: MPMediaItemCollection(items: items))
+        }
+        if let nowPlayingItem = player.currentSong {
+            
+            if (nowPlayingItem.title == item.title){
+                if player.currentPlaybackState() == MPMusicPlaybackState.playing {
+                    player.pause()
+                } else {
+                    player.playItem(item)
+                }
+                
+            } else {
+                player.stop()
+                player.playItem(item)
+            }
+        } else {
+            player.playItem(item)
+        }
+    }
+    
 }

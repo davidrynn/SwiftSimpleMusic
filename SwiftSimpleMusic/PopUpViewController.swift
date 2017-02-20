@@ -44,12 +44,10 @@ class PopUpViewController: UIViewController {
         if (player.currentSong != nil) {
             if let item = player.currentSong {
                 if let view = view as? PopUpView {
-                    let newImage: UIImage
-                    if let artwork = item.artwork {
-                        newImage = (artwork.image(at: view.imageView.bounds.size))!
-                    } else {
-                        newImage = UIImage(named: "noteSml.png")!
-                    }
+                    var newImage = UIImage(named: "noteSml.png")!
+                    if let artwork = item.artwork, let linkedImage = artwork.image(at: view.imageView.bounds.size)  {
+                        newImage = linkedImage
+                    } 
                     view.imageView.image = newImage
                     reloadInputViews()
                     view.setNeedsLayout()

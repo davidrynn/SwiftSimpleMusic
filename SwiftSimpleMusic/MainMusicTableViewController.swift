@@ -76,8 +76,6 @@
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-        
         return viewModel.numberOfRowsForSection(sortType: currentSort, section: section)
     }
     
@@ -112,20 +110,20 @@
      // MARK: - Navigation
      
      // In a storyboard-based application, you will often want to do a little preparation before navigation
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
         
         if segue.identifier == "toSubMediaVC" {
-            if let dVC = segue.destination as? SubMediaTableViewController {
-                 let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort)
+            if let index = tableView.indexPathForSelectedRow, let dVC = segue.destination as? SubMediaTableViewController {
+                let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort, indexPath: index)
                 dVC.inject(newViewModel)
             }
         }
-     }
+    }
     
     //    MARK: - Actions
-    
-    
     @IBAction func shuffleButtonTapped(_ sender: AnyObject) {
         
         if (player.shuffleMode == MPMusicShuffleMode.off || player.shuffleMode.rawValue == 0) {
@@ -190,12 +188,10 @@
     func inject(_ item: MusicPlayer) {
         player = item
         viewModel = MainMusicViewModel(player: item)
-
     }
     
     func assertDependencies() {
         assert(player != nil)
-    }
-    
+    }    
   }
   

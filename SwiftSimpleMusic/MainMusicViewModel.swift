@@ -11,7 +11,7 @@ import MediaPlayer
 
 protocol MainMusicViewModelProtocol {
     var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { get }
-    var player: MusicPlayer { get }
+    var player: MusicPlayerProtocol { get }
     func numberOfSections(sortType: MediaSortType) -> Int
     func titleForSection(sortType: MediaSortType, section: Int) -> String
     func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int
@@ -19,7 +19,7 @@ protocol MainMusicViewModelProtocol {
     func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage
     func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
-    func getSubViewModel(sortType: MediaSortType) -> MediaViewModel
+    func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel
 }
 
 protocol GroupCollectionProtocol {
@@ -80,12 +80,36 @@ struct GroupCollection: GroupCollectionProtocol {
     }
 }
 
+struct SubGroupCollection: GroupCollectionProtocol {
+    var items: [MPMediaItem]
+    var collections: [MPMediaItemCollection]
+    var query: MPMediaQuery
+    var sections: [MPMediaQuerySection]
+    
+    init(items: [MPMediaItem], collections: [MPMediaItemCollection], query: MPMediaQuery, sections: [MPMediaQuerySection]){
+        self.query = query
+        self.sections = sections
+        self.items = items
+        self.collections = collections
+    }
+    
+    func sectionHeaders() -> [String] {
+        var returnStringArray: [String] = []
+        if let sections = query.collectionSections {
+            for section in sections {
+                returnStringArray.append(section.title)
+            }
+        }
+        return returnStringArray
+    }
+}
+
 
 struct MainMusicViewModel: MainMusicViewModelProtocol {
     var mediaDictionary: [MediaSortType : GroupCollectionProtocol]
-    var player: MusicPlayer
+    var player: MusicPlayerProtocol
     
-    init (player: MusicPlayer) {
+    init (player: MusicPlayerProtocol) {
         self.mediaDictionary = [ MediaSortType.songs: SongsGroupCollection(),
                                  MediaSortType.albums: GroupCollection(query: MPMediaQuery.albums()),
                                  MediaSortType.artists: GroupCollection(query: MPMediaQuery.artists()),
@@ -193,8 +217,10 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         }
     }
     
-    func getSubViewModel(sortType: MediaSortType) -> MediaViewModel  {
-        return MediaViewModel(mediaGroupCollection: mediaDictionary[sortType]!, sortType: sortType)
+    func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel  {
+        let collectionItems = mediaDictionary[sortType]?.collections[indexPath.row]
+//        let subGroup = SubGroupCollection(items: <#T##[MPMediaItem]#>, collections: <#T##[MPMediaItemCollection]#>, query: <#T##MPMediaQuery#>, sections: <#T##[MPMediaQuerySection]#>)
+        return MediaViewModel(sortType: sortType, items: collectionItems?.items ?? [], player: player, firstTimeTap: true )
     }
     
 }

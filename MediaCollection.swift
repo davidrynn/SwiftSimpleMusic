@@ -19,6 +19,14 @@ struct MediaCollection {
         self.mediaTypes = self.mpMediaCollection.mediaTypes
     }
     
+    init (collection: MPMediaItemCollection) {
+        self.mpMediaCollection = collection
+        self.items = collection.items
+        self.representativeItem = self.mpMediaCollection.representativeItem
+        self.count = items.count
+        self.mediaTypes = self.mpMediaCollection.mediaTypes
+    }
+    
     fileprivate var mpMediaCollection: MPMediaItemCollection
 
 

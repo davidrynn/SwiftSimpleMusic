@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import MediaPlayer
 @testable import SwiftSimpleMusic
 
 class MainMusicTableViewControllerTest: XCTestCase {
@@ -35,7 +36,7 @@ class MainMusicTableViewControllerTest: XCTestCase {
 extension MainMusicTableViewControllerTest {
     struct MockMainMusicTableViewModel: MainMusicViewModelProtocol {
         var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { return [ : ] }
-        var player: MusicPlayer { return MusicPlayer() }
+        var player: MusicPlayerProtocol { return MusicPlayer() }
         func titleForSection(sortType: MediaSortType, section: Int) -> String {
             return "A"
         }
@@ -56,5 +57,24 @@ extension MainMusicTableViewControllerTest {
         }
         func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType) {
         }
+        
+        func setPlayerQueue(with: MPQuery) {
+            
+        }
+        
+        func getSubViewModel(sortType: MediaSortType) -> MediaViewModel {
+            return MediaViewModel(sortType: sortType, items: mediaDictionary[sortType]?.items ?? [])
+        }
+        
+        func numberOfSections(sortType: MediaSortType) -> Int {
+            return 1
+        }
+//        func titleForSection(sortType: MediaSortType, section: Int) -> String
+//        func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int
+//        func sectionIndexTitles(sortType: MediaSortType) -> [String]
+//        func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage
+//        func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String
+//        func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
+//        func getSubViewModel(sortType: MediaSortType) -> MediaViewModel
     }
 }

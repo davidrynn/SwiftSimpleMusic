@@ -16,6 +16,7 @@
 		224946991CC7E23400D5104C /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224946981CC7E23400D5104C /* UIView+Layout.swift */; };
 		22A802131E58E2CA004E74A4 /* SubMediaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A802121E58E2CA004E74A4 /* SubMediaTableViewController.swift */; };
 		22A802151E58E317004E74A4 /* MediaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A802141E58E317004E74A4 /* MediaViewModel.swift */; };
+		22A802171E59E1D7004E74A4 /* MediaViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A802161E59E1D7004E74A4 /* MediaViewModelTest.swift */; };
 		22AAD4651E47820C00FDE171 /* MainMusicTableViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AAD4641E47820C00FDE171 /* MainMusicTableViewControllerTest.swift */; };
 		22AAD4961E47B91B00FDE171 /* MediaSortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AAD4951E47B91B00FDE171 /* MediaSortType.swift */; };
 		22DED0AF1D84A26B00F9C7FA /* TopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DED0AE1D84A26B00F9C7FA /* TopViewController.swift */; };
@@ -59,6 +60,7 @@
 		224946981CC7E23400D5104C /* UIView+Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
 		22A802121E58E2CA004E74A4 /* SubMediaTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubMediaTableViewController.swift; sourceTree = "<group>"; };
 		22A802141E58E317004E74A4 /* MediaViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaViewModel.swift; sourceTree = "<group>"; };
+		22A802161E59E1D7004E74A4 /* MediaViewModelTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaViewModelTest.swift; sourceTree = "<group>"; };
 		22AAD4641E47820C00FDE171 /* MainMusicTableViewControllerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMusicTableViewControllerTest.swift; sourceTree = "<group>"; };
 		22AAD4951E47B91B00FDE171 /* MediaSortType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaSortType.swift; sourceTree = "<group>"; };
 		22DED0AE1D84A26B00F9C7FA /* TopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopViewController.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 			children = (
 				22AAD4641E47820C00FDE171 /* MainMusicTableViewControllerTest.swift */,
 				22DED0C91D88A39600F9C7FA /* MainMusicViewModelTest.swift */,
+				22A802161E59E1D7004E74A4 /* MediaViewModelTest.swift */,
 				223693741D0C8E6D003F0359 /* Info.plist */,
 			);
 			path = SwiftSimpleMusicTests;
@@ -349,6 +352,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				22AAD4651E47820C00FDE171 /* MainMusicTableViewControllerTest.swift in Sources */,
+				22A802171E59E1D7004E74A4 /* MediaViewModelTest.swift in Sources */,
 				22DED0CA1D88A39600F9C7FA /* MainMusicViewModelTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

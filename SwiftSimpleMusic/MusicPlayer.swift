@@ -10,11 +10,13 @@ import Foundation
 import MediaPlayer
 
 protocol MusicPlayerProtocol {
+    
     var currentSong: MPMediaItem? { get }
     var nextSong: MPMediaItem? { get }
     var previousSong: MPMediaItem? { get }
     var collection: MediaCollection { get }
     func play()
+    func playItem(_ item: MPMediaItem)
     func beginSeekingForward()
     func endSeeking()
     func beginRewind()
@@ -24,6 +26,8 @@ protocol MusicPlayerProtocol {
     func stop()
     func toggleShuffleMode()
     func currentPlaybackState()-> MPMusicPlaybackState
+    func setPlayerQueue(with: MPMediaQuery)
+    func setPlayerQueue(with: MPMediaItemCollection)
     
 }
 
@@ -92,14 +96,18 @@ class MusicPlayer: MusicPlayerProtocol {
         }
     }
     
-    func setPlayerQueue(_ query: MPMediaQuery) {
+    func setPlayerQueue(with query: MPMediaQuery) {
         player.setQueue(with: query)
         collection = MediaCollection(items: query.items!)
     }
     
+    func setPlayerQueue(with collection: MPMediaItemCollection) {
+        player.setQueue(with: collection)
+        self.collection = MediaCollection(collection: collection)
+    }
+    
     func play() {
         self.player.play()
-        
     }
     
     func playItem(_ item: MPMediaItem) {
