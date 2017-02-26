@@ -58,23 +58,30 @@ extension MainMusicTableViewControllerTest {
         func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType) {
         }
         
-        func setPlayerQueue(with: MPQuery) {
-            
+        func setPlayerQueue(with: MPMediaQuery) {
         }
         
-        func getSubViewModel(sortType: MediaSortType) -> MediaViewModel {
-            return MediaViewModel(sortType: sortType, items: mediaDictionary[sortType]?.items ?? [])
+        func setPlayerQueue(sortType: MediaSortType) {
+        }
+        
+        func getSubViewModel(sortType: MediaSortType,  indexPath: IndexPath) -> MediaViewModel {
+            return MediaViewModel(sortType: sortType, items: mediaDictionary[sortType]?.items ?? [], player: player, firstTimeTap: true)
         }
         
         func numberOfSections(sortType: MediaSortType) -> Int {
             return 1
         }
+//        var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { get }
+//        var player: MusicPlayerProtocol { get }
+//        func numberOfSections(sortType: MediaSortType) -> Int
 //        func titleForSection(sortType: MediaSortType, section: Int) -> String
 //        func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int
 //        func sectionIndexTitles(sortType: MediaSortType) -> [String]
 //        func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage
 //        func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String
 //        func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
-//        func getSubViewModel(sortType: MediaSortType) -> MediaViewModel
+//        func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel
+//        func setPlayerQueue(sortType: MediaSortType)
+
     }
 }

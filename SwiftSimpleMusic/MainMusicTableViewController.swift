@@ -21,10 +21,8 @@
   class MainMusicTableViewController: UITableViewController {
     
     var viewModel: MainMusicViewModelProtocol!
+    @IBOutlet weak var seachBar: UISearchBar!
     fileprivate var player: MusicPlayer!
-//    fileprivate var collection: MediaCollection!
-//    fileprivate var sectionStructs: [SectionStruct]!
-//    fileprivate var musicLists: MusicLists!
     fileprivate var currentSort: MediaSortType!
     lazy var players: [String] = {
         var temporaryPlayers = [String]()
@@ -47,6 +45,9 @@
         super.viewDidLoad()
         assertDependencies()
         setupSortButton()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        viewModel.setPlayerQueue(sortType: currentSort)
     }
     
     func setupSortButton(){
@@ -143,7 +144,7 @@
     }
     
     func sortButtonTapped(sender: UIButton) {
-        
+   //get switch off vc
         guard let titleLabel = sender.titleLabel else { return }
         guard let text = titleLabel.text else { return }
         switch text {
@@ -188,6 +189,7 @@
     func inject(_ item: MusicPlayer) {
         player = item
         viewModel = MainMusicViewModel(player: item)
+        
     }
     
     func assertDependencies() {

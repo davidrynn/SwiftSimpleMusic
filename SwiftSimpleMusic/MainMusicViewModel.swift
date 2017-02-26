@@ -20,13 +20,13 @@ protocol MainMusicViewModelProtocol {
     func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
     func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel
+    func setPlayerQueue(sortType: MediaSortType)
 }
 
 protocol GroupCollectionProtocol {
 
     var items: [MPMediaItem] { get set }
     var collections: [MPMediaItemCollection] { get set }
-    var query: MPMediaQuery { get }
     var sections: [MPMediaQuerySection] { get set }
     func sectionHeaders() -> [String]
 }
@@ -79,31 +79,6 @@ struct GroupCollection: GroupCollectionProtocol {
         return returnStringArray
     }
 }
-
-struct SubGroupCollection: GroupCollectionProtocol {
-    var items: [MPMediaItem]
-    var collections: [MPMediaItemCollection]
-    var query: MPMediaQuery
-    var sections: [MPMediaQuerySection]
-    
-    init(items: [MPMediaItem], collections: [MPMediaItemCollection], query: MPMediaQuery, sections: [MPMediaQuerySection]){
-        self.query = query
-        self.sections = sections
-        self.items = items
-        self.collections = collections
-    }
-    
-    func sectionHeaders() -> [String] {
-        var returnStringArray: [String] = []
-        if let sections = query.collectionSections {
-            for section in sections {
-                returnStringArray.append(section.title)
-            }
-        }
-        return returnStringArray
-    }
-}
-
 
 struct MainMusicViewModel: MainMusicViewModelProtocol {
     var mediaDictionary: [MediaSortType : GroupCollectionProtocol]
@@ -158,9 +133,18 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         guard let media = mediaDictionary[sortType] else { return UIImage(named: "noteSml.png")! }
         let section = media.sections[indexPath.section]
         let index = section.range.location + indexPath.row
+      
         let imageViewModifier = CGFloat(0.25)
         let cellImageSize = CGSize(width: 40*imageViewModifier, height: 40*imageViewModifier)
-        return media.items[index].artwork?.image(at: cellImageSize) ?? UIImage(named: "noteSml.png")!
+        
+        if sortType == .songs {
+                let mediaItem: MPMediaItem = media.items[index]
+            return mediaItem.artwork?.image(at: cellImageSize) ?? UIImage(named: "noteSml.png")!
+            
+        } else {
+            let collection = media.collections[index]
+            return collection.representativeItem?.artwork?.image(at: cellImageSize) ?? UIImage(named: "noteSml.png")!
+        }
     }
     
     func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String {
@@ -194,10 +178,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     //    }
     
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType) {
-        
-        guard let media = mediaDictionary[sortType] else { return }
-        let range = media.sections[indexPath.section].range
-        let item = media.items[range.location + indexPath.row]
+        guard let item = getItem(sortType: sortType, indexPath: indexPath) else { return }
         
         if let nowPlayingItem = player.currentSong {
             
@@ -218,9 +199,41 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     }
     
     func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel  {
+        
         let collectionItems = mediaDictionary[sortType]?.collections[indexPath.row]
-//        let subGroup = SubGroupCollection(items: <#T##[MPMediaItem]#>, collections: <#T##[MPMediaItemCollection]#>, query: <#T##MPMediaQuery#>, sections: <#T##[MPMediaQuerySection]#>)
+        
+        
         return MediaViewModel(sortType: sortType, items: collectionItems?.items ?? [], player: player, firstTimeTap: true )
+    }
+    
+    func setPlayerQueue(sortType: MediaSortType) {
+        //to make sure correct queue is setup when returning from subview
+        var query:MPMediaQuery
+        switch sortType {
+        case .albums:
+            query = MPMediaQuery.albums()
+        case .audiobooks:
+            query = MPMediaQuery.audiobooks()
+        case .compilations:
+            query = MPMediaQuery.compilations()
+        case .artists:
+            query = .artists()
+        case .genres:
+            query = .genres()
+        case .songs:
+            query = .songs()
+        case .playlists:
+            query = .playlists()
+        case .podcasts:
+            query = .podcasts()
+        }        
+        player.setPlayerQueue(with: query)
+    }
+    
+    func getItem(sortType: MediaSortType, indexPath: IndexPath) -> MPMediaItem? {
+        guard let media = mediaDictionary[sortType] else { return nil }
+        let range = media.sections[indexPath.section].range
+        return media.items[range.location + indexPath.row]
     }
     
 }

@@ -17,7 +17,7 @@ class MediaViewModelTest: XCTestCase {
     override func setUp() {
         super.setUp()
         let groupCollection: GroupCollectionProtocol = GroupCollection(query: MPMediaQuery.albums())
-        sut = MediaViewModel(mediaGroupCollection: groupCollection, sortType: .albums)
+        sut = MediaViewModel(sortType: .albums, items: groupCollection.items, player: MusicPlayer(), firstTimeTap: true)
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     

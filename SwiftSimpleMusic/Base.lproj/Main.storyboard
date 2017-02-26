@@ -122,9 +122,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="468"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="JJj-Lo-8hV">
+                            <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="26v-5j-zIP" id="Bqz-kv-uCS"/>
+                            </connections>
+                        </searchBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="nnj-kX-mOT">
-                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="72" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nnj-kX-mOT" id="b9t-6l-Gfm">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -151,6 +159,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="loopButton" destination="Kjz-tZ-yS3" id="Ot6-3N-Y5q"/>
+                        <outlet property="searchDisplayController" destination="vrR-hP-Dp1" id="P46-gq-ehz"/>
                         <outlet property="shuffleButton" destination="S41-3b-VTx" id="h78-SR-fFB"/>
                         <segue destination="3Wd-Xk-AWV" kind="show" identifier="toSubMediaVC" id="AKA-bG-0eZ"/>
                     </connections>
@@ -162,6 +171,15 @@
                     <color key="backgroundColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <accessibility key="accessibilityConfiguration" label="Top Bar"/>
                 </view>
+                <searchDisplayController id="vrR-hP-Dp1">
+                    <connections>
+                        <outlet property="delegate" destination="26v-5j-zIP" id="P6b-rl-yjq"/>
+                        <outlet property="searchBar" destination="JJj-Lo-8hV" id="2B3-qY-TWW"/>
+                        <outlet property="searchContentsController" destination="26v-5j-zIP" id="LXq-Pf-ydq"/>
+                        <outlet property="searchResultsDataSource" destination="26v-5j-zIP" id="fDc-Qd-ib3"/>
+                        <outlet property="searchResultsDelegate" destination="26v-5j-zIP" id="hE0-df-h3J"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="2490" y="195"/>
         </scene>

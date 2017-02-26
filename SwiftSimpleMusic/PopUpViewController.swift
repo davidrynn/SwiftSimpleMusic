@@ -12,10 +12,20 @@ import MediaPlayer
 class PopUpViewController: UIViewController {
     
     var player: MusicPlayer!
+    var topBarOpacity: CGFloat = 1 {
+        didSet {
+            let view = self.view as! PopUpView
+            view.topBarOpacity = topBarOpacity
+            view.layoutSubviews()
+        }
+    }
     
     override func loadView() {
         super.loadView()
-        self.view = PopUpView.instanceFromNib()
+        let popUpView = PopUpView.instanceFromNib()
+ //       popUpView.topBar = PopUpTopBarView.instanceFromNib()
+        self.view = popUpView
+
         setupNotifications()
     }
     override func viewDidLoad() {
@@ -24,10 +34,15 @@ class PopUpViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+    
     func setupNotifications() {
         
         let notificationCenter: NotificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(updateArtworkImage), name: NSNotification.Name.MPMusicPlayerControllerNowPlayingItemDidChange, object: player)
+        notificationCenter.addObserver(self, selector: #selector(displayErrorMessage), name: NSNotification.Name(rawValue: "errorMessage"), object: nil)
         
     }
     
@@ -47,12 +62,27 @@ class PopUpViewController: UIViewController {
                     var newImage = UIImage(named: "noteSml.png")!
                     if let artwork = item.artwork, let linkedImage = artwork.image(at: view.imageView.bounds.size)  {
                         newImage = linkedImage
-                    } 
+                    }
+                    view.topBarImageView.image = newImage
                     view.imageView.image = newImage
-                    reloadInputViews()
-                    view.setNeedsLayout()
+                    if let labelText = item.title {
+                        view.labelText = labelText
+                        view.topBarLabel.text = labelText
+                    }
+//                    reloadInputViews()
+//                    view.setNeedsLayout()
+                    view.layoutSubviews()
+                    view.topBar.layoutSubviews()
                 }
             }
+        }
+    }
+    
+    func displayErrorMessage(notification: Notification){
+        if let message = notification.userInfo?["message"] as? String {
+            let view = getView()
+            view.labelText = message
+            view.layoutSubviews()
         }
     }
     
