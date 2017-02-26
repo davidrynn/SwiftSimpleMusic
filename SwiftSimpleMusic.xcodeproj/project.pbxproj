@@ -15,6 +15,7 @@
 		224946931CC7D72800D5104C /* PopUpTopBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 224946921CC7D72800D5104C /* PopUpTopBar.xib */; };
 		224946951CC7D78400D5104C /* PopUpTopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224946941CC7D78400D5104C /* PopUpTopBarView.swift */; };
 		224946991CC7E23400D5104C /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224946981CC7E23400D5104C /* UIView+Layout.swift */; };
+		229D59911E6384E30002F076 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 229D59901E6384E30002F076 /* Storyboard.storyboard */; };
 		22A802131E58E2CA004E74A4 /* SubMediaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A802121E58E2CA004E74A4 /* SubMediaTableViewController.swift */; };
 		22A802151E58E317004E74A4 /* MediaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A802141E58E317004E74A4 /* MediaViewModel.swift */; };
 		22A802171E59E1D7004E74A4 /* MediaViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A802161E59E1D7004E74A4 /* MediaViewModelTest.swift */; };
@@ -33,7 +34,6 @@
 		22DED0CC1D88A4B600F9C7FA /* MediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DED0CB1D88A4B600F9C7FA /* MediaItem.swift */; };
 		22DED0CE1D88A87500F9C7FA /* MPMediaItem+protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DED0CD1D88A87500F9C7FA /* MPMediaItem+protocol.swift */; };
 		22F4F48E1BFF92520050FE2B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F4F48D1BFF92520050FE2B /* AppDelegate.swift */; };
-		22F4F4931BFF92520050FE2B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22F4F4911BFF92520050FE2B /* Main.storyboard */; };
 		22F4F4951BFF92520050FE2B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22F4F4941BFF92520050FE2B /* Assets.xcassets */; };
 		22F4F4981BFF92520050FE2B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22F4F4961BFF92520050FE2B /* LaunchScreen.storyboard */; };
 		22F4F4A81C064F8C0050FE2B /* DRMusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F4F4A71C064F8C0050FE2B /* DRMusicPlayer.swift */; };
@@ -60,6 +60,7 @@
 		224946921CC7D72800D5104C /* PopUpTopBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopUpTopBar.xib; sourceTree = "<group>"; };
 		224946941CC7D78400D5104C /* PopUpTopBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpTopBarView.swift; sourceTree = "<group>"; };
 		224946981CC7E23400D5104C /* UIView+Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
+		229D59901E6384E30002F076 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		22A802121E58E2CA004E74A4 /* SubMediaTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubMediaTableViewController.swift; sourceTree = "<group>"; };
 		22A802141E58E317004E74A4 /* MediaViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaViewModel.swift; sourceTree = "<group>"; };
 		22A802161E59E1D7004E74A4 /* MediaViewModelTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaViewModelTest.swift; sourceTree = "<group>"; };
@@ -79,7 +80,6 @@
 		22DED0CD1D88A87500F9C7FA /* MPMediaItem+protocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MPMediaItem+protocol.swift"; sourceTree = "<group>"; };
 		22F4F48A1BFF92520050FE2B /* SwiftSimpleMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftSimpleMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22F4F48D1BFF92520050FE2B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		22F4F4921BFF92520050FE2B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		22F4F4941BFF92520050FE2B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		22F4F4971BFF92520050FE2B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		22F4F4991BFF92520050FE2B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -209,7 +209,7 @@
 				22F4F4A71C064F8C0050FE2B /* DRMusicPlayer.swift */,
 				22F4F4A21C0644BA0050FE2B /* Supporting Files */,
 				22F4F4A01C0644760050FE2B /* Views/ Controllers */,
-				22F4F4911BFF92520050FE2B /* Main.storyboard */,
+				229D59901E6384E30002F076 /* Storyboard.storyboard */,
 				22F4F4941BFF92520050FE2B /* Assets.xcassets */,
 				22F4F4961BFF92520050FE2B /* LaunchScreen.storyboard */,
 				22F4F4991BFF92520050FE2B /* Info.plist */,
@@ -351,7 +351,7 @@
 				224946931CC7D72800D5104C /* PopUpTopBar.xib in Resources */,
 				2249468B1CC7CF9700D5104C /* PopUpView.xib in Resources */,
 				22F4F4951BFF92520050FE2B /* Assets.xcassets in Resources */,
-				22F4F4931BFF92520050FE2B /* Main.storyboard in Resources */,
+				229D59911E6384E30002F076 /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,14 +408,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		22F4F4911BFF92520050FE2B /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				22F4F4921BFF92520050FE2B /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		22F4F4961BFF92520050FE2B /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
