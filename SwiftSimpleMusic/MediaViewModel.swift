@@ -35,7 +35,6 @@ struct MediaViewModel {
         case .podcasts:
             return items[0].podcastTitle ?? ""
         }
-
     }
     
     func numberOfSections() -> Int{

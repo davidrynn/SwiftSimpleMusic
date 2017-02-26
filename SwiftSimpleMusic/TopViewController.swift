@@ -57,11 +57,9 @@ class TopViewController: UIViewController {
     //    MARK: Actions
     
     func detectPan(_ recognizer: UIPanGestureRecognizer){
-        
         guard let popUpView = popUpViewController.view as? PopUpView else {
             return
         }
-        
         let translation = recognizer.translation(in: self.view)
         popUpView.center.y = lastLocation.y + translation.y
         if recognizer.state == UIGestureRecognizerState.ended {
@@ -80,6 +78,7 @@ class TopViewController: UIViewController {
                     } else {
                         popUpView.y = self.popUpViewY
                     }                    
+
                 }
             }, completion: nil)
         }
