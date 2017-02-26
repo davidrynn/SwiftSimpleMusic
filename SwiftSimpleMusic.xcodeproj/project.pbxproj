@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		220704A71E6369E700F31079 /* UIView + DropShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220704A61E6369E700F31079 /* UIView + DropShadow.swift */; };
 		2249468B1CC7CF9700D5104C /* PopUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2249468A1CC7CF9700D5104C /* PopUpView.xib */; };
 		2249468D1CC7D04700D5104C /* PopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2249468C1CC7D04700D5104C /* PopUpView.swift */; };
 		2249468F1CC7D2C900D5104C /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2249468E1CC7D2C900D5104C /* MusicPlayer.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		220704A61E6369E700F31079 /* UIView + DropShadow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView + DropShadow.swift"; sourceTree = "<group>"; };
 		223693701D0C8E6D003F0359 /* SwiftSimpleMusicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftSimpleMusicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		223693741D0C8E6D003F0359 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2249468A1CC7CF9700D5104C /* PopUpView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopUpView.xib; sourceTree = "<group>"; };
@@ -102,6 +104,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		220704A81E6369F300F31079 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				224946981CC7E23400D5104C /* UIView+Layout.swift */,
+				220704A61E6369E700F31079 /* UIView + DropShadow.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 		223693711D0C8E6D003F0359 /* SwiftSimpleMusicTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,11 +202,11 @@
 		22F4F48C1BFF92520050FE2B /* SwiftSimpleMusic */ = {
 			isa = PBXGroup;
 			children = (
+				220704A81E6369F300F31079 /* Extensions */,
 				22AAD4941E47B87700FDE171 /* Enums */,
 				22DED0B31D84B28D00F9C7FA /* MusicPlayer */,
 				22F86CD51CFCEFCE0058C9D3 /* Models */,
 				22F4F4A71C064F8C0050FE2B /* DRMusicPlayer.swift */,
-				224946981CC7E23400D5104C /* UIView+Layout.swift */,
 				22F4F4A21C0644BA0050FE2B /* Supporting Files */,
 				22F4F4A01C0644760050FE2B /* Views/ Controllers */,
 				22F4F4911BFF92520050FE2B /* Main.storyboard */,
@@ -370,6 +381,7 @@
 				22DED0C81D88957200F9C7FA /* MainMusicViewModel.swift in Sources */,
 				224946911CC7D5B400D5104C /* PopUpViewController.swift in Sources */,
 				22DED0AF1D84A26B00F9C7FA /* TopViewController.swift in Sources */,
+				220704A71E6369E700F31079 /* UIView + DropShadow.swift in Sources */,
 				2249468D1CC7D04700D5104C /* PopUpView.swift in Sources */,
 				22A802151E58E317004E74A4 /* MediaViewModel.swift in Sources */,
 				22AAD4961E47B91B00FDE171 /* MediaSortType.swift in Sources */,

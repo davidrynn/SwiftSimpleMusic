@@ -42,8 +42,6 @@ class TopViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         popUpViewController.view.frame = CGRect(x: 0, y: self.popUpViewY, width: self.view.frame.size.width, height: self.view.height)
-        
-        //        playbackControlView.frame = CGRectMake(0, self.view.height*7/8, self.view.width, self.view.height*7/8)
         self.view.bringSubview(toFront: playbackControlView)
         
     }
@@ -59,10 +57,11 @@ class TopViewController: UIViewController {
     //    MARK: Actions
     
     func detectPan(_ recognizer: UIPanGestureRecognizer){
-        
-        guard let popUpView = popUpViewController.view as? PopUpView else { return }
+        guard let popUpView = popUpViewController.view as? PopUpView else {
+            return
+        }
         let translation = recognizer.translation(in: self.view)
-        popUpViewController.view.center.y = lastLocation.y + translation.y
+        popUpView.center.y = lastLocation.y + translation.y
         if recognizer.state == UIGestureRecognizerState.ended {
             UIView.animate(withDuration: 0.1, delay: 0.0, options: UIViewAnimationOptions(), animations: {
                 //if direction up
@@ -78,8 +77,8 @@ class TopViewController: UIViewController {
                         popUpView.centerVerticallyInSuperview()
                     } else {
                         popUpView.y = self.popUpViewY
-                    }
-                    
+                    }                    
+
                 }
             }, completion: nil)
         }
@@ -87,7 +86,7 @@ class TopViewController: UIViewController {
         //fade top bar
         let fadeStartY: CGFloat = self.view.height/2
         if popUpView.y < fadeStartY {
-            popUpViewController.topBarOpacity = CGFloat(popUpViewController.view.y/fadeStartY)
+            popUpViewController.topBarOpacity = CGFloat(popUpView.y/fadeStartY)
         } else {
             popUpViewController.topBarOpacity = 1.0
         }

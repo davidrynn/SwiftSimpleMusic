@@ -10,19 +10,32 @@ import UIKit
 
 class PlayButton: UIButton {
     override func draw(_ rect: CGRect) {
-        let width: CGFloat = rect.size.width/4;
-        let height = rect.size.height/4;
+        let width: CGFloat = rect.size.width/2;
+        let height = rect.size.height/2;
         let x = rect.size.width/2 - width/2;
         let y = rect.size.height/2 - height/2;
         let small = CGRect(x: x, y: y, width: width, height: height);
         
-        let circleRect = CGRect(x: rect.size.width*0.05, y: rect.size.height*0.05, width: rect.size.width*0.9, height: rect.size.height*0.9);
+        //shadow
+        let circleRect2 = CGRect(x: rect.size.width*0.1 + 1, y: rect.size.height*0.1 + 1, width: rect.size.width*0.8, height: rect.size.height*0.8)
+        //circle
+        let circle2: UIBezierPath = UIBezierPath.init(ovalIn: circleRect2)
+        circle2.lineWidth = 5
+        let blackAlpha = UIColor.black.withAlphaComponent(0.1)
+        blackAlpha.setStroke()
+        circle2.stroke()
+        
+        let circleRect = CGRect(x: rect.size.width*0.1, y: rect.size.height*0.1, width: rect.size.width*0.8, height: rect.size.height*0.8)
         //circle
         let circle: UIBezierPath = UIBezierPath.init(ovalIn: circleRect)
         tintColor.setStroke()
+        UIColor.lightGray.setFill()
         circle.lineWidth = 1
+        circle.fill()
         circle.stroke()
-
+        
+        
+        
         //// Bezier Drawing
         let bezierPath: UIBezierPath = UIBezierPath()
         bezierPath.move(to: CGPoint(x: small.minX + small.size.width/4, y: small.minY))
@@ -33,6 +46,6 @@ class PlayButton: UIButton {
         bezierPath.lineWidth = 1
         bezierPath.fill()
     }
-
+    
     
 }

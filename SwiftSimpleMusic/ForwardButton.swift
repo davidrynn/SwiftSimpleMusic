@@ -11,8 +11,8 @@ import UIKit
 class ForwardButton: UIButton {
 
     override func draw(_ rect: CGRect) {
-        let width: CGFloat = rect.size.width/4;
-        let height = rect.size.height/4;
+        let width: CGFloat = rect.size.width/2;
+        let height = rect.size.height/2;
         let x = rect.size.width/2 - width/2;
         let y = rect.size.height/2 - height/2;
         let small = CGRect(x: x, y: y, width: width, height: height);

@@ -78,6 +78,8 @@ class MusicPlayer: MusicPlayerProtocol {
         self.collection = MediaCollection(items: items)
         self.player.setQueue(with: MPMediaQuery.songs())
         self.shuffleMode = player.shuffleMode
+        player.beginGeneratingPlaybackNotifications()
+
         
     }
     
