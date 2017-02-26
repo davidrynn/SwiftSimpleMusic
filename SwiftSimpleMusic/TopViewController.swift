@@ -60,28 +60,24 @@ class TopViewController: UIViewController {
     
     func detectPan(_ recognizer: UIPanGestureRecognizer){
         
-        let view = popUpViewController.view as? PopUpView
-        let imageView = view?.imageView
-        
+        guard let popUpView = popUpViewController.view as? PopUpView else { return }
         let translation = recognizer.translation(in: self.view)
         popUpViewController.view.center.y = lastLocation.y + translation.y
-        let transationalY = popUpViewController.view.center.y
-        
         if recognizer.state == UIGestureRecognizerState.ended {
             UIView.animate(withDuration: 0.1, delay: 0.0, options: UIViewAnimationOptions(), animations: {
                 //if direction up
                 if translation.y < 0 {
-                if self.popUpViewController.view.center.y >= self.view.height*2/3 {
-                    self.popUpViewController.view.y = self.popUpViewY
+                if popUpView.center.y >= self.view.height*2/3 {
+                    popUpView.y = self.popUpViewY
                 } else {
-                    self.popUpViewController.view.centerVerticallyInSuperview()
+                    popUpView.centerVerticallyInSuperview()
                 }
                 } else {
                     //if direction down
-                    if self.popUpViewController.view.center.y < self.view.height/3 {
-                        self.popUpViewController.view.centerVerticallyInSuperview()
+                    if popUpView.center.y < self.view.height/3 {
+                        popUpView.centerVerticallyInSuperview()
                     } else {
-                        self.popUpViewController.view.y = self.popUpViewY
+                        popUpView.y = self.popUpViewY
                     }
                     
                 }
@@ -90,7 +86,7 @@ class TopViewController: UIViewController {
         
         //fade top bar
         let fadeStartY: CGFloat = self.view.height/2
-        if popUpViewController.view.y < fadeStartY {
+        if popUpView.y < fadeStartY {
             popUpViewController.topBarOpacity = CGFloat(popUpViewController.view.y/fadeStartY)
         } else {
             popUpViewController.topBarOpacity = 1.0

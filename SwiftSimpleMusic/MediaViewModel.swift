@@ -35,11 +35,6 @@ struct MediaViewModel {
         case .podcasts:
             return items[0].podcastTitle ?? ""
         }
-        //            let itemSectionsCount = self.mediaGroupCollection.sections.count
-        //            if section < itemSectionsCount {
-        //                return mediaGroupCollection.sections[section].title
-        //            }
-        return ""
     }
     
     func numberOfSections() -> Int{

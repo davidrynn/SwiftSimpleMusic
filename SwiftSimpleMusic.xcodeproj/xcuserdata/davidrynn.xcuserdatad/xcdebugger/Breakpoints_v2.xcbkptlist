@@ -44,11 +44,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftSimpleMusic/MediaViewModel.swift"
-            timestampString = "509773933.243009"
+            timestampString = "509823110.422081"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "87"
-            endingLineNumber = "87"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
             landmarkName = "didSelectSongAtRowAt(indexPath:)"
             landmarkType = "7">
          </BreakpointContent>
