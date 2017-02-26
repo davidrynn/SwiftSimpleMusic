@@ -77,7 +77,7 @@ class MusicPlayer: MusicPlayerProtocol {
         let items = query.items!
         self.collection = MediaCollection(items: items)
         self.player.setQueue(with: MPMediaQuery.songs())
-        self.shuffleMode = MusicPlayer.shuffleModeFromDefaults()
+        self.shuffleMode = player.shuffleMode
         player.beginGeneratingPlaybackNotifications()
         
     }
@@ -87,14 +87,14 @@ class MusicPlayer: MusicPlayerProtocol {
     //        return MediaCollection(items: items)
     //    }
     
-    fileprivate class func shuffleModeFromDefaults() -> MPMusicShuffleMode {
-        let defaults = UserDefaults.standard
-        if let shuffleModeRaw: Int = defaults.integer(forKey: "shuffleMode") {
-            return MPMusicShuffleMode(rawValue: shuffleModeRaw)!
-        } else {
-            return MPMusicShuffleMode.off
-        }
-    }
+//    fileprivate class func shuffleModeFromDefaults() -> MPMusicShuffleMode {
+//        let defaults = UserDefaults.standard
+//        if let shuffleModeRaw: Int = defaults.integer(forKey: "shuffleMode") {
+//            return MPMusicShuffleMode(rawValue: shuffleModeRaw)!
+//        } else {
+//            return MPMusicShuffleMode.off
+//        }
+//    }
     
     func setPlayerQueue(with query: MPMediaQuery) {
         player.setQueue(with: query)

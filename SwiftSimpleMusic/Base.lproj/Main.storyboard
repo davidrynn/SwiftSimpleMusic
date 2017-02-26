@@ -23,10 +23,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xih-1v-GnH">
-                                <rect key="frame" x="0.0" y="600.5" width="375" height="66.5"/>
+                                <rect key="frame" x="0.0" y="600" width="375" height="67"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJg-oP-G78" userLabel="Forward Button" customClass="ForwardButton" customModule="SwiftSimpleMusic" customModuleProvider="target">
-                                        <rect key="frame" x="313" y="18.5" width="30" height="30"/>
+                                        <rect key="frame" x="313" y="19" width="30" height="30"/>
                                         <gestureRecognizers/>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="jE3-OQ-k7f" appends="YES" id="JyK-dN-slB"/>
@@ -34,7 +34,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dII-fZ-MtB" userLabel="Back Button" customClass="BackButton" customModule="SwiftSimpleMusic" customModuleProvider="target">
-                                        <rect key="frame" x="32" y="18.5" width="30" height="30"/>
+                                        <rect key="frame" x="32" y="19" width="30" height="30"/>
                                         <gestureRecognizers/>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="6br-8e-tfw" appends="YES" id="Qv8-82-yyS"/>
@@ -42,7 +42,10 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O32-5w-fn0" customClass="PlayButton" customModule="SwiftSimpleMusic" customModuleProvider="target">
-                                        <rect key="frame" x="172.5" y="18" width="30" height="30"/>
+                                        <rect key="frame" x="165" y="11" width="45" height="45"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="45" id="ykD-ST-moc"/>
+                                        </constraints>
                                         <connections>
                                             <action selector="playButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Lu7-Q7-UHJ"/>
                                         </connections>
@@ -50,12 +53,13 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
+                                    <constraint firstItem="O32-5w-fn0" firstAttribute="centerY" secondItem="dII-fZ-MtB" secondAttribute="centerY" id="CTZ-G6-gwZ"/>
                                     <constraint firstItem="dII-fZ-MtB" firstAttribute="centerX" secondItem="Xih-1v-GnH" secondAttribute="centerX" multiplier="0.25" id="IYp-b0-oer"/>
                                     <constraint firstItem="sJg-oP-G78" firstAttribute="centerX" secondItem="Xih-1v-GnH" secondAttribute="centerX" multiplier="1.75" id="K5B-k1-vbE"/>
                                     <constraint firstItem="dII-fZ-MtB" firstAttribute="centerY" secondItem="Xih-1v-GnH" secondAttribute="centerY" id="TQx-cz-Az8"/>
-                                    <constraint firstItem="O32-5w-fn0" firstAttribute="centerY" secondItem="Xih-1v-GnH" secondAttribute="centerY" id="UYD-sA-qXg"/>
                                     <constraint firstItem="sJg-oP-G78" firstAttribute="centerY" secondItem="Xih-1v-GnH" secondAttribute="centerY" id="ZXj-Vc-deS"/>
-                                    <constraint firstItem="O32-5w-fn0" firstAttribute="centerX" secondItem="Xih-1v-GnH" secondAttribute="centerX" id="iyS-Mw-ITZ"/>
+                                    <constraint firstItem="O32-5w-fn0" firstAttribute="top" secondItem="Xih-1v-GnH" secondAttribute="top" constant="11" id="eaa-yq-gGd"/>
+                                    <constraint firstItem="O32-5w-fn0" firstAttribute="centerX" secondItem="Xih-1v-GnH" secondAttribute="centerX" id="mIo-yT-jBI"/>
                                 </constraints>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9fG-h3-ycH">
