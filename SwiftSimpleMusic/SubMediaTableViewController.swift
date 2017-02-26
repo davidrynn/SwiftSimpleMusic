@@ -24,6 +24,9 @@ class SubMediaTableViewController: UITableViewController {
         return viewModel.numberOfSections()
     }
 
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return viewModel.titleForSection(section: section)
+    }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return viewModel.numberOfRowsForSection(section: section)
