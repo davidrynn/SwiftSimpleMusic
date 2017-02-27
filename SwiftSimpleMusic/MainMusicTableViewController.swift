@@ -21,14 +21,14 @@
   class MainMusicTableViewController: UITableViewController {
     
     var viewModel: MainMusicViewModelProtocol!
-    @IBOutlet weak var seachBar: UISearchBar!
+    var searchController: UISearchController!
     fileprivate var player: MusicPlayer!
     fileprivate var currentSort: MediaSortType!
     lazy var players: [String] = {
         var temporaryPlayers = [String]()
         temporaryPlayers.append("John Doe")
         return temporaryPlayers
-        }()
+    }()
     var arraySetOutsideClass: [String]? {
         didSet {
             if let stringArray = arraySetOutsideClass {
@@ -45,6 +45,7 @@
         super.viewDidLoad()
         assertDependencies()
         setupSortButton()
+        setupSearchBar()
     }
     override func viewWillAppear(_ animated: Bool) {
         viewModel.setPlayerQueue(sortType: currentSort)
@@ -64,6 +65,19 @@
         self.navigationItem.titleView = buttonView
     }
     
+    func setupSearchBar(){
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.delegate = self
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        
+        searchController.searchBar.sizeToFit()
+        tableView.tableHeaderView = searchController.searchBar
+        
+        // Sets this view controller as presenting view controller for the search interface
+        definesPresentationContext = true
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -81,7 +95,7 @@
     }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-
+        
         return viewModel.sectionIndexTitles(sortType: currentSort)
     }
     
@@ -101,16 +115,16 @@
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if currentSort == MediaSortType.songs {
-        viewModel.didSelectSongAtRowAt(indexPath: indexPath, sortType: currentSort)
+        if currentSort == MediaSortType.songs || viewModel.isSearching {
+            viewModel.didSelectSongAtRowAt(indexPath: indexPath, sortType: currentSort)
         } else {
             performSegue(withIdentifier: "toSubMediaVC", sender: self)
         }
     }
     
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
+    // MARK: - Navigation
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
@@ -144,18 +158,18 @@
     }
     
     func sortButtonTapped(sender: UIButton) {
-   //get switch off vc
+        //get switch off vc
         guard let titleLabel = sender.titleLabel else { return }
         guard let text = titleLabel.text else { return }
         switch text {
         case MediaSortType.albums.description:
             sender.setTitle(MediaSortType.artists.description, for: UIControlState.normal)
             currentSort = .artists
-
+            
         case MediaSortType.artists.description:
             sender.setTitle(MediaSortType.genres.description, for: UIControlState.normal)
             currentSort = .genres
-
+            
         case MediaSortType.genres.description:
             sender.setTitle(MediaSortType.playlists.description, for: UIControlState.normal)
             currentSort = .playlists
@@ -194,6 +208,20 @@
     
     func assertDependencies() {
         assert(player != nil)
-    }    
+    }
   }
-  
+  extension MainMusicTableViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        
+        if let searchText = searchController.searchBar.text {
+            viewModel.searchMedia(searchText: searchText)            
+            tableView.reloadData()
+        }
+    }
+  }
+  extension MainMusicTableViewController: UISearchControllerDelegate {
+    func didDismissSearchController(_ searchController: UISearchController) {
+        viewModel.isSearching = false
+        tableView.reloadData()
+    }
+  }

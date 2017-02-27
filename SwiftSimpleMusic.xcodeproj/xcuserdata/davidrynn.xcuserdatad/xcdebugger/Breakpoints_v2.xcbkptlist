@@ -28,11 +28,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftSimpleMusic/MainMusicViewModel.swift"
-            timestampString = "509770421.2344"
+            timestampString = "509846404.439537"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "220"
-            endingLineNumber = "220"
+            startingLineNumber = "299"
+            endingLineNumber = "299"
             landmarkName = "getSubViewModel(sortType:indexPath:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -50,22 +50,6 @@
             startingLineNumber = "74"
             endingLineNumber = "74"
             landmarkName = "didSelectSongAtRowAt(indexPath:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SwiftSimpleMusic/PopUpViewController.swift"
-            timestampString = "509828719.982609"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
-            landmarkName = "updateArtworkImage()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

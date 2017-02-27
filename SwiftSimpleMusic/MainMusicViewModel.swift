@@ -12,6 +12,7 @@ import MediaPlayer
 protocol MainMusicViewModelProtocol {
     var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { get }
     var player: MusicPlayerProtocol { get }
+    var isSearching: Bool { get set }
     func numberOfSections(sortType: MediaSortType) -> Int
     func titleForSection(sortType: MediaSortType, section: Int) -> String
     func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int
@@ -21,6 +22,13 @@ protocol MainMusicViewModelProtocol {
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
     func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel
     func setPlayerQueue(sortType: MediaSortType)
+    mutating func searchMedia(searchText: String)
+}
+
+struct FilteredMedia {
+    var songs: [MPMediaItem]
+    var albums: [MPMediaItemCollection]
+    var artists: [MPMediaItemCollection]
 }
 
 protocol GroupCollectionProtocol {
@@ -96,9 +104,11 @@ struct GroupCollection: GroupCollectionProtocol {
 }
 
 struct MainMusicViewModel: MainMusicViewModelProtocol {
+    
     var mediaDictionary: [MediaSortType : GroupCollectionProtocol]
     var player: MusicPlayerProtocol
-    
+    var isSearching: Bool = false
+    var filteredMedia: FilteredMedia
     init (player: MusicPlayerProtocol) {
         self.mediaDictionary = [ MediaSortType.songs: SongsGroupCollection(),
                                  MediaSortType.albums: GroupCollection(query: MPMediaQuery.albums()),
@@ -109,56 +119,99 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
                                  MediaSortType.compilations: GroupCollection(query: MPMediaQuery.compilations()),
                                  MediaSortType.audiobooks: GroupCollection(query: MPMediaQuery.audiobooks())]
         self.player = player
+        self.filteredMedia = FilteredMedia(songs: [], albums: [], artists: [])
     }
     
     func titleForSection(sortType: MediaSortType, section: Int) -> String {
-        
-        if let itemDict: GroupCollectionProtocol = self.mediaDictionary[sortType] {
-            let itemSections = itemDict.sections
-            if section < itemSections.count {
-                return itemSections[section].title
+        if isSearching {
+            let sectionsArr = ["Songs", "Albums", "Artists"]
+            return sectionsArr[section]
+        } else {
+            
+            if let itemDict: GroupCollectionProtocol = self.mediaDictionary[sortType] {
+                let itemSections = itemDict.sections
+                if section < itemSections.count {
+                    return itemSections[section].title
+                }
             }
+            return ""
         }
-        return ""
     }
     
     func numberOfSections(sortType: MediaSortType) -> Int{
-        guard let sortedGrouping = mediaDictionary[sortType] else { return 0 }
-        if sortType == .playlists { return 1 }
-        return sortedGrouping.sections.count
+        if isSearching {
+            return 3
+        } else {
+            guard let sortedGrouping = mediaDictionary[sortType] else { return 0 }
+            if sortType == .playlists { return 1 }
+            return sortedGrouping.sections.count
+        }
     }
     func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int {
-        guard let media = self.mediaDictionary[sortType] else { return 0 }
-        if section < media.sections.count {
-            return media.sections[section].range.length
+        if isSearching {
+            switch section {
+            case 0:
+                return filteredMedia.songs.count
+            case 1:
+                return filteredMedia.albums.count
+            case 2:
+                return filteredMedia.artists.count
+            default:
+                return 0
+            }
+        } else {
+            guard let media = self.mediaDictionary[sortType] else { return 0 }
+            if section < media.sections.count {
+                return media.sections[section].range.length
+            }
+            
+            return 0
         }
-        
-        return 0
     }
     
     func sectionIndexTitles(sortType: MediaSortType) -> [String] {
-        var indexTitles: [String] = []
-        if let media = self.mediaDictionary[sortType] {
-            media.sections.forEach {indexTitles.append($0.title)}
+        if isSearching {
+            return []
+        } else{
+            var indexTitles: [String] = []
+            if let media = self.mediaDictionary[sortType] {
+                media.sections.forEach {indexTitles.append($0.title)}
+            }
+            return indexTitles
         }
-        return indexTitles
     }
     
     func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage {
-        guard let media = mediaDictionary[sortType] else { return UIImage(named: "noteSml.png")! }
-        let section = media.sections[indexPath.section]
-        let index = section.range.location + indexPath.row
         
         let imageViewModifier = CGFloat(0.25)
         let cellImageSize = CGSize(width: 40*imageViewModifier, height: 40*imageViewModifier)
+        guard let defaultImage: UIImage = UIImage(named: "noteSml.png") else { return UIImage() }
         
-        if sortType == .songs {
-            let mediaItem: MPMediaItem = media.items[index]
-            return mediaItem.artwork?.image(at: cellImageSize) ?? UIImage(named: "noteSml.png")!
-            
+        if isSearching {
+            switch indexPath.section {
+            case 0:
+                return filteredMedia.songs[indexPath.row].artwork?.image(at: cellImageSize) ?? defaultImage
+            case 1:
+                return filteredMedia.albums[indexPath.row].representativeItem?.artwork?.image(at: cellImageSize) ?? defaultImage
+            case 2:
+                return filteredMedia.artists[indexPath.row].representativeItem?.artwork?.image(at: cellImageSize) ?? defaultImage
+            default:
+                return defaultImage
+            }
         } else {
-            let collection = media.collections[index]
-            return collection.representativeItem?.artwork?.image(at: cellImageSize) ?? UIImage(named: "noteSml.png")!
+            guard let media = mediaDictionary[sortType] else { return UIImage(named: "noteSml.png")! }
+            let section = media.sections[indexPath.section]
+            let index = section.range.location + indexPath.row
+            
+            
+            if sortType == .songs {
+                let mediaItem: MPMediaItem = media.items[index]
+                return mediaItem.artwork?.image(at: cellImageSize) ?? defaultImage
+                
+            } else {
+                let collection = media.collections[index]
+                return collection.representativeItem?.artwork?.image(at: cellImageSize) ?? defaultImage
+            }
         }
     }
     
@@ -169,6 +222,19 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         let mediaItem: MPMediaItem = media.items[index]
         let mediaCollection: MPMediaItemCollection = media.collections[index]
         
+        //handle search
+        if isSearching {
+            switch indexPath.section {
+            case 0:
+                return filteredMedia.songs[indexPath.row].title ?? ""
+            case 1:
+                return filteredMedia.albums[indexPath.row].representativeItem?.albumTitle ?? ""
+            case 2:
+                return filteredMedia.artists[indexPath.row].representativeItem?.artist ?? ""
+            default:
+                return ""
+            }
+        }
         
         switch sortType {
         case .albums, .audiobooks, .compilations:
@@ -194,25 +260,38 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType) {
         //should only work for songs
+        if isSearching {
+            switch indexPath.section {
+            case 0:
+                let item = filteredMedia.songs[indexPath.row]
+                togglePlaying(item: item)
+            default:
+                return
+            }
+            
+            return }
         if sortType == .songs {
             guard let item = getSong(sortType: sortType, indexPath: indexPath) else { return }
+            togglePlaying(item: item)
+        }
+    }
+    
+    func togglePlaying(item: MPMediaItem){
+        if let nowPlayingItem = player.currentSong {
             
-            if let nowPlayingItem = player.currentSong {
-                
-                if (nowPlayingItem.title == item.title){
-                    if player.currentPlaybackState() == MPMusicPlaybackState.playing {
-                        player.pause()
-                    } else {
-                        player.playItem(item)
-                    }
-                    
+            if (nowPlayingItem.title == item.title){
+                if player.currentPlaybackState() == MPMusicPlaybackState.playing {
+                    player.pause()
                 } else {
-                    player.stop()
                     player.playItem(item)
                 }
+                
             } else {
+                player.stop()
                 player.playItem(item)
             }
+        } else {
+            player.playItem(item)
         }
     }
     
@@ -267,6 +346,24 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         guard let media = mediaDictionary[sortType] else { return nil }
         let range = media.sections[indexPath.section].range
         return media.items[range.location + indexPath.row]
+    }
+    
+    mutating func searchMedia(searchText: String){
+        if searchText.isEmpty { return }
+        self.isSearching = true
+        let songs = mediaDictionary[.songs]?.items ?? []
+        filteredMedia.songs = searchText.isEmpty ? [] : songs.filter({(item: MPMediaItem) -> Bool in
+            return item.title?.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+        })
+        let albums = mediaDictionary[.albums]?.collections ?? []
+        filteredMedia.albums = searchText.isEmpty ? [] : albums.filter({(item: MPMediaItemCollection) -> Bool in
+            return item.representativeItem?.albumTitle?.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+        })
+        let artists = mediaDictionary[.artists]?.collections ?? []
+        filteredMedia.artists = searchText.isEmpty ? [] : artists.filter({(item: MPMediaItemCollection) -> Bool in
+            return item.representativeItem?.artist?.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+        })
+        
     }
     
 }
