@@ -37,6 +37,15 @@ struct MediaViewModel {
         }
     }
     
+    func heightForSectionHeader() -> CGFloat {
+        switch subCollection.sortType {
+        case .artists:
+            return 50.0
+        default:
+            return 120.0
+        }
+    }
+    
     func numberOfSections() -> Int{
         if subCollection.sortType == .artists {
             return subCollection.collections.count

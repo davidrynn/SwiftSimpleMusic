@@ -104,8 +104,7 @@
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? MusicTableViewCell else { fatalError("Wrong cell type") }
         guard let cellLabel = cell.textLabel else { return cell }
         guard let cellImageView = cell.imageView else { return cell }
         let tuple = viewModel.cellLabelText(sortType: currentSort, indexPath: indexPath)
@@ -115,6 +114,7 @@
         }
         
         cellImageView.image = viewModel.cellImage(sortType: currentSort, indexPath: indexPath)
+        cell.cellModifier = 0.85
         
         return cell
     }

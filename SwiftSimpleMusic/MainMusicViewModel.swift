@@ -184,7 +184,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage {
         
         let imageViewModifier = CGFloat(0.25)
-        let cellImageSize = CGSize(width: 40*imageViewModifier, height: 40*imageViewModifier)
+        let cellImageSize = CGSize(width: 20, height: 20)
         guard let defaultImage: UIImage = UIImage(named: "noteSml.png") else { return UIImage() }
         
         if isSearching {

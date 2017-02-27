@@ -16,6 +16,7 @@
 		224946951CC7D78400D5104C /* PopUpTopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224946941CC7D78400D5104C /* PopUpTopBarView.swift */; };
 		224946991CC7E23400D5104C /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224946981CC7E23400D5104C /* UIView+Layout.swift */; };
 		229D59911E6384E30002F076 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 229D59901E6384E30002F076 /* Storyboard.storyboard */; };
+		229D59931E645B4A0002F076 /* MusicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229D59921E645B4A0002F076 /* MusicTableViewCell.swift */; };
 		22A802131E58E2CA004E74A4 /* SubMediaTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A802121E58E2CA004E74A4 /* SubMediaTableViewController.swift */; };
 		22A802151E58E317004E74A4 /* MediaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A802141E58E317004E74A4 /* MediaViewModel.swift */; };
 		22A802171E59E1D7004E74A4 /* MediaViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A802161E59E1D7004E74A4 /* MediaViewModelTest.swift */; };
@@ -61,6 +62,7 @@
 		224946941CC7D78400D5104C /* PopUpTopBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpTopBarView.swift; sourceTree = "<group>"; };
 		224946981CC7E23400D5104C /* UIView+Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
 		229D59901E6384E30002F076 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		229D59921E645B4A0002F076 /* MusicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTableViewCell.swift; sourceTree = "<group>"; };
 		22A802121E58E2CA004E74A4 /* SubMediaTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubMediaTableViewController.swift; sourceTree = "<group>"; };
 		22A802141E58E317004E74A4 /* MediaViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaViewModel.swift; sourceTree = "<group>"; };
 		22A802161E59E1D7004E74A4 /* MediaViewModelTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaViewModelTest.swift; sourceTree = "<group>"; };
@@ -227,6 +229,7 @@
 				22A802141E58E317004E74A4 /* MediaViewModel.swift */,
 				22DED0BD1D88252100F9C7FA /* PopUpView */,
 				22DED0AE1D84A26B00F9C7FA /* TopViewController.swift */,
+				229D59921E645B4A0002F076 /* MusicTableViewCell.swift */,
 			);
 			name = "Views/ Controllers";
 			sourceTree = "<group>";
@@ -372,6 +375,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				229D59931E645B4A0002F076 /* MusicTableViewCell.swift in Sources */,
 				22DED0B11D84AAD500F9C7FA /* Injectable.swift in Sources */,
 				22DED0BC1D87B59D00F9C7FA /* PlayButton.swift in Sources */,
 				22DED0C61D8894FB00F9C7FA /* MainMusicTableViewController.swift in Sources */,
