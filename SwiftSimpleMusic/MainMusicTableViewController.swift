@@ -108,7 +108,12 @@
         
         guard let cellLabel = cell.textLabel else { return cell }
         guard let cellImageView = cell.imageView else { return cell }
-        cellLabel.text = viewModel.cellLabelText(sortType: currentSort, indexPath: indexPath)
+        let tuple = viewModel.cellLabelText(sortType: currentSort, indexPath: indexPath)
+        cellLabel.text = tuple?.title ?? ""
+        if let cellDetail = cell.detailTextLabel {
+            cellDetail.text = tuple?.detail ?? ""
+        }
+        
         cellImageView.image = viewModel.cellImage(sortType: currentSort, indexPath: indexPath)
         
         return cell

@@ -18,7 +18,7 @@ protocol MainMusicViewModelProtocol {
     func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int
     func sectionIndexTitles(sortType: MediaSortType) -> [String]
     func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage
-    func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String
+    func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> (title: String?, detail: String?)?
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
     func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel
     func setPlayerQueue(sortType: MediaSortType)
@@ -215,8 +215,8 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         }
     }
     
-    func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String {
-        guard let media = mediaDictionary[sortType] else { return "" }
+    func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> (title: String?, detail: String?)? {
+        guard let media = mediaDictionary[sortType] else { return ("","") }
         let section = media.sections[indexPath.section]
         let index = section.range.location + indexPath.row
         let mediaItem: MPMediaItem = media.items[index]
@@ -226,30 +226,34 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         if isSearching {
             switch indexPath.section {
             case 0:
-                return filteredMedia.songs[indexPath.row].title ?? ""
+                let song: MPMediaItem = filteredMedia.songs[indexPath.row]
+                return (song.title, ((song.artist ?? "Unknown Artist") + "--" + (song.albumTitle ?? "Unknown Album")))
             case 1:
-                return filteredMedia.albums[indexPath.row].representativeItem?.albumTitle ?? ""
+                let album = filteredMedia.albums[indexPath.row]
+                return (album.representativeItem?.albumTitle, album.representativeItem?.artist)
             case 2:
-                return filteredMedia.artists[indexPath.row].representativeItem?.artist ?? ""
+                let artist = filteredMedia.artists[indexPath.row]
+                return (artist.representativeItem?.artist, "")
             default:
-                return ""
+                return ("","")
             }
         }
         
         switch sortType {
         case .albums, .audiobooks, .compilations:
-            return mediaCollection.representativeItem?.albumTitle ?? ""
+            return (mediaCollection.representativeItem?.albumTitle, mediaCollection.representativeItem?.artist)
         case .artists:
-            return mediaCollection.representativeItem?.artist ?? ""
+            return (mediaCollection.representativeItem?.artist, "")
         case .genres:
-            return mediaCollection.representativeItem?.genre ?? ""
+            return (mediaCollection.representativeItem?.genre, "")
         case .songs:
-            return mediaItem.title ?? ""
+            let song: MPMediaItem = mediaItem
+            return (song.title, ((song.artist ?? "Unknown Artist") + "--" + (song.albumTitle ?? "Unknown Album")))
         case .playlists:
-            guard let playlist = mediaCollection as? MPMediaPlaylist else { return "" }
-            return playlist.name ?? ""
+            guard let playlist = mediaCollection as? MPMediaPlaylist else { return ("","") }
+            return (playlist.name, "")
         case .podcasts:
-            return mediaItem.podcastTitle ?? ""
+            return (mediaItem.podcastTitle, "")
         }
         
     }
