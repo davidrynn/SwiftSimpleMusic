@@ -29,7 +29,7 @@ class PlayButton: UIButton {
         //circle
         let circle: UIBezierPath = UIBezierPath.init(ovalIn: circleRect)
         tintColor.setStroke()
-        UIColor.lightGray.setFill()
+        UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1).setFill()
         circle.lineWidth = 1
         circle.fill()
         circle.stroke()

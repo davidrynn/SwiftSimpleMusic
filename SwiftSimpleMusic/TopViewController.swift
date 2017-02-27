@@ -170,6 +170,9 @@ class TopViewController: UIViewController {
             let dVC = segue.destination as? UINavigationController
             if let mainVC = dVC?.topViewController as? MainMusicTableViewController {
                 mainVC.inject(player)
+                let popUpView = popUpViewController.view as? PopUpView
+                popUpView?.delegate = mainVC
+                
             } else {
                 
             }

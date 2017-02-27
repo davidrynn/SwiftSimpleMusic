@@ -7,15 +7,6 @@
   //
   
   import UIKit
-  //
-  //  MusicTableViewController.swift
-  //  SwiftSimpleMusic
-  //
-  //  Created by David Rynn on 9/10/16.
-  //  Copyright © 2016 David Rynn. All rights reserved.
-  //
-  
-  import UIKit
   import MediaPlayer
   
   class MainMusicTableViewController: UITableViewController {
@@ -46,21 +37,26 @@
         assertDependencies()
         setupSortButton()
         setupSearchBar()
+        
+        self.tableView.sectionIndexColor = UIColor.red
     }
     override func viewWillAppear(_ animated: Bool) {
         viewModel.setPlayerQueue(sortType: currentSort)
     }
     
     func setupSortButton(){
-        let buttonView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 30))
+        let buttonView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
         
-        sortButton.frame = CGRect(x: 0, y: 0, width: 100, height: 30);
+        sortButton.frame = CGRect(x: 0, y: 0, width: 150, height: 30);
         sortButton.setTitle(MediaSortType.songs.description, for: UIControlState())
         currentSort = MediaSortType.songs
+        sortButton.backgroundColor = UIColor(red: 253/255, green: 227/255, blue: 167/255, alpha: 1.0 )
+        sortButton.setTitleColor(UIColor.black, for: .normal)
         sortButton.layer.borderColor = UIColor.lightGray.cgColor
         sortButton.layer.borderWidth = 1
         sortButton.layer.cornerRadius = 10
         sortButton.addTarget(self, action: #selector(sortButtonTapped), for: .touchUpInside)
+        sortButton.dropShadow()
         buttonView.addSubview(sortButton)
         self.navigationItem.titleView = buttonView
     }
@@ -88,6 +84,10 @@
     override func numberOfSections(in tableView: UITableView) -> Int {
         
         return viewModel.numberOfSections(sortType: currentSort)
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60.0
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -219,7 +219,7 @@
     func updateSearchResults(for searchController: UISearchController) {
         
         if let searchText = searchController.searchBar.text {
-            viewModel.searchMedia(searchText: searchText)            
+            viewModel.searchMedia(searchText: searchText)
             tableView.reloadData()
         }
     }
@@ -228,5 +228,16 @@
     func didDismissSearchController(_ searchController: UISearchController) {
         viewModel.isSearching = false
         tableView.reloadData()
+    }
+  }
+  
+  extension MainMusicTableViewController: PopUpViewButtonDelegate {
+    func artistButtonTapped() {
+        self.currentSort = MediaSortType.artists
+        performSegue(withIdentifier: "toSubMediaVC", sender: self)
+    }
+    func albumButtonTapped() {
+        self.currentSort = .albums
+        performSegue(withIdentifier: "toSubMediaVC", sender: self)
     }
   }

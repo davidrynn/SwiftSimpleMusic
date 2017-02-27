@@ -51,7 +51,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" red="0.66666666669999997" green="0.66666666669999997" blue="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="Rf4-zq-Pve" firstAttribute="centerX" secondItem="e1D-8P-E4h" secondAttribute="centerX" multiplier="1.75" id="1IL-fI-Lev"/>
                                     <constraint firstItem="dHn-CT-GwS" firstAttribute="centerY" secondItem="e1D-8P-E4h" secondAttribute="centerY" id="997-QV-KOQ"/>
@@ -69,7 +69,7 @@
                                 </connections>
                             </containerView>
                         </subviews>
-                        <color key="backgroundColor" red="0.50196081400000003" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="e1D-8P-E4h" firstAttribute="bottom" secondItem="S4q-32-JRz" secondAttribute="top" id="E2m-U2-U8f"/>
                             <constraint firstItem="e1D-8P-E4h" firstAttribute="width" secondItem="LGZ-ec-RaK" secondAttribute="width" id="FLN-K8-Too"/>
@@ -214,10 +214,10 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Xy0-e3-qsj" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wEc-3W-3cf">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="wEc-3W-3cf">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -233,4 +233,5 @@
         <image name="loop1" width="40" height="40"/>
         <image name="shuffle1" width="40" height="40"/>
     </resources>
+    <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
 </document>
