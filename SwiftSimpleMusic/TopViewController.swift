@@ -66,19 +66,19 @@ class TopViewController: UIViewController {
             UIView.animate(withDuration: 0.1, delay: 0.0, options: UIViewAnimationOptions(), animations: {
                 //if direction up
                 if translation.y < 0 {
-                if popUpView.center.y >= self.view.height*2/3 {
-                    popUpView.y = self.popUpViewY
-                } else {
-                    popUpView.centerVerticallyInSuperview()
-                }
+                    if popUpView.y > self.view.height*3/4 {
+                        popUpView.y = self.popUpViewY
+                    } else {
+                        popUpView.centerVerticallyInSuperview()
+                    }
                 } else {
                     //if direction down
-                    if popUpView.center.y < self.view.height/3 {
+                    if popUpView.y < self.view.height/15 {
                         popUpView.centerVerticallyInSuperview()
                     } else {
                         popUpView.y = self.popUpViewY
-                    }                    
-
+                    }
+                    
                 }
             }, completion: nil)
         }
