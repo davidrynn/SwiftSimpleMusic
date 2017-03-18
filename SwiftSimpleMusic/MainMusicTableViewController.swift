@@ -120,107 +120,127 @@
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if currentSort == MediaSortType.songs || viewModel.isSearching {
-            viewModel.didSelectSongAtRowAt(indexPath: indexPath, sortType: currentSort)
-        } else {
-            performSegue(withIdentifier: "toSubMediaVC", sender: self)
-        }
-    }
-    
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        
-        if segue.identifier == "toSubMediaVC" {
-            if let index = tableView.indexPathForSelectedRow, let dVC = segue.destination as? SubMediaTableViewController {
-                let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort, indexPath: index)
-                dVC.inject(newViewModel)
+        if viewModel.isSearching {
+            let sectionType = SearchSection.typeForSection(indexPath.section)
+            
+            switch sectionType {
+            case .songs:
+                viewModel.playFilteredSong(indexPath: indexPath)
+            default:
+                performSegue(withIdentifier: "toSubMediaVC", sender: self)
+                
+            }
+            }
+            else if currentSort == MediaSortType.songs {
+                viewModel.didSelectSongAtRowAt(indexPath: indexPath, sortType: currentSort)
+            }
+            else {
+                performSegue(withIdentifier: "toSubMediaVC", sender: self)
             }
         }
-    }
-    
-    //    MARK: - Actions
-    @IBAction func shuffleButtonTapped(_ sender: AnyObject) {
         
-        if (player.shuffleMode == MPMusicShuffleMode.off || player.shuffleMode.rawValue == 0) {
-            player.shuffleMode = MPMusicShuffleMode.songs
-            shuffleButton.image = UIImage(named: "shuffle2")
-        }
-        else if (player.shuffleMode == MPMusicShuffleMode.songs || player.shuffleMode.rawValue == 2) {
-            player.shuffleMode = MPMusicShuffleMode.off
-            shuffleButton.image = UIImage(named: "shuffle1")
-        }
-        navigationController?.reloadInputViews()
-    }
-    
-    
-    @IBAction func loopButtonTapped(_ sender: AnyObject) {
-        if player.repeatMode == .none {
-            player.repeatMode = .all
-            loopButton.image = #imageLiteral(resourceName: "loop3")
-        }
-        else if player.repeatMode == .all {
-            player.repeatMode = .one
-            loopButton.image = #imageLiteral(resourceName: "loop2")
-        }
-        else if player.repeatMode == .one {
-            player.repeatMode = .none
-            loopButton.image = #imageLiteral(resourceName: "loop1")
-        }
-        navigationController?.reloadInputViews()
-    
-    }
-    
-    func sortButtonTapped(sender: UIButton) {
-        //get switch off vc
-        guard let titleLabel = sender.titleLabel else { return }
-        guard let text = titleLabel.text else { return }
-        let type = MediaSortType.getNextTypeFromText(text)
-        sender.setTitle(String(describing: type), for: .normal)
-        currentSort = type
-        view.reloadInputViews()
-        tableView.reloadData()
-    }
-  }
-  
-  extension MainMusicTableViewController: Injectable {
-    
-    func inject(_ item: MusicPlayer) {
-        player = item
-        viewModel = MainMusicViewModel(player: item)
-    }
-    
-    func assertDependencies() {
-        assert(player != nil)
-    }
-  }
-  extension MainMusicTableViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
+        // MARK: - Navigation
         
-        if let searchText = searchController.searchBar.text {
-            viewModel.searchMedia(searchText: searchText)
+        // In a storyboard-based application, you will often want to do a little preparation before navigation
+        
+        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            // Get the new view controller using segue.destinationViewController.
+            // Pass the selected object to the new view controller.
+            
+            if segue.identifier == "toSubMediaVC" {
+                
+                if let index = tableView.indexPathForSelectedRow, let dVC = segue.destination as? SubMediaTableViewController {
+                    if viewModel.isSearching {
+                        let searchSection = SearchSection.typeForSection(index.section)
+                        let newViewModel = self.viewModel.getSubViewModelFromSearch(section: searchSection, indexPath: index)
+                        dVC.inject(newViewModel)
+                        
+                    }
+                    else { let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort, indexPath: index)
+                    dVC.inject(newViewModel)
+                    }
+                }
+            }
+        }
+        
+        //    MARK: - Actions
+        @IBAction func shuffleButtonTapped(_ sender: AnyObject) {
+            
+            if (player.shuffleMode == MPMusicShuffleMode.off || player.shuffleMode.rawValue == 0) {
+                player.shuffleMode = MPMusicShuffleMode.songs
+                shuffleButton.image = UIImage(named: "shuffle2")
+            }
+            else if (player.shuffleMode == MPMusicShuffleMode.songs || player.shuffleMode.rawValue == 2) {
+                player.shuffleMode = MPMusicShuffleMode.off
+                shuffleButton.image = UIImage(named: "shuffle1")
+            }
+            navigationController?.reloadInputViews()
+        }
+        
+        
+        @IBAction func loopButtonTapped(_ sender: AnyObject) {
+            if player.repeatMode == .none {
+                player.repeatMode = .all
+                loopButton.image = #imageLiteral(resourceName: "loop3")
+            }
+            else if player.repeatMode == .all {
+                player.repeatMode = .one
+                loopButton.image = #imageLiteral(resourceName: "loop2")
+            }
+            else if player.repeatMode == .one {
+                player.repeatMode = .none
+                loopButton.image = #imageLiteral(resourceName: "loop1")
+            }
+            navigationController?.reloadInputViews()
+            
+        }
+        
+        func sortButtonTapped(sender: UIButton) {
+            //get switch off vc
+            guard let titleLabel = sender.titleLabel else { return }
+            guard let text = titleLabel.text else { return }
+            let type = MediaSortType.getNextTypeFromText(text)
+            sender.setTitle(String(describing: type), for: .normal)
+            currentSort = type
+            view.reloadInputViews()
             tableView.reloadData()
         }
     }
-  }
-  extension MainMusicTableViewController: UISearchControllerDelegate {
-    func didDismissSearchController(_ searchController: UISearchController) {
-        viewModel.isSearching = false
-        tableView.reloadData()
+    
+    extension MainMusicTableViewController: Injectable {
+        
+        func inject(_ item: MusicPlayer) {
+            player = item
+            viewModel = MainMusicViewModel(player: item)
+        }
+        
+        func assertDependencies() {
+            assert(player != nil)
+        }
     }
-  }
-  
-  extension MainMusicTableViewController: PopUpViewButtonDelegate {
-    func artistButtonTapped() {
-        self.currentSort = MediaSortType.artists
-        performSegue(withIdentifier: "toSubMediaVC", sender: self)
+    extension MainMusicTableViewController: UISearchResultsUpdating {
+        func updateSearchResults(for searchController: UISearchController) {
+            
+            if let searchText = searchController.searchBar.text {
+                viewModel.searchMedia(searchText: searchText)
+                tableView.reloadData()
+            }
+        }
     }
-    func albumButtonTapped() {
-        self.currentSort = .albums
-        performSegue(withIdentifier: "toSubMediaVC", sender: self)
+    extension MainMusicTableViewController: UISearchControllerDelegate {
+        func didDismissSearchController(_ searchController: UISearchController) {
+            viewModel.isSearching = false
+            tableView.reloadData()
+        }
     }
+    
+    extension MainMusicTableViewController: PopUpViewButtonDelegate {
+        func artistButtonTapped() {
+            self.currentSort = MediaSortType.artists
+            performSegue(withIdentifier: "toSubMediaVC", sender: self)
+        }
+        func albumButtonTapped() {
+            self.currentSort = .albums
+            performSegue(withIdentifier: "toSubMediaVC", sender: self)
+        }
   }

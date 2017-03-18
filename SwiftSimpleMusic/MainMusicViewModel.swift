@@ -20,8 +20,10 @@ protocol MainMusicViewModelProtocol {
     func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage
     func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> (title: String?, detail: String?)?
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
+    func getSubViewModelFromSearch(section: SearchSection, indexPath: IndexPath) -> MediaViewModel
     func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel
     func setPlayerQueue(sortType: MediaSortType)
+    func playFilteredSong(indexPath: IndexPath)
     mutating func searchMedia(searchText: String)
 }
 
@@ -299,6 +301,13 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         }
     }
     
+    func getSubViewModelFromSearch(section: SearchSection, indexPath: IndexPath) -> MediaViewModel {
+        let filteredItems = (section == .albums) ? filteredMedia.albums[indexPath.row].items : filteredMedia.artists[indexPath.row].items
+        let filteredCollection = (section == .albums) ? filteredMedia.albums[indexPath.row] : filteredMedia.artists[indexPath.row]
+        let subCol = SubGroupCollection(items: filteredItems, collections: [filteredCollection], sections: [], sortType: (section == .albums) ? .albums : .artists)
+        return MediaViewModel(player: player, firstTimeTap: true, subCollection: subCol)
+    }
+    
     func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel  {
         
         guard let media = mediaDictionary[sortType] else { fatalError("failed at line 219 \(#function)") }
@@ -344,6 +353,10 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
             query = .podcasts()
         }
         player.setPlayerQueue(with: query)
+    }
+    
+    func playFilteredSong(indexPath: IndexPath) {
+        togglePlaying(item: filteredMedia.songs[indexPath.row])
     }
     
     func getSong(sortType: MediaSortType, indexPath: IndexPath) -> MPMediaItem? {

@@ -10,6 +10,19 @@ import Foundation
 
 enum SearchSection {
     case songs, albums, artists
+    
+    static func typeForSection(_ section: Int) -> SearchSection {
+        switch section {
+        case 0:
+            return SearchSection.songs
+        case 1:
+            return SearchSection.albums
+        case 2:
+            return SearchSection.artists
+        default:
+            fatalError("invalid section")
+        }
+    }
 }
 
 extension SearchSection: CustomStringConvertible {
