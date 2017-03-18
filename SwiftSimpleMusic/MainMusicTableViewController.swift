@@ -159,56 +159,39 @@
     
     
     @IBAction func loopButtonTapped(_ sender: AnyObject) {
-        
+        if player.repeatMode == .none {
+            player.repeatMode = .all
+            loopButton.image = #imageLiteral(resourceName: "loop3")
+        }
+        else if player.repeatMode == .all {
+            player.repeatMode = .one
+            loopButton.image = #imageLiteral(resourceName: "loop2")
+        }
+        else if player.repeatMode == .one {
+            player.repeatMode = .none
+            loopButton.image = #imageLiteral(resourceName: "loop1")
+        }
+        navigationController?.reloadInputViews()
+    
     }
     
     func sortButtonTapped(sender: UIButton) {
         //get switch off vc
         guard let titleLabel = sender.titleLabel else { return }
         guard let text = titleLabel.text else { return }
-        switch text {
-        case MediaSortType.albums.description:
-            sender.setTitle(MediaSortType.artists.description, for: UIControlState.normal)
-            currentSort = .artists
-            
-        case MediaSortType.artists.description:
-            sender.setTitle(MediaSortType.genres.description, for: UIControlState.normal)
-            currentSort = .genres
-            
-        case MediaSortType.genres.description:
-            sender.setTitle(MediaSortType.playlists.description, for: UIControlState.normal)
-            currentSort = .playlists
-        case MediaSortType.playlists.description:
-            sender.setTitle(MediaSortType.podcasts.description, for: UIControlState.normal)
-            currentSort = .podcasts
-        case MediaSortType.podcasts.description:
-            sender.setTitle(MediaSortType.audiobooks.description, for: UIControlState.normal)
-            currentSort = .audiobooks
-        case MediaSortType.audiobooks.description:
-            sender.setTitle(MediaSortType.compilations.description, for: UIControlState.normal)
-            currentSort = .compilations
-        case String(describing: MediaSortType.compilations):
-            sender.setTitle(MediaSortType.songs.description, for: UIControlState.normal)
-            currentSort = .songs
-        case MediaSortType.songs.description:
-            sender.setTitle(MediaSortType.albums.description, for: UIControlState.normal)
-            currentSort = .albums
-        default:
-            sender.setTitle(String(describing: MediaSortType.songs), for: UIControlState.normal)
-            currentSort = .songs
-        }
-        
+        let type = MediaSortType.getNextTypeFromText(text)
+        sender.setTitle(String(describing: type), for: .normal)
+        currentSort = type
         view.reloadInputViews()
         tableView.reloadData()
     }
-    
   }
+  
   extension MainMusicTableViewController: Injectable {
     
     func inject(_ item: MusicPlayer) {
         player = item
         viewModel = MainMusicViewModel(player: item)
-        
     }
     
     func assertDependencies() {

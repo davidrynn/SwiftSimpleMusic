@@ -60,6 +60,12 @@ class MusicPlayer: MusicPlayerProtocol {
             return self.player.nowPlayingItem
         }
     }
+    
+    var repeatMode: MPMusicRepeatMode {
+        didSet {
+            player.repeatMode = self.repeatMode
+        }
+    }
     //    var musicCollection: MPMediaItemCollection
     //    var randomizedCollection: MPMediaItemCollection
     var shuffleMode: MPMusicShuffleMode {
@@ -78,9 +84,9 @@ class MusicPlayer: MusicPlayerProtocol {
         self.collection = MediaCollection(items: items)
         self.player.setQueue(with: MPMediaQuery.songs())
         self.shuffleMode = player.shuffleMode
+        self.repeatMode = player.repeatMode
         player.beginGeneratingPlaybackNotifications()
 
-        
     }
     
     //    fileprivate func collection(query: MPMediaQuery) -> MediaCollection {
