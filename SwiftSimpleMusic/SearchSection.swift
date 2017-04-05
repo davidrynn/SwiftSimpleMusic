@@ -23,6 +23,17 @@ enum SearchSection {
             fatalError("invalid section")
         }
     }
+    
+    func sortType() -> MediaSortType {
+        switch self {
+        case .songs:
+            return MediaSortType.songs
+        case .albums:
+            return MediaSortType.albums
+        case .artists:
+            return MediaSortType.artists
+        }
+    }
 }
 
 extension SearchSection: CustomStringConvertible {

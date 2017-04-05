@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2200C2F61E9569D700CEF604 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2200C2F51E9569D700CEF604 /* AppState.swift */; };
 		220704A71E6369E700F31079 /* UIView + DropShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220704A61E6369E700F31079 /* UIView + DropShadow.swift */; };
 		2249468B1CC7CF9700D5104C /* PopUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2249468A1CC7CF9700D5104C /* PopUpView.xib */; };
 		2249468D1CC7D04700D5104C /* PopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2249468C1CC7D04700D5104C /* PopUpView.swift */; };
@@ -52,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2200C2F51E9569D700CEF604 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		220704A61E6369E700F31079 /* UIView + DropShadow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView + DropShadow.swift"; sourceTree = "<group>"; };
 		223693701D0C8E6D003F0359 /* SwiftSimpleMusicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftSimpleMusicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		223693741D0C8E6D003F0359 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 			children = (
 				22AAD4951E47B91B00FDE171 /* MediaSortType.swift */,
 				227285321E7B688C0052304A /* SearchSection.swift */,
+				2200C2F51E9569D700CEF604 /* AppState.swift */,
 			);
 			name = Enums;
 			sourceTree = "<group>";
@@ -394,6 +397,7 @@
 				22AAD4961E47B91B00FDE171 /* MediaSortType.swift in Sources */,
 				224946991CC7E23400D5104C /* UIView+Layout.swift in Sources */,
 				22F4F4A81C064F8C0050FE2B /* DRMusicPlayer.swift in Sources */,
+				2200C2F61E9569D700CEF604 /* AppState.swift in Sources */,
 				22DED0CE1D88A87500F9C7FA /* MPMediaItem+protocol.swift in Sources */,
 				227285331E7B688C0052304A /* SearchSection.swift in Sources */,
 				2249468F1CC7D2C900D5104C /* MusicPlayer.swift in Sources */,

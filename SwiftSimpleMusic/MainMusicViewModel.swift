@@ -11,8 +11,7 @@ import MediaPlayer
 
 protocol MainMusicViewModelProtocol {
     var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { get }
-    var player: MusicPlayerProtocol { get }
-    var isSearching: Bool { get set }
+    var appState: AppState { get set }
     func numberOfSections(sortType: MediaSortType) -> Int
     func titleForSection(sortType: MediaSortType, section: Int) -> String
     func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int
@@ -109,7 +108,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     
     var mediaDictionary: [MediaSortType : GroupCollectionProtocol]
     var player: MusicPlayerProtocol
-    var isSearching: Bool = false
+    var appState: AppState = .normal
     var filteredMedia: FilteredMedia
     init (player: MusicPlayerProtocol) {
         self.mediaDictionary = [ MediaSortType.songs: SongsGroupCollection(),
@@ -125,7 +124,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     }
     
     func titleForSection(sortType: MediaSortType, section: Int) -> String {
-        if isSearching {
+        if appState == .isSearching {
             let sectionsArr = ["Songs", "Albums", "Artists"]
             return sectionsArr[section]
         } else {
@@ -141,7 +140,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     }
     
     func numberOfSections(sortType: MediaSortType) -> Int{
-        if isSearching {
+        if appState == .isSearching {
             return 3
         } else {
             guard let sortedGrouping = mediaDictionary[sortType] else { return 0 }
@@ -150,7 +149,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         }
     }
     func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int {
-        if isSearching {
+        if appState == .isSearching {
             switch section {
             case 0:
                 return filteredMedia.songs.count
@@ -172,7 +171,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     }
     
     func sectionIndexTitles(sortType: MediaSortType) -> [String] {
-        if isSearching {
+        if appState == .isSearching {
             return []
         } else{
             var indexTitles: [String] = []
@@ -189,7 +188,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         let cellImageSize = CGSize(width: 20, height: 20)
         guard let defaultImage: UIImage = UIImage(named: "noteSml.png") else { return UIImage() }
         
-        if isSearching {
+        if appState == .isSearching {
             switch indexPath.section {
             case 0:
                 return filteredMedia.songs[indexPath.row].artwork?.image(at: cellImageSize) ?? defaultImage
@@ -225,7 +224,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         let mediaCollection: MPMediaItemCollection = media.collections[index]
         
         //handle search
-        if isSearching {
+        if appState == .isSearching {
             switch indexPath.section {
             case 0:
                 let song: MPMediaItem = filteredMedia.songs[indexPath.row]
@@ -266,7 +265,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType) {
         //should only work for songs
-        if isSearching {
+        if appState == .isSearching {
             switch indexPath.section {
             case 0:
                 let item = filteredMedia.songs[indexPath.row]
@@ -304,8 +303,27 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     func getSubViewModelFromSearch(section: SearchSection, indexPath: IndexPath) -> MediaViewModel {
         let filteredItems = (section == .albums) ? filteredMedia.albums[indexPath.row].items : filteredMedia.artists[indexPath.row].items
         let filteredCollection = (section == .albums) ? filteredMedia.albums[indexPath.row] : filteredMedia.artists[indexPath.row]
-        let subCol = SubGroupCollection(items: filteredItems, collections: [filteredCollection], sections: [], sortType: (section == .albums) ? .albums : .artists)
-        return MediaViewModel(player: player, firstTimeTap: true, subCollection: subCol)
+        return MediaViewModel(player: player, sortType: section.sortType(), firstTimeTap: true, collections: [filteredCollection], items: filteredItems)
+    }
+    
+    func getSubViewModel(sortType: MediaSortType, item: MPMediaItem) -> MediaViewModel {
+        var collections: [MPMediaItemCollection] = []
+        var items: [MPMediaItem] = []
+        
+        if sortType == .albums {
+            let album = item.albumTitle
+            let query = MPMediaQuery.albums()
+            let predicate = MPMediaPropertyPredicate(value: album, forProperty: "albumTitle")
+            query.addFilterPredicate(predicate)
+            collections = query.collections ?? []
+            items = query.items ?? []
+        }
+        else if sortType == .artists {
+            let artist = item.artist
+        }
+        
+            return MediaViewModel(player: player, sortType: sortType, firstTimeTap: true, collections: <#T##[MPMediaItemCollection]#>, items: <#T##[MPMediaItem]#>)
+    
     }
     
     func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel  {
@@ -326,9 +344,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
             sections = query.collectionSections ?? []
             collections = query.collections ?? []
         }
-        
-        let subCol = SubGroupCollection(items: collectionItems, collections: collections, sections: sections, sortType: sortType)
-        return MediaViewModel(player: player, firstTimeTap: true, subCollection: subCol)
+        return MediaViewModel(player: player, sortType: sortType, firstTimeTap: true, collections: collections, items: collectionItems)
     }
     
     func setPlayerQueue(sortType: MediaSortType) {
@@ -367,7 +383,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     
     mutating func searchMedia(searchText: String){
         if searchText.isEmpty { return }
-        self.isSearching = true
+        appState = .isSearching
         let songs = mediaDictionary[.songs]?.items ?? []
         filteredMedia.songs = searchText.isEmpty ? [] : songs.filter({(item: MPMediaItem) -> Bool in
             return item.title?.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil

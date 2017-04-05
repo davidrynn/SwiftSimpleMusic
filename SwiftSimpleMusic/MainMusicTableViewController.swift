@@ -120,7 +120,7 @@
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if viewModel.isSearching {
+        if viewModel.appState == .isSearching {
             let sectionType = SearchSection.typeForSection(indexPath.section)
             
             switch sectionType {
@@ -148,17 +148,21 @@
             // Pass the selected object to the new view controller.
             
             if segue.identifier == "toSubMediaVC" {
-                
                 if let index = tableView.indexPathForSelectedRow, let dVC = segue.destination as? SubMediaTableViewController {
-                    if viewModel.isSearching {
-                        let searchSection = SearchSection.typeForSection(index.section)
-                        let newViewModel = self.viewModel.getSubViewModelFromSearch(section: searchSection, indexPath: index)
-                        dVC.inject(newViewModel)
-                        
-                    }
-                    else { let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort, indexPath: index)
+                
+                switch viewModel.appState {
+                case .isSearching:
+                    let searchSection = SearchSection.typeForSection(index.section)
+                    let newViewModel = self.viewModel.getSubViewModelFromSearch(section: searchSection, indexPath: index)
                     dVC.inject(newViewModel)
-                    }
+                case .isShowingSong:
+                    
+                case .normal:
+                    let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort, indexPath: index)
+                    dVC.inject(newViewModel)
+                    
+                }
+
                 }
             }
         }
@@ -229,7 +233,7 @@
     }
     extension MainMusicTableViewController: UISearchControllerDelegate {
         func didDismissSearchController(_ searchController: UISearchController) {
-            viewModel.isSearching = false
+            viewModel.appState = .normal
             tableView.reloadData()
         }
     }
