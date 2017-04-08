@@ -91,12 +91,17 @@ class MainMusicViewModelTest: XCTestCase {
         
     }
     
+    func testGetViewModelFromPopUp_ShouldGetSong(){
+        
+    }
+    
     
     
 }
 
 extension MainMusicViewModelTest {
-    class MockMusicPlayer: SwiftSimpleMusic.MusicPlayer {
+    class MockMusicPlayer: SwiftSimpleMusic.MusicPlayerProtocol {
+        
         //        var currentSong: MPMediaItem? { get }
         //        var nextSong: MPMediaItem? { get }
         //        var previousSong: MPMediaItem? { get }

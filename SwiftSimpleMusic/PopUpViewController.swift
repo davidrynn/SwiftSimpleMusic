@@ -11,7 +11,7 @@ import MediaPlayer
 
 class PopUpViewController: UIViewController {
     
-    var player: MusicPlayer!
+    var player: MusicPlayerProtocol!
     var topBarOpacity: CGFloat = 1 {
         didSet {
             let view = self.view as! PopUpView

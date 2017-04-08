@@ -9,5 +9,5 @@
 import Foundation
 
 enum AppState {
-    case isSearching, normal, isShowingSong
+    case isSearching, normal, isShowingPopUp
 }

@@ -322,7 +322,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
             let artist = item.artist
         }
         
-            return MediaViewModel(player: player, sortType: sortType, firstTimeTap: true, collections: <#T##[MPMediaItemCollection]#>, items: <#T##[MPMediaItem]#>)
+            return MediaViewModel(player: player, sortType: sortType, firstTimeTap: true, collections: collections, items: items)
     
     }
     

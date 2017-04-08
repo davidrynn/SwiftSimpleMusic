@@ -13,7 +13,7 @@
     
     var viewModel: MainMusicViewModelProtocol!
     var searchController: UISearchController!
-    fileprivate var player: MusicPlayer!
+    fileprivate var player: MusicPlayerProtocol!
     fileprivate var currentSort: MediaSortType!
     lazy var players: [String] = {
         var temporaryPlayers = [String]()
@@ -155,8 +155,9 @@
                     let searchSection = SearchSection.typeForSection(index.section)
                     let newViewModel = self.viewModel.getSubViewModelFromSearch(section: searchSection, indexPath: index)
                     dVC.inject(newViewModel)
-                case .isShowingSong:
-                    
+                case .isShowingPopUp:
+                    let newViewModel = self.viewModel.getSubViewModelFromPopUp()
+                    dVC.inject(newViewModel)
                 case .normal:
                     let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort, indexPath: index)
                     dVC.inject(newViewModel)
@@ -213,7 +214,7 @@
     
     extension MainMusicTableViewController: Injectable {
         
-        func inject(_ item: MusicPlayer) {
+        func inject(_ item: MusicPlayerProtocol) {
             player = item
             viewModel = MainMusicViewModel(player: item)
         }

@@ -14,6 +14,8 @@ protocol MusicPlayerProtocol {
     var currentSong: MPMediaItem? { get }
     var nextSong: MPMediaItem? { get }
     var previousSong: MPMediaItem? { get }
+    var repeatMode: MPMusicRepeatMode { get set }
+    var shuffleMode: MPMusicShuffleMode { get set }
     var collection: MediaCollection { get }
     func play()
     func playItem(_ item: MPMediaItem)
@@ -88,20 +90,6 @@ class MusicPlayer: MusicPlayerProtocol {
         player.beginGeneratingPlaybackNotifications()
 
     }
-    
-    //    fileprivate func collection(query: MPMediaQuery) -> MediaCollection {
-    //        let items = query.items!
-    //        return MediaCollection(items: items)
-    //    }
-    
-//    fileprivate class func shuffleModeFromDefaults() -> MPMusicShuffleMode {
-//        let defaults = UserDefaults.standard
-//        if let shuffleModeRaw: Int = defaults.integer(forKey: "shuffleMode") {
-//            return MPMusicShuffleMode(rawValue: shuffleModeRaw)!
-//        } else {
-//            return MPMusicShuffleMode.off
-//        }
-//    }
     
     func setPlayerQueue(with query: MPMediaQuery) {
         player.setQueue(with: query)
