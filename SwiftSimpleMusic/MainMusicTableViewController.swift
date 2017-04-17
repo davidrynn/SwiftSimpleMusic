@@ -156,7 +156,8 @@
                     let newViewModel = self.viewModel.getSubViewModelFromSearch(section: searchSection, indexPath: index)
                     dVC.inject(newViewModel)
                 case .isShowingPopUp:
-                    let newViewModel = self.viewModel.getSubViewModelFromPopUp()
+                    guard let item = self.player.currentSong else { return }
+                    let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort, item: item)
                     dVC.inject(newViewModel)
                 case .normal:
                     let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort, indexPath: index)

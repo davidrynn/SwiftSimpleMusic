@@ -21,6 +21,7 @@ protocol MainMusicViewModelProtocol {
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
     func getSubViewModelFromSearch(section: SearchSection, indexPath: IndexPath) -> MediaViewModel
     func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel
+    func getSubViewModel(sortType: MediaSortType, item: MPMediaItem) -> MediaViewModel
     func setPlayerQueue(sortType: MediaSortType)
     func playFilteredSong(indexPath: IndexPath)
     mutating func searchMedia(searchText: String)
@@ -315,16 +316,24 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
             let query = MPMediaQuery.albums()
             let predicate = MPMediaPropertyPredicate(value: album, forProperty: "albumTitle")
             query.addFilterPredicate(predicate)
+            query.groupingType = .album
             collections = query.collections ?? []
             items = query.items ?? []
         }
         else if sortType == .artists {
             let artist = item.artist
+            let query = MPMediaQuery.artists()
+            let predicate = MPMediaPropertyPredicate(value: artist, forProperty: "artist")
+            query.addFilterPredicate(predicate)
+            query.groupingType = .artist
+            collections = query.collections ?? []
+            items = query.items ?? []
         }
         
             return MediaViewModel(player: player, sortType: sortType, firstTimeTap: true, collections: collections, items: items)
     
     }
+
     
     func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel  {
         

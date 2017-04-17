@@ -28,6 +28,14 @@ class TopViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        if #available(iOS 9.3, *) {
+            MPMediaLibrary.requestAuthorization { status in
+                if status == MPMediaLibraryAuthorizationStatus.denied{}
+                
+            }
+        } else {
+            // Fallback on earlier versions
+        }
         self.addChildViewController(popUpViewController)
         self.view.addSubview(popUpViewController.view)
         popUpViewController.didMove(toParentViewController: self)
@@ -35,6 +43,8 @@ class TopViewController: UIViewController {
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.detectPan(_:)))
         popUpViewController.view.gestureRecognizers = [panRecognizer]
         popUpViewController.player = player
+        let popUpView = popUpViewController.view as? PopUpView
+        popUpView?.popUpScrollDelegate = self as! PopUpScrollDelegate
         
     }
     
@@ -63,24 +73,7 @@ class TopViewController: UIViewController {
         let translation = recognizer.translation(in: self.view)
         popUpView.center.y = lastLocation.y + translation.y
         if recognizer.state == UIGestureRecognizerState.ended {
-            UIView.animate(withDuration: 0.1, delay: 0.0, options: UIViewAnimationOptions(), animations: {
-                //if direction up
-                if translation.y < 0 {
-                    if popUpView.y > self.view.height*3/4 {
-                        popUpView.y = self.popUpViewY
-                    } else {
-                        popUpView.centerVerticallyInSuperview()
-                    }
-                } else {
-                    //if direction down
-                    if popUpView.y < self.view.height/15 {
-                        popUpView.centerVerticallyInSuperview()
-                    } else {
-                        popUpView.y = self.popUpViewY
-                    }
-                    
-                }
-            }, completion: nil)
+            animateView(direction: translation.y)
         }
         
         //fade top bar
@@ -90,6 +83,31 @@ class TopViewController: UIViewController {
         } else {
             popUpViewController.topBarOpacity = 1.0
         }
+        
+    }
+    
+    func animateView(direction: CGFloat) {
+        guard let popUpView = popUpViewController.view as? PopUpView else {
+            return
+        }
+        UIView.animate(withDuration: 0.1, delay: 0.0, options: UIViewAnimationOptions(), animations: {
+            //if direction up
+            if direction < 0 {
+                if popUpView.y > self.view.height*3/4 {
+                    popUpView.y = self.popUpViewY
+                } else {
+                    popUpView.centerVerticallyInSuperview()
+                }
+            } else {
+                //if direction down
+                if popUpView.y < self.view.height/15 {
+                    popUpView.centerVerticallyInSuperview()
+                } else {
+                    popUpView.y = self.popUpViewY
+                }
+                
+            }
+        }, completion: nil)
         
     }
     
@@ -193,5 +211,11 @@ class TopViewController: UIViewController {
         popUpViewController.removeFromParentViewController()
     }
     
+}
+
+extension TopViewController: PopUpScrollDelegate {
+    func scrollPopUpView() {
+        self.animateView(direction: -1)
+    }
 }
 

@@ -13,6 +13,10 @@ protocol PopUpViewButtonDelegate {
     func albumButtonTapped()
 }
 
+protocol PopUpScrollDelegate {
+    func scrollPopUpView()
+}
+
 class PopUpView: UIView {
 
     
@@ -33,6 +37,7 @@ class PopUpView: UIView {
     @IBOutlet fileprivate weak var label: UILabel!
     
     var delegate: PopUpViewButtonDelegate?
+    var popUpScrollDelegate: PopUpScrollDelegate?
     var topBarOpacity: CGFloat = 1.0
     var labelText: String {
         get {
