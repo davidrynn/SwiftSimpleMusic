@@ -55,6 +55,8 @@ class TopViewController: UIViewController {
         self.view.bringSubview(toFront: playbackControlView)
         
     }
+    
+    
     func setupButtons(){
         //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TopViewController.backButtonTapped(_:))  //Tap function will call when user tap on button
         //        let longGesture = UILongPressGestureRecognizer(target: self, action: "Long") //Long function will call when user long press on button.
@@ -76,14 +78,21 @@ class TopViewController: UIViewController {
             animateView(direction: translation.y)
         }
         
-        //fade top bar
+        fadeTopBarWithDrag()
+
+        
+    }
+    
+    func fadeTopBarWithDrag() {
+        guard let popUpView = popUpViewController.view as? PopUpView else {
+            return
+        }
         let fadeStartY: CGFloat = self.view.height/2
         if popUpView.y < fadeStartY {
             popUpViewController.topBarOpacity = CGFloat(popUpView.y/fadeStartY)
         } else {
             popUpViewController.topBarOpacity = 1.0
         }
-        
     }
     
     func animateView(direction: CGFloat) {
@@ -125,31 +134,6 @@ class TopViewController: UIViewController {
         }
     }
     
-    
-    //    @IBAction func forwardButtonLongPressed(_ sender: UILongPressGestureRecognizer) {
-    //        player.seekForward { () -> (Bool) in
-    //            if sender.state == UIGestureRecognizerState.ended {
-    //                return true
-    //            }
-    //            return false
-    //        }
-    //    }
-    
-    //    @IBAction func forwardButtonLongPressed(_ sender: UILongPressGestureRecognizer) {
-    //        sender.minimumPressDuration = 1.0
-    //        if sender.state == UIGestureRecognizerState.ended {
-    //print("longpress ended")
-    //        }
-    //        if sender.state == UIGestureRecognizerState.began {
-    //            print("longpress began")
-    //        }
-    //                player.seekForward { () -> (Bool) in
-    //                    if sender.state == UIGestureRecognizerState.ended {
-    //                        return true
-    //                    }
-    //                    return false
-    //                }
-    //    }
     @IBAction func forwardButtonLongPressed(_ sender: UILongPressGestureRecognizer) {
         sender.minimumPressDuration = 1.0
         if sender.state == UIGestureRecognizerState.ended {
@@ -190,14 +174,9 @@ class TopViewController: UIViewController {
                 mainVC.inject(player)
                 let popUpView = popUpViewController.view as? PopUpView
                 popUpView?.delegate = mainVC
-                
-            } else {
-                
             }
         }
     }
-    
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

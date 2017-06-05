@@ -14,9 +14,10 @@ struct MediaViewModel {
 
     let player: MusicPlayerProtocol
     let sortType: MediaSortType
+    let groupStruct: GroupCollectionProtocol
     var firstTimeTap: Bool = true
-    let collections: [MPMediaItemCollection]
-    var items: [MPMediaItem]
+    var collections: [MPMediaItemCollection] { return groupStruct.collections }
+    var items: [MPMediaItem] { return groupStruct.items }
     
     
     func titleForSection(section: Int) -> String {
