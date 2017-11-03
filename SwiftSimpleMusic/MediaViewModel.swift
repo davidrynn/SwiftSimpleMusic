@@ -13,18 +13,19 @@ struct MediaViewModel {
     //    let mediaGroupCollection: GroupCollectionProtocol
 
     let player: MusicPlayerProtocol
+    let sortType: MediaSortType
+    let groupStruct: GroupCollectionProtocol
     var firstTimeTap: Bool = true
-    let subCollection: SubGroupCollection
-    var items: [MPMediaItem] { return subCollection.items }
+    var collections: [MPMediaItemCollection] { return groupStruct.collections }
+    var items: [MPMediaItem] { return groupStruct.items }
     
     
     func titleForSection(section: Int) -> String {
-        let sortType = subCollection.sortType
         switch sortType {
         case .albums, .audiobooks, .compilations:
             return items[0].albumTitle ?? ""
         case .artists:
-            return subCollection.collections[section].representativeItem?.albumTitle ?? ""
+            return collections[section].representativeItem?.albumTitle ?? ""
         case .genres:
             return items[0].genre ?? ""
         case .songs:
@@ -37,49 +38,50 @@ struct MediaViewModel {
         }
     }
     
+    func heightForSectionHeader() -> CGFloat {
+        switch sortType {
+        case .artists:
+            return 50.0
+        default:
+            return 120.0
+        }
+    }
+    
     func numberOfSections() -> Int{
-        if subCollection.sortType == .artists {
-            return subCollection.collections.count
+        if sortType == .artists {
+            return collections.count
         }
         return 1
     }
 
     
     func numberOfRowsForSection(section: Int) -> Int {
-        if subCollection.sortType == .artists {
-            return subCollection.collections[section].items.count
+        if sortType == .artists {
+            return collections[section].items.count
         }
         return items.count
     }
     
-    //    func sectionIndexTitles() -> [String] {
-    //        var indexTitles: [String] = []
-    //         let media = self.mediaGroupCollection
-    //            media.sections.forEach {indexTitles.append($0.title)}
-    //
-    //        return indexTitles
-    //    }
-    
     func cellImage(indexPath: IndexPath) -> UIImage {
         let imageViewModifier = CGFloat(0.25)
         let cellImageSize = CGSize(width: 40*imageViewModifier, height: 40*imageViewModifier)
-        return subCollection.collections[indexPath.row].items[indexPath.row].artwork?.image(at: cellImageSize) ?? UIImage(named: "noteSml.png")!
+        return collections[indexPath.row].items[indexPath.row].artwork?.image(at: cellImageSize) ?? UIImage(named: "noteSml.png")!
     }
     
     func cellLabelText(indexPath: IndexPath) -> String {
-        let mediaItem: MPMediaItem = subCollection.collections[indexPath.section].items[indexPath.row]
+        let mediaItem: MPMediaItem = collections[indexPath.section].items[indexPath.row]
         return mediaItem.title ?? ""
     }
     
     func didSelectSongAtRowAt(indexPath: IndexPath) {
         
         var item = items[indexPath.row]
-        if subCollection.sortType == .artists {
-         item = subCollection.collections[indexPath.section].items[indexPath.row]
+        if sortType == .artists {
+         item = collections[indexPath.section].items[indexPath.row]
         }
         if firstTimeTap {
-            if subCollection.sortType == .artists {
-                player.setPlayerQueue(with: subCollection.collections[indexPath.section])
+            if sortType == .artists {
+                player.setPlayerQueue(with: collections[indexPath.section])
             } else {
             player.setPlayerQueue(with: MPMediaItemCollection(items: items))
             }

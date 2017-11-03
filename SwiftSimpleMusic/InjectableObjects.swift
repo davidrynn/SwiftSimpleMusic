@@ -11,10 +11,10 @@ import MediaPlayer
 
 
 struct InjectionObjects {
-    let player: MusicPlayer
+    let player: MusicPlayerProtocol
     let collection: MediaCollection
     
-    init (player: MusicPlayer, collection: MediaCollection) {
+    init (player: MusicPlayerProtocol, collection: MediaCollection) {
         self.player = player
         self.collection = collection
     }

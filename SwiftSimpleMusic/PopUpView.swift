@@ -8,6 +8,15 @@
 
 import UIKit
 
+protocol PopUpViewButtonDelegate {
+    func artistButtonTapped()
+    func albumButtonTapped()
+}
+
+protocol PopUpScrollDelegate {
+    func scrollPopUpView()
+}
+
 class PopUpView: UIView {
 
     
@@ -21,10 +30,14 @@ class PopUpView: UIView {
     @IBOutlet weak var topBarImageView: UIImageView!
     @IBOutlet weak var topBarLabel: UILabel!
   
+    @IBOutlet weak var albumButton: UIButton!
+    @IBOutlet weak var artistButton: UIButton!
     @IBOutlet weak var slider: UISlider!
     
     @IBOutlet fileprivate weak var label: UILabel!
     
+    var delegate: PopUpViewButtonDelegate?
+    var popUpScrollDelegate: PopUpScrollDelegate?
     var topBarOpacity: CGFloat = 1.0
     var labelText: String {
         get {
@@ -70,22 +83,35 @@ class PopUpView: UIView {
         } else {
             self.backgroundColor = UIColor.white
         }
-        
-        
     }
+    
+    @IBAction func artistButtonTapped(_ sender: Any) {
+        self.delegate?.artistButtonTapped()
+    }
+    @IBAction func albumButtonTapped(_ sender: Any) {
+        self.delegate?.albumButtonTapped()
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
         self.sendSubview(toBack: blurView)
-        self.topBar.frame = CGRect(x: 0, y: 0, width: self.width, height: 40)
-        self.topBarImageView.frame = CGRect(x: 5.0, y: 2.5, width: 35, height: 35)
-        self.topBarLabel.frame = CGRect(x:50.0, y: 2.5, width: self.width - 50, height: 35)
+        self.artistButton.frame = CGRect(x: 40, y: self.height - 140, width: 80, height: 45)
+        self.artistButton.backgroundColor = UIColor.lightGray
+        self.artistButton.dropShadow()
+        self.albumButton.frame = CGRect(x: self.width - 120, y: self.height - 140, width: 80, height: 45)
+        self.albumButton.backgroundColor = UIColor.lightGray
+        self.albumButton.dropShadow()
+        self.topBar.frame = CGRect(x: 0, y: 0, width: self.width, height: 60)
+        self.topBarImageView.frame = CGRect(x: 5.0, y: 12.5, width: 35, height: 35)
+        self.topBarLabel.frame = CGRect(x:50.0, y: 12.5, width: self.width - 50, height: 35)
         let sliderWidth = self.width*2/3
         self.slider.frame = CGRect(x: centeringOriginX(sliderWidth), y: self.height*2/3, width: sliderWidth, height: 40.0)
-        self.label.origin = CGPoint(x: centeringOriginX(self.label.width), y: self.slider.origin.y - 45.0)
+        self.label.frame = CGRect(x: centeringOriginX(sliderWidth), y: slider.origin.y - 45, width: sliderWidth, height: 40)
+        self.label.textAlignment = .center
         self.imageView.frame = CGRect(x: self.slider.origin.x, y: 80, width: sliderWidth, height: sliderWidth)
         self.topBar.alpha = topBarOpacity
         self.topBarImageView.alpha = topBarOpacity
-        self.label.alpha = topBarOpacity
+        self.topBar.dropShadow()
     }
     
     func centeringOriginX(_ objectWidth: CGFloat) -> CGFloat {

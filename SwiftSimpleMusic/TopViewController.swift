@@ -28,6 +28,14 @@ class TopViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        if #available(iOS 9.3, *) {
+            MPMediaLibrary.requestAuthorization { status in
+                if status == MPMediaLibraryAuthorizationStatus.denied{}
+                
+            }
+        } else {
+            // Fallback on earlier versions
+        }
         self.addChildViewController(popUpViewController)
         self.view.addSubview(popUpViewController.view)
         popUpViewController.didMove(toParentViewController: self)
@@ -35,6 +43,8 @@ class TopViewController: UIViewController {
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.detectPan(_:)))
         popUpViewController.view.gestureRecognizers = [panRecognizer]
         popUpViewController.player = player
+        let popUpView = popUpViewController.view as? PopUpView
+        popUpView?.popUpScrollDelegate = self as! PopUpScrollDelegate
         
     }
     
@@ -45,6 +55,8 @@ class TopViewController: UIViewController {
         self.view.bringSubview(toFront: playbackControlView)
         
     }
+    
+    
     func setupButtons(){
         //        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TopViewController.backButtonTapped(_:))  //Tap function will call when user tap on button
         //        let longGesture = UILongPressGestureRecognizer(target: self, action: "Long") //Long function will call when user long press on button.
@@ -63,33 +75,48 @@ class TopViewController: UIViewController {
         let translation = recognizer.translation(in: self.view)
         popUpView.center.y = lastLocation.y + translation.y
         if recognizer.state == UIGestureRecognizerState.ended {
-            UIView.animate(withDuration: 0.1, delay: 0.0, options: UIViewAnimationOptions(), animations: {
-                //if direction up
-                if translation.y < 0 {
-                if popUpView.center.y >= self.view.height*2/3 {
-                    popUpView.y = self.popUpViewY
-                } else {
-                    popUpView.centerVerticallyInSuperview()
-                }
-                } else {
-                    //if direction down
-                    if popUpView.center.y < self.view.height/3 {
-                        popUpView.centerVerticallyInSuperview()
-                    } else {
-                        popUpView.y = self.popUpViewY
-                    }                    
-
-                }
-            }, completion: nil)
+            animateView(direction: translation.y)
         }
         
-        //fade top bar
+        fadeTopBarWithDrag()
+
+        
+    }
+    
+    func fadeTopBarWithDrag() {
+        guard let popUpView = popUpViewController.view as? PopUpView else {
+            return
+        }
         let fadeStartY: CGFloat = self.view.height/2
         if popUpView.y < fadeStartY {
             popUpViewController.topBarOpacity = CGFloat(popUpView.y/fadeStartY)
         } else {
             popUpViewController.topBarOpacity = 1.0
         }
+    }
+    
+    func animateView(direction: CGFloat) {
+        guard let popUpView = popUpViewController.view as? PopUpView else {
+            return
+        }
+        UIView.animate(withDuration: 0.1, delay: 0.0, options: UIViewAnimationOptions(), animations: {
+            //if direction up
+            if direction < 0 {
+                if popUpView.y > self.view.height*3/4 {
+                    popUpView.y = self.popUpViewY
+                } else {
+                    popUpView.centerVerticallyInSuperview()
+                }
+            } else {
+                //if direction down
+                if popUpView.y < self.view.height/15 {
+                    popUpView.centerVerticallyInSuperview()
+                } else {
+                    popUpView.y = self.popUpViewY
+                }
+                
+            }
+        }, completion: nil)
         
     }
     
@@ -107,31 +134,6 @@ class TopViewController: UIViewController {
         }
     }
     
-    
-    //    @IBAction func forwardButtonLongPressed(_ sender: UILongPressGestureRecognizer) {
-    //        player.seekForward { () -> (Bool) in
-    //            if sender.state == UIGestureRecognizerState.ended {
-    //                return true
-    //            }
-    //            return false
-    //        }
-    //    }
-    
-    //    @IBAction func forwardButtonLongPressed(_ sender: UILongPressGestureRecognizer) {
-    //        sender.minimumPressDuration = 1.0
-    //        if sender.state == UIGestureRecognizerState.ended {
-    //print("longpress ended")
-    //        }
-    //        if sender.state == UIGestureRecognizerState.began {
-    //            print("longpress began")
-    //        }
-    //                player.seekForward { () -> (Bool) in
-    //                    if sender.state == UIGestureRecognizerState.ended {
-    //                        return true
-    //                    }
-    //                    return false
-    //                }
-    //    }
     @IBAction func forwardButtonLongPressed(_ sender: UILongPressGestureRecognizer) {
         sender.minimumPressDuration = 1.0
         if sender.state == UIGestureRecognizerState.ended {
@@ -170,13 +172,11 @@ class TopViewController: UIViewController {
             let dVC = segue.destination as? UINavigationController
             if let mainVC = dVC?.topViewController as? MainMusicTableViewController {
                 mainVC.inject(player)
-            } else {
-                
+                let popUpView = popUpViewController.view as? PopUpView
+                popUpView?.delegate = mainVC
             }
         }
     }
-    
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -190,5 +190,11 @@ class TopViewController: UIViewController {
         popUpViewController.removeFromParentViewController()
     }
     
+}
+
+extension TopViewController: PopUpScrollDelegate {
+    func scrollPopUpView() {
+        self.animateView(direction: -1)
+    }
 }
 

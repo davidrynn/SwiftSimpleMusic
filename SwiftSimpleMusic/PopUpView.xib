@@ -7,7 +7,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,25 +17,52 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i8j-M5-rTD">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VpE-5V-OuK">
+                            <rect key="frame" x="20" y="8" width="58" height="32"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1bK-37-nZl">
-                            <rect key="frame" x="124" y="10" width="42" height="21"/>
+                            <rect key="frame" x="124" y="14" width="42" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VpE-5V-OuK">
-                            <rect key="frame" x="20" y="8" width="58" height="32"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        </imageView>
                     </subviews>
-                    <color key="backgroundColor" red="0.94117647059999998" green="0.94117647059999998" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XHU-Ct-FAe">
+                    <rect key="frame" x="313" y="563" width="46" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="Album"/>
+                    <connections>
+                        <action selector="albumButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="bnR-Ms-VJt"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="duz-qV-hHp">
+                    <rect key="frame" x="120" y="563" width="46" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="Artist"/>
+                    <connections>
+                        <action selector="artistButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="dg9-K5-U15"/>
+                    </connections>
+                </button>
+                <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="900-PH-wHg">
+                    <rect key="frame" x="5" y="442" width="364" height="31"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </slider>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CQ6-7P-63b">
+                    <rect key="frame" x="168" y="413" width="96" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="noteSml.png" translatesAutoresizingMaskIntoConstraints="NO" id="IHy-1Y-7Wc">
-                    <rect key="frame" x="120" y="45" width="360" height="360"/>
+                    <rect key="frame" x="7" y="58" width="360" height="360"/>
                     <constraints>
                         <constraint firstAttribute="height" secondItem="IHy-1Y-7Wc" secondAttribute="width" multiplier="1:1" id="eed-fb-MVc"/>
                     </constraints>
@@ -46,53 +72,11 @@
                         </mask>
                     </variation>
                 </imageView>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XHU-Ct-FAe">
-                    <rect key="frame" x="313" y="563" width="46" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="Button"/>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="duz-qV-hHp">
-                    <rect key="frame" x="120" y="563" width="46" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="Button"/>
-                </button>
-                <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="900-PH-wHg">
-                    <rect key="frame" x="118" y="445" width="364" height="31"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="114" id="e5H-eD-cuE"/>
-                    </constraints>
-                    <variation key="default">
-                        <mask key="constraints">
-                            <exclude reference="e5H-eD-cuE"/>
-                        </mask>
-                    </variation>
-                </slider>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CQ6-7P-63b">
-                    <rect key="frame" x="252" y="413" width="96" height="21"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-            <constraints>
-                <constraint firstItem="IHy-1Y-7Wc" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="0Bm-il-EQU"/>
-                <constraint firstItem="900-PH-wHg" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="UWx-ft-wn8"/>
-                <constraint firstItem="900-PH-wHg" firstAttribute="top" secondItem="IHy-1Y-7Wc" secondAttribute="bottom" constant="40" id="WcQ-2a-il8"/>
-                <constraint firstItem="IHy-1Y-7Wc" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" multiplier="0.75" id="mfZ-4T-Yqj"/>
-                <constraint firstItem="900-PH-wHg" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.6" id="qcX-jp-BCo"/>
-                <constraint firstItem="IHy-1Y-7Wc" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.6" id="sHY-1z-S6a"/>
-            </constraints>
-            <variation key="default">
-                <mask key="constraints">
-                    <exclude reference="0Bm-il-EQU"/>
-                    <exclude reference="mfZ-4T-Yqj"/>
-                    <exclude reference="sHY-1z-S6a"/>
-                    <exclude reference="WcQ-2a-il8"/>
-                </mask>
-            </variation>
             <connections>
+                <outlet property="albumButton" destination="XHU-Ct-FAe" id="rQo-dL-18L"/>
+                <outlet property="artistButton" destination="duz-qV-hHp" id="ycf-r3-tCK"/>
                 <outlet property="imageView" destination="IHy-1Y-7Wc" id="Reu-Ol-Eom"/>
                 <outlet property="label" destination="CQ6-7P-63b" id="MDe-QG-e64"/>
                 <outlet property="slider" destination="900-PH-wHg" id="lRZ-cu-862"/>
@@ -100,7 +84,7 @@
                 <outlet property="topBarImageView" destination="VpE-5V-OuK" id="a4T-qt-qFB"/>
                 <outlet property="topBarLabel" destination="1bK-37-nZl" id="le2-et-h1r"/>
             </connections>
-            <point key="canvasLocation" x="-30.5" y="-9.5"/>
+            <point key="canvasLocation" x="-31" y="-15"/>
         </view>
     </objects>
     <resources>

@@ -23,7 +23,7 @@ class MainMusicViewModelTest: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        let player = MockMusicPlayer()
+        let player = MusicPlayer()
         self.sut = SwiftSimpleMusic.MainMusicViewModel(player: player)
         //        let sectionHeader1: SectionHeaderInfo = SectionHeaderInfo(letter: "A", song: <#T##MPMediaItem#>)
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -91,25 +91,30 @@ class MainMusicViewModelTest: XCTestCase {
         
     }
     
+    func testGetViewModelFromPopUp_ShouldGetSong(){
+        let viewModel = sut.getViewModelFromPopUp()
+    }
+    
     
     
 }
 
 extension MainMusicViewModelTest {
-    class MockMusicPlayer: SwiftSimpleMusic.MusicPlayer {
-        //        var currentSong: MPMediaItem? { get }
-        //        var nextSong: MPMediaItem? { get }
-        //        var previousSong: MPMediaItem? { get }
-        //        var collection: MediaCollection { get }
-        //        func play()
-        //        func beginSeekingForward()
-        //        func endSeeking()
-        //        func beginRewind()
-        //        func skipToNextItem()
-        //        func playPreviousItem()
-        //        func pause()
-        //        func stop()
-        //        func toggleShuffleMode()
-        //        func currentPlaybackState()-> MPMusicPlaybackState
-    }
+//    class MockMusicPlayer: SwiftSimpleMusic.MusicPlayerProtocol {
+//        
+//        //        var currentSong: MPMediaItem? { get }
+//        //        var nextSong: MPMediaItem? { get }
+//        //        var previousSong: MPMediaItem? { get }
+//        //        var collection: MediaCollection { get }
+//        //        func play()
+//        //        func beginSeekingForward()
+//        //        func endSeeking()
+//        //        func beginRewind()
+//        //        func skipToNextItem()
+//        //        func playPreviousItem()
+//        //        func pause()
+//        //        func stop()
+//        //        func toggleShuffleMode()
+//        //        func currentPlaybackState()-> MPMusicPlaybackState
+//    }
 }

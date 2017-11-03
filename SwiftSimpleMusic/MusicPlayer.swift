@@ -14,6 +14,8 @@ protocol MusicPlayerProtocol {
     var currentSong: MPMediaItem? { get }
     var nextSong: MPMediaItem? { get }
     var previousSong: MPMediaItem? { get }
+    var repeatMode: MPMusicRepeatMode { get set }
+    var shuffleMode: MPMusicShuffleMode { get set }
     var collection: MediaCollection { get }
     func play()
     func playItem(_ item: MPMediaItem)
@@ -25,6 +27,7 @@ protocol MusicPlayerProtocol {
     func pause()
     func stop()
     func toggleShuffleMode()
+    func toggleLoopMode(loopButton: UIBarButtonItem)
     func currentPlaybackState()-> MPMusicPlaybackState
     func setPlayerQueue(with: MPMediaQuery)
     func setPlayerQueue(with: MPMediaItemCollection)
@@ -60,6 +63,16 @@ class MusicPlayer: MusicPlayerProtocol {
             return self.player.nowPlayingItem
         }
     }
+    
+    var repeatMode: MPMusicRepeatMode {
+        set {
+            player.repeatMode = self.repeatMode
+        }
+        
+        get {
+            return player.repeatMode
+        }
+    }
     //    var musicCollection: MPMediaItemCollection
     //    var randomizedCollection: MPMediaItemCollection
     var shuffleMode: MPMusicShuffleMode {
@@ -78,24 +91,10 @@ class MusicPlayer: MusicPlayerProtocol {
         self.collection = MediaCollection(items: items)
         self.player.setQueue(with: MPMediaQuery.songs())
         self.shuffleMode = player.shuffleMode
+        self.repeatMode = player.repeatMode
         player.beginGeneratingPlaybackNotifications()
 
-        
     }
-    
-    //    fileprivate func collection(query: MPMediaQuery) -> MediaCollection {
-    //        let items = query.items!
-    //        return MediaCollection(items: items)
-    //    }
-    
-//    fileprivate class func shuffleModeFromDefaults() -> MPMusicShuffleMode {
-//        let defaults = UserDefaults.standard
-//        if let shuffleModeRaw: Int = defaults.integer(forKey: "shuffleMode") {
-//            return MPMusicShuffleMode(rawValue: shuffleModeRaw)!
-//        } else {
-//            return MPMusicShuffleMode.off
-//        }
-//    }
     
     func setPlayerQueue(with query: MPMediaQuery) {
         player.setQueue(with: query)
@@ -157,6 +156,22 @@ class MusicPlayer: MusicPlayerProtocol {
     
     func toggleShuffleMode() {
         
+    }
+    
+    func toggleLoopMode(loopButton: UIBarButtonItem) {
+        
+        if repeatMode == .none {
+            player.repeatMode = .all
+            loopButton.image = #imageLiteral(resourceName: "loop3")
+        }
+        else if repeatMode == .all {
+            player.repeatMode = .one
+            loopButton.image = #imageLiteral(resourceName: "loop2")
+        }
+        else if player.repeatMode == .one {
+            player.repeatMode = .none
+            loopButton.image = #imageLiteral(resourceName: "loop1")
+        }
     }
     
     deinit{
