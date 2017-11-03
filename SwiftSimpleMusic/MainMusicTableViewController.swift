@@ -184,19 +184,8 @@
         }
         
         
-        @IBAction func loopButtonTapped(_ sender: AnyObject) {
-            if player.repeatMode == .none {
-                player.repeatMode = .all
-                loopButton.image = #imageLiteral(resourceName: "loop3")
-            }
-            else if player.repeatMode == .all {
-                player.repeatMode = .one
-                loopButton.image = #imageLiteral(resourceName: "loop2")
-            }
-            else if player.repeatMode == .one {
-                player.repeatMode = .none
-                loopButton.image = #imageLiteral(resourceName: "loop1")
-            }
+        @IBAction func loopButtonTapped(_ sender: UIBarButtonItem) {
+            player.toggleLoopMode(loopButton: sender)
             navigationController?.reloadInputViews()
             
         }
@@ -249,4 +238,7 @@
             self.currentSort = .albums
             performSegue(withIdentifier: "toSubMediaVC", sender: self)
         }
+  }
+
+  extension MusicListViewProtocol {
   }

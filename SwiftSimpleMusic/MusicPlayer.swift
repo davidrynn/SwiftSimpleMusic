@@ -27,6 +27,7 @@ protocol MusicPlayerProtocol {
     func pause()
     func stop()
     func toggleShuffleMode()
+    func toggleLoopMode(loopButton: UIBarButtonItem)
     func currentPlaybackState()-> MPMusicPlaybackState
     func setPlayerQueue(with: MPMediaQuery)
     func setPlayerQueue(with: MPMediaItemCollection)
@@ -64,8 +65,12 @@ class MusicPlayer: MusicPlayerProtocol {
     }
     
     var repeatMode: MPMusicRepeatMode {
-        didSet {
+        set {
             player.repeatMode = self.repeatMode
+        }
+        
+        get {
+            return player.repeatMode
         }
     }
     //    var musicCollection: MPMediaItemCollection
@@ -151,6 +156,22 @@ class MusicPlayer: MusicPlayerProtocol {
     
     func toggleShuffleMode() {
         
+    }
+    
+    func toggleLoopMode(loopButton: UIBarButtonItem) {
+        
+        if repeatMode == .none {
+            player.repeatMode = .all
+            loopButton.image = #imageLiteral(resourceName: "loop3")
+        }
+        else if repeatMode == .all {
+            player.repeatMode = .one
+            loopButton.image = #imageLiteral(resourceName: "loop2")
+        }
+        else if player.repeatMode == .one {
+            player.repeatMode = .none
+            loopButton.image = #imageLiteral(resourceName: "loop1")
+        }
     }
     
     deinit{

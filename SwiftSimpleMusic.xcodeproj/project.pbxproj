@@ -16,6 +16,7 @@
 		224946931CC7D72800D5104C /* PopUpTopBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 224946921CC7D72800D5104C /* PopUpTopBar.xib */; };
 		224946951CC7D78400D5104C /* PopUpTopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224946941CC7D78400D5104C /* PopUpTopBarView.swift */; };
 		224946991CC7E23400D5104C /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224946981CC7E23400D5104C /* UIView+Layout.swift */; };
+		226FB19F1FACFD26006A5185 /* MusicListViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226FB19E1FACFD26006A5185 /* MusicListViewProtocol.swift */; };
 		227285331E7B688C0052304A /* SearchSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227285321E7B688C0052304A /* SearchSection.swift */; };
 		229D59911E6384E30002F076 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 229D59901E6384E30002F076 /* Storyboard.storyboard */; };
 		229D59931E645B4A0002F076 /* MusicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229D59921E645B4A0002F076 /* MusicTableViewCell.swift */; };
@@ -64,6 +65,7 @@
 		224946921CC7D72800D5104C /* PopUpTopBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopUpTopBar.xib; sourceTree = "<group>"; };
 		224946941CC7D78400D5104C /* PopUpTopBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpTopBarView.swift; sourceTree = "<group>"; };
 		224946981CC7E23400D5104C /* UIView+Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
+		226FB19E1FACFD26006A5185 /* MusicListViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicListViewProtocol.swift; sourceTree = "<group>"; };
 		227285321E7B688C0052304A /* SearchSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchSection.swift; sourceTree = "<group>"; };
 		229D59901E6384E30002F076 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		229D59921E645B4A0002F076 /* MusicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTableViewCell.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				224946901CC7D5B400D5104C /* PopUpViewController.swift */,
+				226FB19E1FACFD26006A5185 /* MusicListViewProtocol.swift */,
 				2249468C1CC7D04700D5104C /* PopUpView.swift */,
 				2249468A1CC7CF9700D5104C /* PopUpView.xib */,
 				224946941CC7D78400D5104C /* PopUpTopBarView.swift */,
@@ -397,6 +400,7 @@
 				22AAD4961E47B91B00FDE171 /* MediaSortType.swift in Sources */,
 				224946991CC7E23400D5104C /* UIView+Layout.swift in Sources */,
 				22F4F4A81C064F8C0050FE2B /* DRMusicPlayer.swift in Sources */,
+				226FB19F1FACFD26006A5185 /* MusicListViewProtocol.swift in Sources */,
 				2200C2F61E9569D700CEF604 /* AppState.swift in Sources */,
 				22DED0CE1D88A87500F9C7FA /* MPMediaItem+protocol.swift in Sources */,
 				227285331E7B688C0052304A /* SearchSection.swift in Sources */,
