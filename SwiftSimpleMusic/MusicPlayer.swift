@@ -36,7 +36,7 @@ protocol MusicPlayerProtocol {
 
 class MusicPlayer: MusicPlayerProtocol {
     
-    var player: MPMusicPlayerController
+    let player: MPMusicPlayerController
     var nextSong: MPMediaItem? {
         get {
             let indexNextSong = player.indexOfNowPlayingItem + 1
@@ -111,14 +111,8 @@ class MusicPlayer: MusicPlayerProtocol {
     }
     
     func playItem(_ item: MPMediaItem) {
-        //need to set shuffle mode off for tap on cell to work
-        let currentShuffleMode = player.shuffleMode
-        player.shuffleMode = .off
         player.nowPlayingItem = item
-        
-        
         player.play()
-        player.shuffleMode = currentShuffleMode
     }
     
     func stop() {

@@ -276,11 +276,6 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     //    }
     
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType) {
-        guard let media = mediaDictionary[sortType] else { return }
-        let section = media.sections[indexPath.section]
-        let index = section.range.location + indexPath.row
-        let mediaItem: MPMediaItem = media.items[index]
-        let mediaCollection: MPMediaItemCollection = media.collections[index]
         //should only work for songs
         if appState == .isSearching {
             switch indexPath.section {
@@ -309,7 +304,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
                 }
                 
             } else {
-              //  player.stop()
+                player.stop()
                 player.playItem(item)
             }
         } else {
@@ -403,12 +398,9 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     }
     
     func getSong(sortType: MediaSortType, indexPath: IndexPath) -> MPMediaItem? {
-
         guard let media = mediaDictionary[sortType] else { return nil }
-        let section = media.sections[indexPath.section]
-        let index = section.range.location + indexPath.row
-        return  media.items[index]
-
+        let range = media.sections[indexPath.section].range
+        return media.items[range.location + indexPath.row]
     }
     
     mutating func searchMedia(searchText: String){
