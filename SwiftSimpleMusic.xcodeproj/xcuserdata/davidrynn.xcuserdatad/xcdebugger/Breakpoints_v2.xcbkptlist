@@ -43,13 +43,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SwiftSimpleMusic/MainMusicTableViewController.swift"
-            timestampString = "531432581.343489"
+            filePath = "SwiftSimpleMusic/MusicPlayer.swift"
+            timestampString = "531442883.460549"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "188"
-            endingLineNumber = "188"
-            landmarkName = "loopButtonTapped(_:)"
+            startingLineNumber = "114"
+            endingLineNumber = "114"
+            landmarkName = "playItem(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -60,12 +60,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftSimpleMusic/MusicPlayer.swift"
-            timestampString = "531432581.34356"
+            timestampString = "531442883.460953"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "162"
-            endingLineNumber = "162"
-            landmarkName = "toggleLoopMode(loopButton:)"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
+            landmarkName = "playItem(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
