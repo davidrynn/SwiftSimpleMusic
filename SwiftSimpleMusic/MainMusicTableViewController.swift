@@ -170,16 +170,8 @@
         }
         
         //    MARK: - Actions
-        @IBAction func shuffleButtonTapped(_ sender: AnyObject) {
-            
-            if (player.shuffleMode == MPMusicShuffleMode.off || player.shuffleMode.rawValue == 0) {
-                player.shuffleMode = MPMusicShuffleMode.songs
-                shuffleButton.image = UIImage(named: "shuffle2")
-            }
-            else if (player.shuffleMode == MPMusicShuffleMode.songs || player.shuffleMode.rawValue == 2) {
-                player.shuffleMode = MPMusicShuffleMode.off
-                shuffleButton.image = UIImage(named: "shuffle1")
-            }
+        @IBAction func shuffleButtonTapped(_ sender: UIBarButtonItem) {
+            player.toggleShuffleMode(shuffleButton: sender)
             navigationController?.reloadInputViews()
         }
         

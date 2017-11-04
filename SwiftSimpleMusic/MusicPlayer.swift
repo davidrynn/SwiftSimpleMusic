@@ -26,7 +26,7 @@ protocol MusicPlayerProtocol {
     func playPreviousItem()
     func pause()
     func stop()
-    func toggleShuffleMode()
+    func toggleShuffleMode(shuffleButton: UIBarButtonItem)
     func toggleLoopMode(loopButton: UIBarButtonItem)
     func currentPlaybackState()-> MPMusicPlaybackState
     func setPlayerQueue(with: MPMediaQuery)
@@ -154,8 +154,15 @@ class MusicPlayer: MusicPlayerProtocol {
     }
 
     
-    func toggleShuffleMode() {
-        
+    func toggleShuffleMode(shuffleButton: UIBarButtonItem) {
+        if (player.shuffleMode == MPMusicShuffleMode.off || player.shuffleMode.rawValue == 0) {
+            player.shuffleMode = MPMusicShuffleMode.songs
+            shuffleButton.image = UIImage(named: "shuffle2")
+        }
+        else {
+            player.shuffleMode = MPMusicShuffleMode.off
+            shuffleButton.image = UIImage(named: "shuffle1")
+        }
     }
     
     func toggleLoopMode(loopButton: UIBarButtonItem) {
