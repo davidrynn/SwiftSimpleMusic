@@ -304,7 +304,6 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
                 }
                 
             } else {
-                player.stop()
                 player.playItem(item)
             }
         } else {
