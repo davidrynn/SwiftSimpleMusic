@@ -122,38 +122,17 @@
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var item: MPMediaItem?
         //1. get song or representative song
-        if viewModel.appState == .isSearching {
-            item = viewModel.filteredMedia.songs[indexPath.row]
-        } else {
-            item = viewModel.getSong(sortType: currentSort, indexPath: indexPath)
-        }
-        //3. if song toggle play
-        guard let safeItem = item else { return }
+        viewModel.setSelectedSong(sortType: currentSort, indexPath: indexPath)
+
+        //2. if song toggle play
         if (currentSort == .songs) || (viewModel.appState == .isSearching && indexPath.section == 0) {
-            viewModel.togglePlaying(item: safeItem)
+        //    viewModel.togglePlaying(item: safeItem)
+            viewModel.togglePlayingSelectedSong()
             return
         }
-        //1. if searching find out if it's
-        
-        //        if viewModel.appState == .isSearching {
-        //            let sectionType = SearchSection.typeForSection(indexPath.section)
-        //
-        //            switch sectionType {
-        //            case .songs:
-        //                viewModel.playFilteredSong(indexPath: indexPath)
-        //            default:
-        //                performSegue(withIdentifier: "toSubMediaVC", sender: self)
-        //
-        //            }
-        //        }
-        //        else if currentSort == MediaSortType.songs {
-        //            viewModel.didSelectSongAtRowAt(indexPath: indexPath, sortType: currentSort)
-        //        }
-        //        else {
-        //            performSegue(withIdentifier: "toSubMediaVC", sender: self)
-        //        }
-        
-        //takes in song rep at index and either goes to appropriate subMediaVC or plays song
+        //3. Otherwise segue appropriately
+        performSegue(withIdentifier: "toSubMediaVC", sender: self)
+
     }
     
     // MARK: - Navigation
@@ -177,9 +156,8 @@
                     let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort, item: item)
                     dVC.inject(newViewModel)
                 case .normal:
-                    let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort, indexPath: index)
-                    dVC.inject(newViewModel)
-                    
+                    let newViewModel = self.viewModel.getSubViewModelFromSelectedRow(sortType: currentSort)
+                    dVC.inject(newViewModel)                    
                 }
                 
             }

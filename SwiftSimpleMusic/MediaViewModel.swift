@@ -11,7 +11,7 @@ import MediaPlayer
 
 struct MediaViewModel {
     //    let mediaGroupCollection: GroupCollectionProtocol
-
+    
     let player: MusicPlayerProtocol
     let sortType: MediaSortType
     let groupStruct: GroupCollectionProtocol
@@ -53,7 +53,7 @@ struct MediaViewModel {
         }
         return 1
     }
-
+    
     
     func numberOfRowsForSection(section: Int) -> Int {
         if sortType == .artists {
@@ -75,33 +75,35 @@ struct MediaViewModel {
     
     func didSelectSongAtRowAt(indexPath: IndexPath) {
         
-        var item = items[indexPath.row]
-        if sortType == .artists {
-         item = collections[indexPath.section].items[indexPath.row]
-        }
-        if firstTimeTap {
-            if sortType == .artists {
-                player.setPlayerQueue(with: collections[indexPath.section])
-            } else {
-            player.setPlayerQueue(with: MPMediaItemCollection(items: items))
-            }
-        }
-        if let nowPlayingItem = player.currentSong {
-            
-            if (nowPlayingItem.title == item.title){
-                if player.currentPlaybackState() == MPMusicPlaybackState.playing {
-                    player.pause()
-                } else {
-                    player.playItem(item)
-                }
-                
-            } else {
-                player.stop()
-                player.playItem(item)
-            }
-        } else {
-            player.playItem(item)
-        }
+        let mediaItem: MPMediaItem = collections[indexPath.section].items[indexPath.row]
+        player.playItem(mediaItem)
+//        var item = items[indexPath.row]
+//        if sortType == .artists {
+//            item = collections[indexPath.section].items[indexPath.row]
+//        }
+//        if firstTimeTap {
+//            if sortType == .artists {
+//                player.setPlayerQueue(with: collections[indexPath.section])
+//            } else {
+//                player.setPlayerQueue(with: MPMediaItemCollection(items: items))
+//            }
+//        }
+//        if let nowPlayingItem = player.currentSong {
+//
+//            if (nowPlayingItem.title == item.title){
+//                if player.currentPlaybackState() == MPMusicPlaybackState.playing {
+//                    player.pause()
+//                } else {
+//                    player.playItem(item)
+//                }
+//
+//            } else {
+//                player.stop()
+//                player.playItem(item)
+//            }
+//        } else {
+//            player.playItem(item)
+//        }
     }
     
 }
