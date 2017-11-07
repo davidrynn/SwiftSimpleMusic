@@ -12,6 +12,8 @@ import MediaPlayer
 protocol MainMusicViewModelProtocol {
     var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { get }
     var appState: AppState { get set }
+    var filteredMedia: FilteredMedia { get }
+    func togglePlaying(item: MPMediaItem)
     func numberOfSections(sortType: MediaSortType) -> Int
     func titleForSection(sortType: MediaSortType, section: Int) -> String
     func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int
@@ -19,6 +21,7 @@ protocol MainMusicViewModelProtocol {
     func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage
     func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> (title: String?, detail: String?)?
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
+    func getSong(sortType: MediaSortType, indexPath: IndexPath) -> MPMediaItem?
     func getSubViewModelFromSearch(section: SearchSection, indexPath: IndexPath) -> MediaViewModel
     func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel
     func getSubViewModel(sortType: MediaSortType, item: MPMediaItem) -> MediaViewModel
@@ -398,8 +401,13 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     
     func getSong(sortType: MediaSortType, indexPath: IndexPath) -> MPMediaItem? {
         guard let media = mediaDictionary[sortType] else { return nil }
-        let range = media.sections[indexPath.section].range
-        return media.items[range.location + indexPath.row]
+        let section = media.sections[indexPath.section]
+        let index = section.range.location + indexPath.row
+        let mediaCollection: MPMediaItemCollection = media.collections[index]
+        if sortType == .songs {
+         return media.items[index]
+        }
+        return mediaCollection.representativeItem
     }
     
     mutating func searchMedia(searchText: String){
