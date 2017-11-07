@@ -120,12 +120,11 @@
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var item: MPMediaItem?
         //1. get song or representative song
-        viewModel.setSelectedSong(sortType: currentSort, indexPath: indexPath)
+        viewModel.setSelectedItem(sortType: currentSort, indexPath: indexPath)
 
         //2. if song toggle play
-        if (currentSort == .songs) || (viewModel.appState == .isSearching && indexPath.section == 0) {
+        if (currentSort == .songs) || (viewModel.appState == .isSearching && indexPath.section == 0) || (currentSort == .audiobooks) {
         //    viewModel.togglePlaying(item: safeItem)
             viewModel.togglePlayingSelectedSong()
             return

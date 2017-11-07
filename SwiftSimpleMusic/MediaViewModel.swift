@@ -73,37 +73,30 @@ struct MediaViewModel {
         return mediaItem.title ?? ""
     }
     
-    func didSelectSongAtRowAt(indexPath: IndexPath) {
-        
-        let mediaItem: MPMediaItem = collections[indexPath.section].items[indexPath.row]
-        player.playItem(mediaItem)
-//        var item = items[indexPath.row]
-//        if sortType == .artists {
-//            item = collections[indexPath.section].items[indexPath.row]
-//        }
-//        if firstTimeTap {
-//            if sortType == .artists {
-//                player.setPlayerQueue(with: collections[indexPath.section])
-//            } else {
-//                player.setPlayerQueue(with: MPMediaItemCollection(items: items))
-//            }
-//        }
-//        if let nowPlayingItem = player.currentSong {
-//
-//            if (nowPlayingItem.title == item.title){
-//                if player.currentPlaybackState() == MPMusicPlaybackState.playing {
-//                    player.pause()
-//                } else {
-//                    player.playItem(item)
-//                }
-//
-//            } else {
-//                player.stop()
-//                player.playItem(item)
-//            }
-//        } else {
-//            player.playItem(item)
-//        }
+    mutating func didSelectSongAtRowAt(indexPath: IndexPath) {
+        var item = items[indexPath.row]
+        if sortType == .artists {
+            item = collections[indexPath.section].items[indexPath.row]
+        }
+        //if it's the first time selecting something on this view, change the player queue so not stuck on old queue
+        if firstTimeTap {
+            if sortType == .artists {
+                player.setPlayerQueue(with: collections[indexPath.section])
+            } else {
+                player.setPlayerQueue(with: MPMediaItemCollection(items: items))
+            }
+            firstTimeTap = false
+        }
+        togglePlaying(item: item)
+    }
+    
+    func togglePlaying(item: MPMediaItem){
+        //if user taps on song already playing pause, otherwise play song
+        if let nowPlayingItem = player.currentSong, nowPlayingItem.title == item.title, player.currentPlaybackState() == MPMusicPlaybackState.playing {
+            player.pause()
+            return
+        }
+        player.playItem(item)
     }
     
 }

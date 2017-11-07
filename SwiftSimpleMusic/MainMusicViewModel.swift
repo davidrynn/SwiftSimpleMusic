@@ -28,7 +28,7 @@
     func getSubViewModel(sortType: MediaSortType, item: MPMediaItem) -> MediaViewModel
     func getSubViewModelFromSelectedRow(sortType: MediaSortType) -> MediaViewModel
     func setPlayerQueue(sortType: MediaSortType)
-    mutating func setSelectedSong(sortType: MediaSortType, indexPath: IndexPath)
+    mutating func setSelectedItem(sortType: MediaSortType, indexPath: IndexPath)
     func playFilteredSong(indexPath: IndexPath)
     mutating func searchMedia(searchText: String)
  }
@@ -129,6 +129,7 @@
     var appState: AppState = .normal
     var filteredMedia: FilteredMedia
     private var selectedSong: MPMediaItem?
+    private var selectedPlaylistTitle: String?
     
     init (player: MusicPlayerProtocol) {
         self.mediaDictionary = [ MediaSortType.songs: SongsGroupCollection(),
@@ -278,11 +279,7 @@
         }
         
     }
-    
-    //    func itemAtSelectedRow(indexPath: IndexPath, sortType: MediaSortType) -> MPMediaItem {
-    //
-    //    }
-    
+
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType) {
         //should only work for songs
         if appState == .isSearching {
@@ -352,17 +349,34 @@
 
     }
     
-    
     func getSubViewModelFromSelectedRow(sortType: MediaSortType) -> MediaViewModel  {
-        
-//        switch sortType {
-//        default:
-            let albumPredicate = MPMediaPropertyPredicate.init(value: selectedSong?.albumTitle, forProperty: MPMediaItemPropertyAlbumTitle)
-            let albumQuery = MPMediaQuery.albums()
-            albumQuery.addFilterPredicate(albumPredicate)
-            albumQuery.groupingType = .album
+        var query = MPMediaQuery()
+        switch sortType {
+        case .artists:
+            let artistPredicate = MPMediaPropertyPredicate.init(value: selectedSong?.artist, forProperty: MPMediaItemPropertyArtist)
+            query = MPMediaQuery.artists()
+            query.addFilterPredicate(artistPredicate)
+        case .genres:
+            let genrePredicate = MPMediaPropertyPredicate.init(value: selectedSong?.genre, forProperty: MPMediaItemPropertyGenre)
+            query = MPMediaQuery.genres()
+            query.addFilterPredicate(genrePredicate)
+        case .playlists:
+            query = MPMediaQuery.playlists()
+            let playlistPredicate = MPMediaPropertyPredicate.init(value: selectedPlaylistTitle, forProperty: MPMediaPlaylistPropertyName)
+            query.addFilterPredicate(playlistPredicate)
             
-            return MediaViewModel(player: player, sortType: sortType, groupStruct: GroupCollection.init(query: albumQuery), firstTimeTap: true)
+        case .podcasts:
+            let podcastPredicate = MPMediaPropertyPredicate.init(value: selectedSong?.podcastTitle, forProperty: MPMediaItemPropertyPodcastTitle)
+            query = MPMediaQuery.podcasts()
+            query.addFilterPredicate(podcastPredicate)
+        default:
+            let albumPredicate = MPMediaPropertyPredicate.init(value: selectedSong?.albumTitle, forProperty: MPMediaItemPropertyAlbumTitle)
+            query = MPMediaQuery.albums()
+            query.addFilterPredicate(albumPredicate)
+        }
+        
+        query.groupingType = .album
+        return MediaViewModel(player: player, sortType: sortType, groupStruct: GroupCollection.init(query: query), firstTimeTap: true)
     }
 
     func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel  {
@@ -413,9 +427,13 @@
         togglePlaying(item: filteredMedia.songs[indexPath.row])
     }
     
-    mutating func setSelectedSong(sortType: MediaSortType ,indexPath: IndexPath) {
+    mutating func setSelectedItem(sortType: MediaSortType ,indexPath: IndexPath) {
         if appState == .isSearching {
             selectedSong = filteredMedia.songs[indexPath.row]
+        } else if sortType == .playlists {
+                let tuple = cellLabelText(sortType: .playlists, indexPath: indexPath)
+                selectedPlaylistTitle = tuple?.title
+            
         } else {
             selectedSong = getSong(sortType: sortType, indexPath: indexPath)
         }
