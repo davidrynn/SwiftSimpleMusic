@@ -176,7 +176,7 @@
         
     }
     
-    func sortButtonTapped(sender: UIButton) {
+    @objc func sortButtonTapped(sender: UIButton) {
         //get switch off vc
         guard let titleLabel = sender.titleLabel else { return }
         guard let text = titleLabel.text else { return }

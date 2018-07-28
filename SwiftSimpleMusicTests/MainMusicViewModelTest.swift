@@ -87,13 +87,13 @@ class MainMusicViewModelTest: XCTestCase {
             let song = mediaSongs[mockIndexPath.row]
             let songTitle = song.title
         
-        XCTAssertEqual(sut.cellLabelText(sortType: MediaSortType.songs, indexPath: mockIndexPath), songTitle)
+        XCTAssertEqual(sut.cellLabelText(sortType: MediaSortType.songs, indexPath: mockIndexPath)?.title, songTitle)
         
     }
     
-    func testGetViewModelFromPopUp_ShouldGetSong(){
-        let viewModel = sut.getViewModelFromPopUp()
-    }
+//    func testGetViewModelFromPopUp_ShouldGetSong(){
+//        let viewModel = sut.getViewModelFromPopUp()
+//    }
     
     
     

@@ -44,7 +44,7 @@ class TopViewController: UIViewController {
         popUpViewController.view.gestureRecognizers = [panRecognizer]
         popUpViewController.player = player
         let popUpView = popUpViewController.view as? PopUpView
-        popUpView?.popUpScrollDelegate = self as! PopUpScrollDelegate
+        popUpView?.popUpScrollDelegate = self as PopUpScrollDelegate
         
     }
     
@@ -68,7 +68,7 @@ class TopViewController: UIViewController {
     
     //    MARK: Actions
     
-    func detectPan(_ recognizer: UIPanGestureRecognizer){
+    @objc func detectPan(_ recognizer: UIPanGestureRecognizer){
         guard let popUpView = popUpViewController.view as? PopUpView else {
             return
         }

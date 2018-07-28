@@ -205,7 +205,7 @@
     
     func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage {
         
-        let imageViewModifier = CGFloat(0.25)
+//        let imageViewModifier = CGFloat(0.25)
         let cellImageSize = CGSize(width: 20, height: 20)
         guard let defaultImage: UIImage = UIImage(named: "noteSml.png") else { return UIImage() }
         
@@ -321,8 +321,8 @@
     }
     
     func getSubViewModel(sortType: MediaSortType, item: MPMediaItem) -> MediaViewModel {
-        var collections: [MPMediaItemCollection] = []
-        var items: [MPMediaItem] = []
+//        var collections: [MPMediaItemCollection] = []
+//        var items: [MPMediaItem] = []
         var groupCollection: GroupCollectionProtocol?
 
         if sortType == .albums {
