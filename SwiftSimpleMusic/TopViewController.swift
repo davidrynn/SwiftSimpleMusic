@@ -16,7 +16,7 @@ class TopViewController: UIViewController {
     @IBOutlet weak var container: MainMusicTableViewController!
     @IBOutlet weak var playbackControlView: UIView!
     
-    let popUpViewController = PopUpViewController()
+    private let popUpViewController = PopUpViewController()
     var lastLocation: CGPoint = CGPoint(x: 0, y: 0)
     lazy var popUpViewY: CGFloat = {
         
@@ -43,6 +43,7 @@ class TopViewController: UIViewController {
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.detectPan(_:)))
         popUpViewController.view.gestureRecognizers = [panRecognizer]
         popUpViewController.player = player
+        popUpViewController.updateArtworkImage()
         let popUpView = popUpViewController.view as? PopUpView
         popUpView?.popUpScrollDelegate = self as PopUpScrollDelegate
         
