@@ -234,11 +234,11 @@
 				22DED0BE1D88840400F9C7FA /* Buttons */,
 				22DED0C51D8894FB00F9C7FA /* MainMusicTableViewController.swift */,
 				22DED0C71D88957200F9C7FA /* MainMusicViewModel.swift */,
-				22A802121E58E2CA004E74A4 /* SubMediaTableViewController.swift */,
 				22A802141E58E317004E74A4 /* MediaViewModel.swift */,
-				22DED0BD1D88252100F9C7FA /* PopUpView */,
-				22DED0AE1D84A26B00F9C7FA /* TopViewController.swift */,
 				229D59921E645B4A0002F076 /* MusicTableViewCell.swift */,
+				22DED0BD1D88252100F9C7FA /* PopUpView */,
+				22A802121E58E2CA004E74A4 /* SubMediaTableViewController.swift */,
+				22DED0AE1D84A26B00F9C7FA /* TopViewController.swift */,
 			);
 			name = "Views/ Controllers";
 			sourceTree = "<group>";

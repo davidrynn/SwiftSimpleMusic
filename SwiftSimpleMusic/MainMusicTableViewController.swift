@@ -120,18 +120,20 @@
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //1. get song or representative song
-        viewModel.setSelectedItem(sortType: currentSort, indexPath: indexPath)
 
-        //2. if song toggle play
-        if (currentSort == .songs) || (viewModel.appState == .isSearching && indexPath.section == 0) || (currentSort == .audiobooks) {
-        //    viewModel.togglePlaying(item: safeItem)
-            viewModel.togglePlayingSelectedSong()
+        //if song toggle play
+        if (currentSort == .songs && viewModel.appState != .isSearching) || (currentSort == .audiobooks) || (viewModel.appState == .isSearching && SearchSection.typeForSection(indexPath.section) == .songs) {
+            playSongAt(indexPath: indexPath)
             return
         }
-        //3. Otherwise segue appropriately
+        //Otherwise segue appropriately
         performSegue(withIdentifier: "toSubMediaVC", sender: self)
 
+    }
+    
+    func playSongAt(indexPath: IndexPath) {
+        viewModel.setSelectedItem(sortType: currentSort, indexPath: indexPath)
+        viewModel.togglePlayingSelectedSong()
     }
     
     // MARK: - Navigation
