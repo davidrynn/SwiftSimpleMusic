@@ -21,7 +21,8 @@ class MainMusicTableViewControllerTest: XCTestCase {
         let player = MusicPlayer()
         sut = topViewController.container
         sut.inject(player)
-        sut.viewModel = MockMainMusicTableViewModel()
+        let bogusFilteredMedia = FilteredMedia(songs: [], albums: [], artists: [])
+        sut.viewModel = MockMainMusicTableViewModel(appState: .normal, filteredMedia: bogusFilteredMedia)
         let _ = sut.view
         
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -35,6 +36,50 @@ class MainMusicTableViewControllerTest: XCTestCase {
 
 extension MainMusicTableViewControllerTest {
     struct MockMainMusicTableViewModel: MainMusicViewModelProtocol {
+        var appState: AppState
+        
+        var filteredMedia: FilteredMedia
+        
+        func togglePlaying(item: MPMediaItem) {
+            
+        }
+        
+        func togglePlayingSelectedSong() {
+            
+        }
+        
+        func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> (title: String?, detail: String?)? {
+            
+        }
+        
+        func getSong(sortType: MediaSortType, indexPath: IndexPath) -> MPMediaItem? {
+            <#code#>
+        }
+        
+        func getSubViewModelFromSearch(section: SearchSection, indexPath: IndexPath) -> MediaViewModel {
+            <#code#>
+        }
+        
+        func getSubViewModel(sortType: MediaSortType, item: MPMediaItem) -> MediaViewModel {
+            <#code#>
+        }
+        
+        func getSubViewModelFromSelectedRow(sortType: MediaSortType) -> MediaViewModel {
+            <#code#>
+        }
+        
+        mutating func setSelectedItem(sortType: MediaSortType, indexPath: IndexPath) {
+            <#code#>
+        }
+        
+        func playFilteredSong(indexPath: IndexPath) {
+            <#code#>
+        }
+        
+        mutating func searchMedia(searchText: String) {
+            <#code#>
+        }
+        
         var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { return [ : ] }
         var player: MusicPlayerProtocol { return MusicPlayer() }
         func titleForSection(sortType: MediaSortType, section: Int) -> String {
@@ -64,9 +109,10 @@ extension MainMusicTableViewControllerTest {
         func setPlayerQueue(sortType: MediaSortType) {
         }
         
-        func getSubViewModel(sortType: MediaSortType,  indexPath: IndexPath) -> MediaViewModel {
-            return MediaViewModel(sortType: sortType, items: mediaDictionary[sortType]?.items ?? [], player: player, firstTimeTap: true)
-        }
+//        func getSubViewModel(sortType: MediaSortType,  indexPath: IndexPath) -> MediaViewModel {
+//            let groupsStruct = GroupCollection(query: mediaDictionary)
+//            return MediaViewModel(player: player, sortType: sortType, groupStruct: mediaDictionary[sortType]?.items ?? [], firstTimeTap: true)
+//        }
         
         func numberOfSections(sortType: MediaSortType) -> Int {
             return 1

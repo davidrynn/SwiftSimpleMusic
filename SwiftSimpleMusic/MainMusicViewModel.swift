@@ -1,17 +1,20 @@
  //
-//  MainMusicViewModel.swift
-//  SwiftSimpleMusic
-//
-//  Created by David Rynn on 9/13/16.
-//  Copyright © 2016 David Rynn. All rights reserved.
-//
-
-import Foundation
-import MediaPlayer
-
-protocol MainMusicViewModelProtocol {
+ //  MainMusicViewModel.swift
+ //  SwiftSimpleMusic
+ //
+ //  Created by David Rynn on 9/13/16.
+ //  Copyright © 2016 David Rynn. All rights reserved.
+ //
+ 
+ import Foundation
+ import MediaPlayer
+ 
+ protocol MainMusicViewModelProtocol {
     var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { get }
     var appState: AppState { get set }
+    var filteredMedia: FilteredMedia { get }
+    func togglePlaying(item: MPMediaItem)
+    func togglePlayingSelectedSong()
     func numberOfSections(sortType: MediaSortType) -> Int
     func titleForSection(sortType: MediaSortType, section: Int) -> String
     func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int
@@ -19,29 +22,32 @@ protocol MainMusicViewModelProtocol {
     func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage
     func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> (title: String?, detail: String?)?
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
+    func getSong(sortType: MediaSortType, indexPath: IndexPath) -> MPMediaItem?
     func getSubViewModelFromSearch(section: SearchSection, indexPath: IndexPath) -> MediaViewModel
-    func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel
+//    func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel
     func getSubViewModel(sortType: MediaSortType, item: MPMediaItem) -> MediaViewModel
+    func getSubViewModelFromSelectedRow(sortType: MediaSortType) -> MediaViewModel
     func setPlayerQueue(sortType: MediaSortType)
+    mutating func setSelectedItem(sortType: MediaSortType, indexPath: IndexPath)
     func playFilteredSong(indexPath: IndexPath)
     mutating func searchMedia(searchText: String)
-}
-
-struct FilteredMedia {
+ }
+ 
+ struct FilteredMedia {
     var songs: [MPMediaItem]
     var albums: [MPMediaItemCollection]
     var artists: [MPMediaItemCollection]
-}
-
-protocol GroupCollectionProtocol {
+ }
+ 
+ protocol GroupCollectionProtocol {
     
     var items: [MPMediaItem] { get set }
     var collections: [MPMediaItemCollection] { get set }
     var sections: [MPMediaQuerySection] { get set }
     func sectionHeaders() -> [String]
-}
-
-struct SubGroupCollection: GroupCollectionProtocol {
+ }
+ 
+ struct SubGroupCollection: GroupCollectionProtocol {
     var items: [MPMediaItem]
     var collections: [MPMediaItemCollection]
     var sections: [MPMediaQuerySection]
@@ -54,9 +60,9 @@ struct SubGroupCollection: GroupCollectionProtocol {
         }
         return returnStringArray
     }
-}
-
-struct SearchCollection: GroupCollectionProtocol {
+ }
+ 
+ struct SearchCollection: GroupCollectionProtocol {
     var items: [MPMediaItem]
     var collections: [MPMediaItemCollection]
     var sections: [MPMediaQuerySection]
@@ -65,9 +71,9 @@ struct SearchCollection: GroupCollectionProtocol {
         return ["Songs", "Artists", "Albums"]
     }
     
-}
-
-struct SongsGroupCollection: GroupCollectionProtocol {
+ }
+ 
+ struct SongsGroupCollection: GroupCollectionProtocol {
     
     var query: MPMediaQuery
     var items: [MPMediaItem]
@@ -90,9 +96,9 @@ struct SongsGroupCollection: GroupCollectionProtocol {
         }
         return returnStringArray
     }
-}
-
-struct GroupCollection: GroupCollectionProtocol {
+ }
+ 
+ struct GroupCollection: GroupCollectionProtocol {
     var items: [MPMediaItem]
     var collections: [MPMediaItemCollection]
     var query: MPMediaQuery
@@ -114,14 +120,17 @@ struct GroupCollection: GroupCollectionProtocol {
         }
         return returnStringArray
     }
-}
-
-struct MainMusicViewModel: MainMusicViewModelProtocol {
+ }
+ 
+ struct MainMusicViewModel: MainMusicViewModelProtocol {
     
     var mediaDictionary: [MediaSortType : GroupCollectionProtocol]
     var player: MusicPlayerProtocol
     var appState: AppState = .normal
     var filteredMedia: FilteredMedia
+    private var selectedSong: MPMediaItem?
+    private var selectedPlaylistTitle: String?
+    
     init (player: MusicPlayerProtocol) {
         self.mediaDictionary = [ MediaSortType.songs: SongsGroupCollection(),
                                  MediaSortType.albums: GroupCollection(query: MPMediaQuery.albums()),
@@ -196,7 +205,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
     
     func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage {
         
-        let imageViewModifier = CGFloat(0.25)
+//        let imageViewModifier = CGFloat(0.25)
         let cellImageSize = CGSize(width: 20, height: 20)
         guard let defaultImage: UIImage = UIImage(named: "noteSml.png") else { return UIImage() }
         
@@ -270,11 +279,7 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         }
         
     }
-    
-    //    func itemAtSelectedRow(indexPath: IndexPath, sortType: MediaSortType) -> MPMediaItem {
-    //
-    //    }
-    
+
     func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType) {
         //should only work for songs
         if appState == .isSearching {
@@ -293,80 +298,102 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         }
     }
     
-    func togglePlaying(item: MPMediaItem){
-        if let nowPlayingItem = player.currentSong {
-            
-            if (nowPlayingItem.title == item.title){
-                if player.currentPlaybackState() == MPMusicPlaybackState.playing {
-                    player.pause()
-                } else {
-                    player.playItem(item)
-                }
-                
-            } else {
-                player.playItem(item)
-            }
-        } else {
-            player.playItem(item)
+    func togglePlayingSelectedSong() {
+        if let song = selectedSong {
+            togglePlaying(item: song)
         }
+    }
+    
+    func togglePlaying(item: MPMediaItem){
+        //if user taps on song already playing pause, otherwise play song
+        if let nowPlayingItem = player.currentSong, nowPlayingItem.title == item.title, player.currentPlaybackState() == MPMusicPlaybackState.playing {
+            player.pause()
+            return
+        }
+        player.playItem(item)
     }
     
     func getSubViewModelFromSearch(section: SearchSection, indexPath: IndexPath) -> MediaViewModel {
         let filteredItems = (section == .albums) ? filteredMedia.albums[indexPath.row].items : filteredMedia.artists[indexPath.row].items
         let filteredCollection = (section == .albums) ? filteredMedia.albums[indexPath.row] : filteredMedia.artists[indexPath.row]
         let collection = SearchCollection(items: filteredItems, collections: [filteredCollection], sections: [])
-        return MediaViewModel(player: player, sortType: section.sortType(), groupStruct: collection, firstTimeTap: true)
+        return MediaViewModel(player: player, sortType: section.sortType(), grouping: collection, firstTimeTap: true)
     }
     
     func getSubViewModel(sortType: MediaSortType, item: MPMediaItem) -> MediaViewModel {
-        var collections: [MPMediaItemCollection] = []
-        var items: [MPMediaItem] = []
-        var groupCollection: GroupCollectionProtocol?
-        
+
+        let query: MPMediaQuery
+
         if sortType == .albums {
             let album = item.albumTitle
-            let query = MPMediaQuery.albums()
+            query = MPMediaQuery.albums()
             let predicate = MPMediaPropertyPredicate(value: album, forProperty: "albumTitle")
             query.addFilterPredicate(predicate)
             query.groupingType = .album
-            groupCollection = GroupCollection(query: query)
-//            collections = query.collections ?? []
-//            items = query.items ?? []
         }
         else if sortType == .artists {
             let artist = item.artist
-            let query = MPMediaQuery.artists()
+            query = MPMediaQuery.artists()
             let predicate = MPMediaPropertyPredicate(value: artist, forProperty: "artist")
             query.addFilterPredicate(predicate)
             query.groupingType = .artist
-            groupCollection = GroupCollection(query: query)
 
+        } else {
+            fatalError()
         }
-        guard let grouping = groupCollection else { fatalError() }
-        return MediaViewModel(player: player, sortType: sortType, groupStruct: grouping, firstTimeTap: true )
-    
-    }
+        return MediaViewModel(player: player, sortType: sortType, query: query, firstTimeTap: true )
 
+    }
     
-    func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel  {
-        
-        guard let media = mediaDictionary[sortType] else { fatalError("failed at line 219 \(#function)") }
-        let range = media.sections[indexPath.section].range
-        
-        let start = range.location
-        //        let end = range.location + range.length
-        var collections = [media.collections[start + indexPath.row]]
-        let collectionItems = collections[0].items
-        var subGrouping: GroupCollectionProtocol = SubGroupCollection(items: collectionItems, collections: collections, sections: [], sortType: sortType)
-        if sortType == .artists {
-            let artistPredicate = MPMediaPropertyPredicate.init(value: collectionItems[0].artist, forProperty: MPMediaItemPropertyArtist)
-            let query = MPMediaQuery.albums()
+    func getSubViewModelFromSelectedRow(sortType: MediaSortType) -> MediaViewModel  {
+        var query = MPMediaQuery()
+        switch sortType {
+        case .artists:
+            let artistPredicate = MPMediaPropertyPredicate.init(value: selectedSong?.artist, forProperty: MPMediaItemPropertyArtist)
+            query = MPMediaQuery.artists()
             query.addFilterPredicate(artistPredicate)
-            query.groupingType = .album
-            subGrouping = GroupCollection(query: query)
+        case .genres:
+            let genrePredicate = MPMediaPropertyPredicate.init(value: selectedSong?.genre, forProperty: MPMediaItemPropertyGenre)
+            query = MPMediaQuery.genres()
+            query.addFilterPredicate(genrePredicate)
+        case .playlists:
+            query = MPMediaQuery.playlists()
+            let playlistPredicate = MPMediaPropertyPredicate.init(value: selectedPlaylistTitle, forProperty: MPMediaPlaylistPropertyName)
+            query.addFilterPredicate(playlistPredicate)
+            
+        case .podcasts:
+            let podcastPredicate = MPMediaPropertyPredicate.init(value: selectedSong?.podcastTitle, forProperty: MPMediaItemPropertyPodcastTitle)
+            query = MPMediaQuery.podcasts()
+            query.addFilterPredicate(podcastPredicate)
+        default:
+            let albumPredicate = MPMediaPropertyPredicate.init(value: selectedSong?.albumTitle, forProperty: MPMediaItemPropertyAlbumTitle)
+            query = MPMediaQuery.albums()
+            query.addFilterPredicate(albumPredicate)
         }
-        return MediaViewModel(player: player, sortType: sortType, groupStruct: subGrouping, firstTimeTap: true)
+        
+        query.groupingType = .album
+        return MediaViewModel(player: player, sortType: sortType, query: query, firstTimeTap: true)
     }
+
+//    func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel  {
+//
+//        guard let media = mediaDictionary[sortType] else { fatalError("failed at line 219 \(#function)") }
+//        let range = media.sections[indexPath.section].range
+//
+//        let start = range.location
+//        //        let end = range.location + range.length
+//        var collections = [media.collections[start + indexPath.row]]
+//        let collectionItems = collections[0].items
+//        var subGrouping: GroupCollectionProtocol = SubGroupCollection(items: collectionItems, collections: collections, sections: [], sortType: sortType)
+//        if sortType == .artists {
+//            let artistPredicate = MPMediaPropertyPredicate.init(value: collectionItems[0].artist, forProperty: MPMediaItemPropertyArtist)
+//            let query = MPMediaQuery.albums()
+//            query.addFilterPredicate(artistPredicate)
+//            query.groupingType = .album
+//            subGrouping = GroupCollection(query: query)
+//        }
+//        return MediaViewModel(player: player, sortType: sortType, grouping: subGrouping, firstTimeTap: true)
+//    }
     
     func setPlayerQueue(sortType: MediaSortType) {
         //to make sure correct queue is setup when returning from subview
@@ -396,10 +423,27 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         togglePlaying(item: filteredMedia.songs[indexPath.row])
     }
     
+    mutating func setSelectedItem(sortType: MediaSortType ,indexPath: IndexPath) {
+        if appState == .isSearching {
+            selectedSong = filteredMedia.songs[indexPath.row]
+        } else if sortType == .playlists {
+                let tuple = cellLabelText(sortType: .playlists, indexPath: indexPath)
+                selectedPlaylistTitle = tuple?.title
+            
+        } else {
+            selectedSong = getSong(sortType: sortType, indexPath: indexPath)
+        }
+    }
+    
     func getSong(sortType: MediaSortType, indexPath: IndexPath) -> MPMediaItem? {
         guard let media = mediaDictionary[sortType] else { return nil }
-        let range = media.sections[indexPath.section].range
-        return media.items[range.location + indexPath.row]
+        let section = media.sections[indexPath.section]
+        let index = section.range.location + indexPath.row
+        let mediaCollection: MPMediaItemCollection = media.collections[index]
+        if sortType == .songs {
+            return media.items[index]
+        }
+        return mediaCollection.representativeItem
     }
     
     mutating func searchMedia(searchText: String){
@@ -420,5 +464,5 @@ struct MainMusicViewModel: MainMusicViewModelProtocol {
         
     }
     
-}
-
+ }
+ 

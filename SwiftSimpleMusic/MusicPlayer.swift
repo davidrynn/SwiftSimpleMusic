@@ -87,10 +87,10 @@ class MusicPlayer: MusicPlayerProtocol {
     
     init() {
         
-        self.player = MPMusicPlayerController.systemMusicPlayer()
+        self.player = MPMusicPlayerController.systemMusicPlayer
         let query = MPMediaQuery.songs()
         
-        let items = query.items!
+        let items: [MPMediaItem] = query.items ?? []
         self.collection = MediaCollection(items: items)
         self.player.setQueue(with: MPMediaQuery.songs())
         self.shuffleMode = player.shuffleMode

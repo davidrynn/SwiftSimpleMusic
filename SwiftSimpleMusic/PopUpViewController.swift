@@ -55,7 +55,7 @@ class PopUpViewController: UIViewController {
         return self.view as! PopUpView
     }
     
-    func updateArtworkImage() {
+    @objc func updateArtworkImage() {
         if (player.currentSong != nil) {
             if let item = player.currentSong {
                 if let view = view as? PopUpView {
@@ -78,7 +78,7 @@ class PopUpViewController: UIViewController {
         }
     }
     
-    func displayErrorMessage(notification: Notification){
+    @objc func displayErrorMessage(notification: Notification){
         if let message = notification.userInfo?["message"] as? String {
             let view = getView()
             view.labelText = message

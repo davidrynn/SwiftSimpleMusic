@@ -47,5 +47,7 @@ class PlayButton: UIButton {
         bezierPath.fill()
     }
     
+    //func toggle inner image
+    
     
 }

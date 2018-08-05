@@ -18,8 +18,9 @@ class MediaViewModelTest: XCTestCase {
         super.setUp()
         let query = MPMediaQuery.albums()
         let collections = query.collections
+        let groupStruct = GroupCollection(query: query)
         let items = query.items
-        sut = MediaViewModel(player: MusicPlayer(), sortType: .albums, firstTimeTap: true, collections: collections!, items: items!)
+        sut = MediaViewModel(player: MusicPlayer(), sortType: .albums, groupStruct: groupStruct, firstTimeTap: true)
 
     }
     
