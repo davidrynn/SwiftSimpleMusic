@@ -85,7 +85,7 @@ class MainMusicTableViewControllerTest: XCTestCase {
     private func assertControlsEnabled(_ enabled: Bool, file: StaticString = #filePath, line: UInt = #line) {
         XCTAssertEqual(sut.shuffleButton.isEnabled, enabled, "shuffle", file: file, line: line)
         XCTAssertEqual(sut.loopButton.isEnabled, enabled, "loop", file: file, line: line)
-        let sortButton = sut.navigationItem.titleView?.subviews.first as? UIButton
+        let sortButton = sut.navigationItem.titleView as? UIButton
         XCTAssertNotNil(sortButton, file: file, line: line)
         XCTAssertEqual(sortButton?.isEnabled, enabled, "sort", file: file, line: line)
         XCTAssertEqual(sut.searchController.searchBar.isUserInteractionEnabled, enabled, "search", file: file, line: line)
