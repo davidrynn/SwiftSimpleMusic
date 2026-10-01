@@ -9,45 +9,58 @@
 import UIKit
 
 class PlayButton: UIButton {
-    override func draw(_ rect: CGRect) {
-        let width: CGFloat = rect.size.width/2;
-        let height = rect.size.height/2;
-        let x = rect.size.width/2 - width/2;
-        let y = rect.size.height/2 - height/2;
-        let small = CGRect(x: x, y: y, width: width, height: height);
-        
-        //shadow
-        let circleRect2 = CGRect(x: rect.size.width*0.1 + 1, y: rect.size.height*0.1 + 1, width: rect.size.width*0.8, height: rect.size.height*0.8)
-        //circle
-        let circle2: UIBezierPath = UIBezierPath.init(ovalIn: circleRect2)
+
+    var isPlaying: Bool = false {
+        didSet { setNeedsDisplay() }
+    }
+
+    override func draw(_ bounds: CGRect) {
+        // Always draw in a centered square so the button stays round even if its frame isn't.
+        let side = min(bounds.width, bounds.height)
+        let rect = CGRect(x: bounds.midX - side / 2, y: bounds.midY - side / 2, width: side, height: side)
+
+        // Shadow circle
+        let circleRect2 = CGRect(x: rect.minX + rect.size.width*0.1 + 1, y: rect.minY + rect.size.height*0.1 + 1, width: rect.size.width*0.8, height: rect.size.height*0.8)
+        let circle2 = UIBezierPath(ovalIn: circleRect2)
         circle2.lineWidth = 5
-        let blackAlpha = UIColor.black.withAlphaComponent(0.1)
-        blackAlpha.setStroke()
+        UIColor.black.withAlphaComponent(0.1).setStroke()
         circle2.stroke()
-        
-        let circleRect = CGRect(x: rect.size.width*0.1, y: rect.size.height*0.1, width: rect.size.width*0.8, height: rect.size.height*0.8)
-        //circle
-        let circle: UIBezierPath = UIBezierPath.init(ovalIn: circleRect)
+
+        // Main circle
+        let circleRect = CGRect(x: rect.minX + rect.size.width*0.1, y: rect.minY + rect.size.height*0.1, width: rect.size.width*0.8, height: rect.size.height*0.8)
+        let circle = UIBezierPath(ovalIn: circleRect)
         tintColor.setStroke()
         UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1).setFill()
         circle.lineWidth = 1
         circle.fill()
         circle.stroke()
-        
-        
-        
-        //// Bezier Drawing
-        let bezierPath: UIBezierPath = UIBezierPath()
-        bezierPath.move(to: CGPoint(x: small.minX + small.size.width/4, y: small.minY))
-        bezierPath.addLine(to: CGPoint(x: small.minX + small.size.width/4, y: small.maxY))
-        bezierPath.addLine(to: CGPoint(x: small.maxX, y: rect.midY))
-        bezierPath.close()
+
         tintColor.setFill()
-        bezierPath.lineWidth = 1
-        bezierPath.fill()
+
+        if isPlaying {
+            // Pause icon: two vertical bars centered in circle
+            let barWidth = rect.size.width * 0.12
+            let barHeight = rect.size.height * 0.38
+            let gap = rect.size.width * 0.10
+            let totalWidth = barWidth * 2 + gap
+            let startX = rect.midX - totalWidth / 2
+            let startY = rect.midY - barHeight / 2
+
+            UIBezierPath(rect: CGRect(x: startX, y: startY, width: barWidth, height: barHeight)).fill()
+            UIBezierPath(rect: CGRect(x: startX + barWidth + gap, y: startY, width: barWidth, height: barHeight)).fill()
+        } else {
+            // Play icon: right-pointing triangle; offset slightly right for visual balance
+            let triWidth = rect.size.width * 0.32
+            let triHeight = rect.size.height * 0.38
+            let startX = rect.midX - triWidth * 0.4
+            let startY = rect.midY - triHeight / 2
+
+            let path = UIBezierPath()
+            path.move(to: CGPoint(x: startX, y: startY))
+            path.addLine(to: CGPoint(x: startX, y: startY + triHeight))
+            path.addLine(to: CGPoint(x: startX + triWidth, y: rect.midY))
+            path.close()
+            path.fill()
+        }
     }
-    
-    //func toggle inner image
-    
-    
 }

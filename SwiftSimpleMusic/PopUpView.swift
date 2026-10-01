@@ -39,6 +39,10 @@ class PopUpView: UIView {
     var delegate: PopUpViewButtonDelegate?
     var popUpScrollDelegate: PopUpScrollDelegate?
     var topBarOpacity: CGFloat = 1.0
+    /// Height of whatever overlaps the bottom of this view when expanded (playback controls + home indicator).
+    var bottomOverlapHeight: CGFloat = 0 {
+        didSet { if bottomOverlapHeight != oldValue { setNeedsLayout() } }
+    }
     var labelText: String {
         get {
             return label.text ?? ""
@@ -72,7 +76,7 @@ class PopUpView: UIView {
     }
     
     fileprivate func transparencySetup() {
-        if !UIAccessibilityIsReduceTransparencyEnabled() {
+        if !UIAccessibility.isReduceTransparencyEnabled {
             self.backgroundColor = UIColor.clear
             let blurEffect = UIBlurEffect(style: .light)
             blurView = UIVisualEffectView(effect: blurEffect)
@@ -94,11 +98,12 @@ class PopUpView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.sendSubview(toBack: blurView)
-        self.artistButton.frame = CGRect(x: 40, y: self.height - 140, width: 80, height: 45)
+        self.sendSubviewToBack(blurView)
+        let buttonY = self.height - bottomOverlapHeight - 45 - 20
+        self.artistButton.frame = CGRect(x: 40, y: buttonY, width: 80, height: 45)
         self.artistButton.backgroundColor = UIColor.lightGray
         self.artistButton.dropShadow()
-        self.albumButton.frame = CGRect(x: self.width - 120, y: self.height - 140, width: 80, height: 45)
+        self.albumButton.frame = CGRect(x: self.width - 120, y: buttonY, width: 80, height: 45)
         self.albumButton.backgroundColor = UIColor.lightGray
         self.albumButton.dropShadow()
         self.topBar.frame = CGRect(x: 0, y: 0, width: self.width, height: 60)

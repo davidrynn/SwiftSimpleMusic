@@ -23,7 +23,7 @@ class MainMusicViewModelTest: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        let player = MusicPlayer()
+        let player = MockMusicPlayer()
         self.sut = SwiftSimpleMusic.MainMusicViewModel(player: player)
         //        let sectionHeader1: SectionHeaderInfo = SectionHeaderInfo(letter: "A", song: <#T##MPMediaItem#>)
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -75,8 +75,8 @@ class MainMusicViewModelTest: XCTestCase {
         guard let songArtwork: MPMediaItemArtwork = song.artwork else { fatalError("error getting song artwork")}
         guard let songImage = songArtwork.image(at: CGSize(width: 40*0.25, height: 40*0.25)) else { fatalError("error getting image from artwork")}
         let sutImage: UIImage = sut.cellImage(sortType: .songs, indexPath: mockIndexPath)
-        guard let data1: Data = UIImagePNGRepresentation(songImage) else { fatalError("error converting image to data") }
-        let data2: Data = UIImagePNGRepresentation(sutImage)!;
+        guard let data1: Data = songImage.pngData() else { fatalError("error converting image to data") }
+        let data2: Data = sutImage.pngData()!
         XCTAssertEqual(data1, data2)
     }
     
@@ -99,22 +99,29 @@ class MainMusicViewModelTest: XCTestCase {
     
 }
 
-extension MainMusicViewModelTest {
-//    class MockMusicPlayer: SwiftSimpleMusic.MusicPlayerProtocol {
-//        
-//        //        var currentSong: MPMediaItem? { get }
-//        //        var nextSong: MPMediaItem? { get }
-//        //        var previousSong: MPMediaItem? { get }
-//        //        var collection: MediaCollection { get }
-//        //        func play()
-//        //        func beginSeekingForward()
-//        //        func endSeeking()
-//        //        func beginRewind()
-//        //        func skipToNextItem()
-//        //        func playPreviousItem()
-//        //        func pause()
-//        //        func stop()
-//        //        func toggleShuffleMode()
-//        //        func currentPlaybackState()-> MPMusicPlaybackState
-//    }
+/// No-op player so view model tests don't need real media library access.
+/// Shared with other tests in this target.
+final class MockMusicPlayer: MusicPlayerProtocol {
+    var currentSong: MPMediaItem?
+    var nextSong: MPMediaItem?
+    var previousSong: MPMediaItem?
+    var repeatMode: MPMusicRepeatMode = .none
+    var shuffleMode: MPMusicShuffleMode = .off
+    var collection = MediaCollection(items: [])
+    var playbackState: MPMusicPlaybackState = .stopped
+
+    func play() {}
+    func playItem(_ item: MPMediaItem) {}
+    func beginSeekingForward() {}
+    func endSeeking() {}
+    func beginRewind() {}
+    func skipToNextItem() {}
+    func playPreviousItem() {}
+    func pause() {}
+    func stop() {}
+    func toggleShuffleMode(shuffleButton: UIBarButtonItem) {}
+    func toggleLoopMode(loopButton: UIBarButtonItem) {}
+    func currentPlaybackState() -> MPMusicPlaybackState { playbackState }
+    func setPlayerQueue(with: MPMediaQuery) {}
+    func setPlayerQueue(with: MPMediaItemCollection) {}
 }

@@ -20,7 +20,7 @@ class MediaViewModelTest: XCTestCase {
         let collections = query.collections
         let groupStruct = GroupCollection(query: query)
         let items = query.items
-        sut = MediaViewModel(player: MusicPlayer(), sortType: .albums, groupStruct: groupStruct, firstTimeTap: true)
+        sut = MediaViewModel(player: MockMusicPlayer(), sortType: .albums, grouping: groupStruct, firstTimeTap: true)
 
     }
     

@@ -8,6 +8,27 @@
 
 import Foundation
 import MediaPlayer
+import AVFAudio
+
+enum MusicPlayerError: Error, LocalizedError {
+    case mediaLibraryAccessDenied
+    case mediaLibraryAccessRestricted
+    case mediaLibraryAccessNotDetermined
+    case mediaLibraryAccessUnknown
+
+    var errorDescription: String? {
+        switch self {
+        case .mediaLibraryAccessDenied:
+            return "Media Library access was denied."
+        case .mediaLibraryAccessRestricted:
+            return "Media Library access is restricted on this device."
+        case .mediaLibraryAccessNotDetermined:
+            return "Media Library access has not been determined."
+        case .mediaLibraryAccessUnknown:
+            return "Media Library access failed due to an unknown reason."
+        }
+    }
+}
 
 protocol MusicPlayerProtocol {
     
@@ -34,7 +55,16 @@ protocol MusicPlayerProtocol {
     
 }
 
-class MusicPlayer: MusicPlayerProtocol {
+final class MusicPlayer: @MainActor MusicPlayerProtocol {
+    
+    private func configureAudioSessionIfNeeded() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Audio session error: \(error)")
+        }
+    }
     
     var player: MPMusicPlayerController
     var nextSong: MPMediaItem? {
@@ -69,9 +99,8 @@ class MusicPlayer: MusicPlayerProtocol {
     
     var repeatMode: MPMusicRepeatMode {
         set {
-            player.repeatMode = self.repeatMode
+            player.repeatMode = newValue
         }
-        
         get {
             return player.repeatMode
         }
@@ -85,38 +114,117 @@ class MusicPlayer: MusicPlayerProtocol {
     }
     var collection: MediaCollection
     
-    init() {
-        
-        self.player = MPMusicPlayerController.systemMusicPlayer
-        let query = MPMediaQuery.songs()
-        
-        let items: [MPMediaItem] = query.items ?? []
-        self.collection = MediaCollection(items: items)
-        self.player.setQueue(with: MPMediaQuery.songs())
+    init() async throws {
+        self.player = MPMusicPlayerController.applicationMusicPlayer
+
+        // Start with an empty collection; we'll load after auth.
+        self.collection = MediaCollection(items: [])
         self.shuffleMode = player.shuffleMode
         self.repeatMode = player.repeatMode
         player.beginGeneratingPlaybackNotifications()
 
+        // Optionally attempt to load immediately if already authorized.
+        if MPMediaLibrary.authorizationStatus() == .authorized {
+            configureAudioSessionIfNeeded()
+            reloadLibraryQueue()
+        } else if MPMediaLibrary.authorizationStatus() == .notDetermined {
+            let status = await MusicPlayer.requestMediaLibraryAccess()
+            switch status {
+            case .authorized:
+                configureAudioSessionIfNeeded()
+                reloadLibraryQueue()
+            case .denied:
+                throw MusicPlayerError.mediaLibraryAccessDenied
+            case .restricted:
+                throw MusicPlayerError.mediaLibraryAccessRestricted
+            case .notDetermined:
+                throw MusicPlayerError.mediaLibraryAccessNotDetermined
+            @unknown default:
+                throw MusicPlayerError.mediaLibraryAccessUnknown
+            }
+        } else {
+            // Handle other statuses returned by `authorizationStatus()` proactively
+            switch MPMediaLibrary.authorizationStatus() {
+            case .denied:
+                throw MusicPlayerError.mediaLibraryAccessDenied
+            case .restricted:
+                throw MusicPlayerError.mediaLibraryAccessRestricted
+            case .notDetermined:
+                throw MusicPlayerError.mediaLibraryAccessNotDetermined
+            @unknown default:
+                throw MusicPlayerError.mediaLibraryAccessUnknown
+            }
+        }
     }
-    
+    static func requestMediaLibraryAccess() async -> MPMediaLibraryAuthorizationStatus {
+        return await withCheckedContinuation { continuation in
+            MPMediaLibrary.requestAuthorization { status in
+                continuation.resume(returning: status)
+            }
+        }
+    }
+    // Rebuild the queue with on-device playable items only.
+    func reloadLibraryQueue() {
+        let query = MPMediaQuery.songs()
+
+        // Exclude cloud-only items.
+        let notCloud = MPMediaPropertyPredicate(value: false, forProperty: MPMediaItemPropertyIsCloudItem)
+        query.addFilterPredicate(notCloud)
+
+        // Filter to items with an asset URL (playable by the app).
+        let playableItems = (query.items ?? []).filter { $0.assetURL != nil }
+
+        self.collection = MediaCollection(items: playableItems)
+        self.player.setQueue(with: MPMediaItemCollection(items: playableItems))
+        self.player.prepareToPlay()
+
+        print("Reloaded queue. Playable items: \(playableItems.count)")
+    }
+
     func setPlayerQueue(with query: MPMediaQuery) {
-        player.setQueue(with: query)
-        collection = MediaCollection(items: query.items!)
+        // Ensure we only queue playable items.
+        let notCloud = MPMediaPropertyPredicate(value: false, forProperty: MPMediaItemPropertyIsCloudItem)
+        query.addFilterPredicate(notCloud)
+        let playableItems = (query.items ?? []).filter { $0.assetURL != nil }
+
+        player.setQueue(with: MPMediaItemCollection(items: playableItems))
+        collection = MediaCollection(items: playableItems)
+        player.prepareToPlay()
+        print("Set queue from query. Playable items: \(playableItems.count)")
     }
-    
+
     func setPlayerQueue(with collection: MPMediaItemCollection) {
-        player.setQueue(with: collection)
-        self.collection = MediaCollection(collection: collection)
+        // Ensure we only queue playable items.
+        let playableItems = collection.items.filter { $0.assetURL != nil }
+        player.setQueue(with: MPMediaItemCollection(items: playableItems))
+        self.collection = MediaCollection(items: playableItems)
+        player.prepareToPlay()
+        print("Set queue from collection. Playable items: \(playableItems.count)")
     }
+//    func setPlayerQueue(with query: MPMediaQuery) {
+//        player.setQueue(with: query)
+//        collection = MediaCollection(items: query.items ?? [])
+//    }
+//    
+//    func setPlayerQueue(with collection: MPMediaItemCollection) {
+//        player.setQueue(with: collection)
+//        self.collection = MediaCollection(collection: collection)
+//    }
     
     func play() {
-        self.player.play()
+        guard !collection.items.isEmpty else {
+            print("No playable items in queue; aborting play()")
+            return
+        }
+        player.play()
     }
     
     func playItem(_ item: MPMediaItem) {
         let currentShuffleMode = player.shuffleMode
         player.shuffleMode = .off
         player.nowPlayingItem = item
+        player.prepareToPlay()
+        print("Attempting to play specific item: \(item.title ?? "<unknown>")")
         player.play()
         player.shuffleMode = currentShuffleMode
     }
@@ -160,7 +268,7 @@ class MusicPlayer: MusicPlayerProtocol {
     }
 
     
-    func toggleShuffleMode(shuffleButton: UIBarButtonItem) {
+    @MainActor func toggleShuffleMode(shuffleButton: UIBarButtonItem) {
         if (player.shuffleMode == MPMusicShuffleMode.off || player.shuffleMode.rawValue == 0) {
             player.shuffleMode = MPMusicShuffleMode.songs
             shuffleButton.image = UIImage(named: "shuffle2")
@@ -171,7 +279,7 @@ class MusicPlayer: MusicPlayerProtocol {
         }
     }
     
-    func toggleLoopMode(loopButton: UIBarButtonItem) {
+    @MainActor func toggleLoopMode(loopButton: UIBarButtonItem) {
         
         if repeatMode == .none {
             player.repeatMode = .all
@@ -193,3 +301,4 @@ class MusicPlayer: MusicPlayerProtocol {
     
     
 }
+
