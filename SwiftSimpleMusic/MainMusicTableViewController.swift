@@ -15,6 +15,15 @@
     let viewModel: MainMusicViewModelProtocol
   }
   
+  extension UIColor {
+    /// App accent: a music-app red that pairs with the neutral gray chrome.
+    static let appAccent = UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red: 255/255, green: 69/255, blue: 90/255, alpha: 1)
+            : UIColor(red: 230/255, green: 38/255, blue: 64/255, alpha: 1)
+    }
+  }
+
   final class MainMusicTableViewController: UITableViewController {
     
     var viewModel: MainMusicViewModelProtocol?
@@ -41,10 +50,11 @@
     override func viewDidLoad() {
         super.viewDidLoad()
         // assertDependencies()  <-- Removed as per instructions
+        setupNavigationBar()
         setupSortButton()
         setupSearchBar()
         
-        self.tableView.sectionIndexColor = UIColor.red
+        self.tableView.sectionIndexColor = .appAccent
         updateEnabledState()
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -53,20 +63,37 @@
     }
     
     func setupSortButton(){
-        let buttonView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
-        
-        sortButton.frame = CGRect(x: 0, y: 0, width: 150, height: 30);
-        sortButton.setTitle(MediaSortType.songs.description, for: UIControl.State())
         currentSort = MediaSortType.songs
-        sortButton.backgroundColor = UIColor(red: 253/255, green: 227/255, blue: 167/255, alpha: 1.0 )
-        sortButton.setTitleColor(UIColor.black, for: .normal)
-        sortButton.layer.borderColor = UIColor.lightGray.cgColor
-        sortButton.layer.borderWidth = 1
-        sortButton.layer.cornerRadius = 10
+
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = .appAccent
+        config.baseForegroundColor = .white
+        config.cornerStyle = .capsule
+        config.title = MediaSortType.songs.description
+        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in
+            var attributes = attributes
+            attributes.font = UIFont.preferredFont(forTextStyle: .headline)
+            return attributes
+        }
+        sortButton.configuration = config
         sortButton.addTarget(self, action: #selector(sortButtonTapped), for: .touchUpInside)
-        sortButton.dropShadow()
-        buttonView.addSubview(sortButton)
-        self.navigationItem.titleView = buttonView
+        // Size via constraints; the nav bar lays out titleView with Auto Layout.
+        sortButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            sortButton.widthAnchor.constraint(equalToConstant: 150),
+            sortButton.heightAnchor.constraint(equalToConstant: 34),
+        ])
+        navigationItem.titleView = sortButton
+    }
+
+    func setupNavigationBar() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .systemGray5
+        appearance.shadowColor = .clear
+        navigationItem.standardAppearance = appearance
+        navigationItem.scrollEdgeAppearance = appearance
+        navigationItem.compactAppearance = appearance
     }
     
     func setupSearchBar(){
@@ -185,11 +212,8 @@
     }
     
     @objc func sortButtonTapped(sender: UIButton) {
-        //get switch off vc
-        guard let titleLabel = sender.titleLabel else { return }
-        guard let text = titleLabel.text else { return }
-        let type = MediaSortType.getNextTypeFromText(text)
-        sender.setTitle(String(describing: type), for: .normal)
+        let type = MediaSortType.getNextTypeFromText(currentSort.description)
+        sender.configuration?.title = type.description
         currentSort = type
         view.reloadInputViews()
         tableView.reloadData()

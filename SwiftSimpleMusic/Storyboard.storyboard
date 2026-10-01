@@ -71,17 +71,11 @@
                             <constraint firstItem="e1D-8P-E4h" firstAttribute="width" secondItem="LGZ-ec-RaK" secondAttribute="width" id="FLN-K8-Too"/>
                             <constraint firstItem="5FO-1D-l4m" firstAttribute="width" secondItem="LGZ-ec-RaK" secondAttribute="width" id="FNt-oe-Jmc"/>
                             <constraint firstItem="e1D-8P-E4h" firstAttribute="centerX" secondItem="LGZ-ec-RaK" secondAttribute="centerX" id="FXJ-0Q-EVw"/>
-                            <constraint firstItem="5FO-1D-l4m" firstAttribute="top" secondItem="co0-bp-ms2" secondAttribute="bottom" id="S89-rq-bpe"/>
+                            <constraint firstItem="5FO-1D-l4m" firstAttribute="top" secondItem="LGZ-ec-RaK" secondAttribute="top" id="S89-rq-bpe"/>
                             <constraint firstItem="5FO-1D-l4m" firstAttribute="centerX" secondItem="LGZ-ec-RaK" secondAttribute="centerX" id="dcY-Cf-9Tx"/>
-                            <constraint firstItem="5FO-1D-l4m" firstAttribute="height" secondItem="LGZ-ec-RaK" secondAttribute="height" multiplier="0.78" id="efv-LN-qo1"/>
-                            <constraint firstItem="5FO-1D-l4m" firstAttribute="bottom" secondItem="e1D-8P-E4h" secondAttribute="top" constant="-30" id="lG9-9X-GTe"/>
+                            <constraint firstItem="5FO-1D-l4m" firstAttribute="bottom" secondItem="e1D-8P-E4h" secondAttribute="top" id="lG9-9X-GTe"/>
                             <constraint firstItem="e1D-8P-E4h" firstAttribute="height" secondItem="LGZ-ec-RaK" secondAttribute="height" multiplier="0.1" id="nsy-cS-tcJ"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="lG9-9X-GTe"/>
-                            </mask>
-                        </variation>
                     </view>
                     <connections>
                         <outlet property="containerView" destination="5FO-1D-l4m" id="NSu-B0-Hst"/>
@@ -211,7 +205,6 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="wEc-3W-3cf">
                         <rect key="frame" x="0.0" y="20" width="375" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
