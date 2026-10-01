@@ -9,11 +9,17 @@
   import UIKit
   import MediaPlayer
   
-  class MainMusicTableViewController: UITableViewController {
+  /// Everything the main list needs; only constructed once the async player is ready.
+  struct MainMusicDependencies {
+    let player: MusicPlayerProtocol
+    let viewModel: MainMusicViewModelProtocol
+  }
+  
+  final class MainMusicTableViewController: UITableViewController {
     
-    var viewModel: MainMusicViewModelProtocol!
+    var viewModel: MainMusicViewModelProtocol?
     var searchController: UISearchController!
-    fileprivate var player: MusicPlayerProtocol!
+    fileprivate var player: MusicPlayerProtocol?
     fileprivate var currentSort: MediaSortType!
     lazy var players: [String] = {
         var temporaryPlayers = [String]()
@@ -28,27 +34,29 @@
         }
     }
     
-    fileprivate var sortButton: UIButton = UIButton(type: UIButtonType.custom)
+      fileprivate var sortButton: UIButton = UIButton(type: UIButton.ButtonType.custom)
     @IBOutlet weak var loopButton: UIBarButtonItem!
     @IBOutlet weak var shuffleButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        assertDependencies()
+        // assertDependencies()  <-- Removed as per instructions
         setupSortButton()
         setupSearchBar()
         
         self.tableView.sectionIndexColor = UIColor.red
+        updateEnabledState()
     }
     override func viewWillAppear(_ animated: Bool) {
-        viewModel.setPlayerQueue(sortType: currentSort)
+        super.viewWillAppear(animated)
+        viewModel?.setPlayerQueue(sortType: currentSort)
     }
     
     func setupSortButton(){
         let buttonView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
         
         sortButton.frame = CGRect(x: 0, y: 0, width: 150, height: 30);
-        sortButton.setTitle(MediaSortType.songs.description, for: UIControlState())
+        sortButton.setTitle(MediaSortType.songs.description, for: UIControl.State())
         currentSort = MediaSortType.songs
         sortButton.backgroundColor = UIColor(red: 253/255, green: 227/255, blue: 167/255, alpha: 1.0 )
         sortButton.setTitleColor(UIColor.black, for: .normal)
@@ -65,7 +73,7 @@
         searchController = UISearchController(searchResultsController: nil)
         searchController.delegate = self
         searchController.searchResultsUpdater = self
-        searchController.dimsBackgroundDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false
         
         searchController.searchBar.sizeToFit()
         tableView.tableHeaderView = searchController.searchBar
@@ -82,8 +90,7 @@
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        
-        return viewModel.numberOfSections(sortType: currentSort)
+        return viewModel?.numberOfSections(sortType: currentSort) ?? 0
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -91,22 +98,23 @@
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfRowsForSection(sortType: currentSort, section: section)
+        return viewModel?.numberOfRowsForSection(sortType: currentSort, section: section) ?? 0
     }
     
     override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         
-        return viewModel.sectionIndexTitles(sortType: currentSort)
+        return viewModel?.sectionIndexTitles(sortType: currentSort)
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return viewModel.titleForSection(sortType: currentSort, section: section)
+        return viewModel?.titleForSection(sortType: currentSort, section: section)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? MusicTableViewCell else { fatalError("Wrong cell type") }
         guard let cellLabel = cell.textLabel else { return cell }
         guard let cellImageView = cell.imageView else { return cell }
+        guard let viewModel else { return cell }
         let tuple = viewModel.cellLabelText(sortType: currentSort, indexPath: indexPath)
         cellLabel.text = tuple?.title ?? ""
         if let cellDetail = cell.detailTextLabel {
@@ -121,7 +129,8 @@
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //1.set selected song// representative song
-        viewModel.setSelectedItem(sortType: currentSort, indexPath: indexPath)
+        viewModel?.setSelectedItem(sortType: currentSort, indexPath: indexPath)
+        guard let viewModel else { return }
 
         //if song toggle play
         if (currentSort == .songs && viewModel.appState != .isSearching) || (currentSort == .audiobooks) || (viewModel.appState == .isSearching && SearchSection.typeForSection(indexPath.section) == .songs) {
@@ -142,19 +151,19 @@
         // Pass the selected object to the new view controller.
         
         if segue.identifier == "toSubMediaVC" {
-            if let index = tableView.indexPathForSelectedRow, let dVC = segue.destination as? SubMediaTableViewController {
+            if let index = tableView.indexPathForSelectedRow, let viewModel, let dVC = segue.destination as? SubMediaTableViewController {
                 
                 switch viewModel.appState {
                 case .isSearching:
                     let searchSection = SearchSection.typeForSection(index.section)
-                    let newViewModel = self.viewModel.getSubViewModelFromSearch(section: searchSection, indexPath: index)
+                    let newViewModel = viewModel.getSubViewModelFromSearch(section: searchSection, indexPath: index)
                     dVC.inject(newViewModel)
                 case .isShowingPopUp:
-                    guard let item = self.player.currentSong else { return }
-                    let newViewModel = self.viewModel.getSubViewModel(sortType: currentSort, item: item)
+                    guard let item = player?.currentSong else { return }
+                    let newViewModel = viewModel.getSubViewModel(sortType: currentSort, item: item)
                     dVC.inject(newViewModel)
                 case .normal:
-                    let newViewModel = self.viewModel.getSubViewModelFromSelectedRow(sortType: currentSort)
+                    let newViewModel = viewModel.getSubViewModelFromSelectedRow(sortType: currentSort)
                     dVC.inject(newViewModel)                    
                 }
                 
@@ -164,13 +173,13 @@
     
     //    MARK: - Actions
     @IBAction func shuffleButtonTapped(_ sender: UIBarButtonItem) {
-        player.toggleShuffleMode(shuffleButton: sender)
+        player?.toggleShuffleMode(shuffleButton: sender)
         navigationController?.reloadInputViews()
     }
     
     
     @IBAction func loopButtonTapped(_ sender: UIBarButtonItem) {
-        player.toggleLoopMode(loopButton: sender)
+        player?.toggleLoopMode(loopButton: sender)
         navigationController?.reloadInputViews()
         
     }
@@ -187,34 +196,50 @@
     }
   }
   
-  extension MainMusicTableViewController: Injectable {
+extension MainMusicTableViewController: @MainActor Injectable {
     
-    func inject(_ item: MusicPlayerProtocol) {
-        player = item
-        viewModel = MainMusicViewModel(player: item)
+    /// Called by `TopViewController` once the async player and view model are ready.
+    /// May arrive before or after the view has loaded/appeared.
+    func inject(_ item: MainMusicDependencies) {
+        player = item.player
+        viewModel = item.viewModel
+        guard isViewLoaded else { return }
+        updateEnabledState()
+        // viewWillAppear may already have run with no view model, so set the queue now.
+        viewModel?.setPlayerQueue(sortType: currentSort)
+        tableView.reloadData()
     }
     
     func assertDependencies() {
-        assert(player != nil)
+        assert(player != nil && viewModel != nil)
+    }
+    
+    /// Keep controls inert until dependencies arrive.
+    fileprivate func updateEnabledState() {
+        let isReady = viewModel != nil
+        shuffleButton?.isEnabled = isReady
+        loopButton?.isEnabled = isReady
+        sortButton.isEnabled = isReady
+        searchController?.searchBar.isUserInteractionEnabled = isReady
     }
   }
   extension MainMusicTableViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         
         if let searchText = searchController.searchBar.text {
-            viewModel.searchMedia(searchText: searchText)
+            viewModel?.searchMedia(searchText: searchText)
             tableView.reloadData()
         }
     }
   }
   extension MainMusicTableViewController: UISearchControllerDelegate {
     func didDismissSearchController(_ searchController: UISearchController) {
-        viewModel.appState = .normal
+        viewModel?.appState = .normal
         tableView.reloadData()
     }
   }
   
-  extension MainMusicTableViewController: PopUpViewButtonDelegate {
+extension MainMusicTableViewController: @MainActor PopUpViewButtonDelegate {
     func artistButtonTapped() {
         self.currentSort = MediaSortType.artists
         performSegue(withIdentifier: "toSubMediaVC", sender: self)

@@ -39,18 +39,27 @@
     var artists: [MPMediaItemCollection]
  }
  
+ /// The parts of a query section the UI uses. Lets tests supply sections,
+ /// since MPMediaQuerySection can't be created outside MediaPlayer.
+ protocol MediaSection {
+    var title: String { get }
+    var range: NSRange { get }
+ }
+ 
+ extension MPMediaQuerySection: MediaSection {}
+ 
  protocol GroupCollectionProtocol {
     
     var items: [MPMediaItem] { get set }
     var collections: [MPMediaItemCollection] { get set }
-    var sections: [MPMediaQuerySection] { get set }
+    var sections: [MediaSection] { get set }
     func sectionHeaders() -> [String]
  }
  
  struct SubGroupCollection: GroupCollectionProtocol {
     var items: [MPMediaItem]
     var collections: [MPMediaItemCollection]
-    var sections: [MPMediaQuerySection]
+    var sections: [MediaSection]
     var sortType: MediaSortType
     
     func sectionHeaders() -> [String] {
@@ -65,7 +74,7 @@
  struct SearchCollection: GroupCollectionProtocol {
     var items: [MPMediaItem]
     var collections: [MPMediaItemCollection]
-    var sections: [MPMediaQuerySection]
+    var sections: [MediaSection]
     
     func sectionHeaders() -> [String] {
         return ["Songs", "Artists", "Albums"]
@@ -78,7 +87,7 @@
     var query: MPMediaQuery
     var items: [MPMediaItem]
     var collections: [MPMediaItemCollection]
-    var sections: [MPMediaQuerySection]
+    var sections: [MediaSection]
     
     init() {
         self.query = MPMediaQuery.songs()
@@ -102,7 +111,7 @@
     var items: [MPMediaItem]
     var collections: [MPMediaItemCollection]
     var query: MPMediaQuery
-    var sections: [MPMediaQuerySection]
+    var sections: [MediaSection]
     
     init(query: MPMediaQuery){
         self.query = query
@@ -131,15 +140,21 @@
     private var selectedSong: MPMediaItem?
     private var selectedPlaylistTitle: String?
     
+    /// Builds the view model from the device's media library.
     init (player: MusicPlayerProtocol) {
-        self.mediaDictionary = [ MediaSortType.songs: SongsGroupCollection(),
+        self.init(player: player, mediaDictionary: [ MediaSortType.songs: SongsGroupCollection(),
                                  MediaSortType.albums: GroupCollection(query: MPMediaQuery.albums()),
                                  MediaSortType.artists: GroupCollection(query: MPMediaQuery.artists()),
                                  MediaSortType.playlists: GroupCollection(query: MPMediaQuery.playlists()),
                                  MediaSortType.genres: GroupCollection(query: MPMediaQuery.genres()),
                                  MediaSortType.podcasts: GroupCollection(query: MPMediaQuery.podcasts()),
                                  MediaSortType.compilations: GroupCollection(query: MPMediaQuery.compilations()),
-                                 MediaSortType.audiobooks: GroupCollection(query: MPMediaQuery.audiobooks())]
+                                 MediaSortType.audiobooks: GroupCollection(query: MPMediaQuery.audiobooks())])
+    }
+    
+    /// Builds the view model from pre-grouped media, e.g. fixtures in tests.
+    init (player: MusicPlayerProtocol, mediaDictionary: [MediaSortType : GroupCollectionProtocol]) {
+        self.mediaDictionary = mediaDictionary
         self.player = player
         self.filteredMedia = FilteredMedia(songs: [], albums: [], artists: [])
     }

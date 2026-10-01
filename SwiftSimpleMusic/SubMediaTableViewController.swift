@@ -59,7 +59,7 @@ class SubMediaTableViewController: UITableViewController {
 
 
 }
-extension SubMediaTableViewController: Injectable {
+extension SubMediaTableViewController: @MainActor Injectable {
     func inject(_ item: MediaViewModel) {
         self.viewModel = item
     }

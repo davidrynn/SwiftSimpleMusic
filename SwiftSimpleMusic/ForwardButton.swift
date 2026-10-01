@@ -46,3 +46,23 @@ class ForwardButton: UIButton {
     */
 
 }
+
+import SwiftUI
+
+struct ForwardButtonSUI: View {
+    @State var viewModel: ForwardButtonViewModel
+    
+    var body: some View {
+        let systemImage = viewModel.isTapped ? "forward.fill" : "forward"
+        Button (action: {
+            viewModel.isTapped.toggle()
+        })
+       {
+           Label("Forward", systemImage: systemImage)
+        }
+    }
+}
+
+final class ForwardButtonViewModel: ObservableObject {
+    @Published var isTapped: Bool = false
+}

@@ -20,101 +20,149 @@ class MainMusicViewModelTest: XCTestCase {
     }
     
     var sut: MainMusicViewModel!
+    var library: FakeSongLibrary!
     
     override func setUp() {
         super.setUp()
-        let player = MusicPlayer()
-        self.sut = SwiftSimpleMusic.MainMusicViewModel(player: player)
-        //        let sectionHeader1: SectionHeaderInfo = SectionHeaderInfo(letter: "A", song: <#T##MPMediaItem#>)
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        library = FakeSongLibrary(songsPerSection: 2)
+        sut = MainMusicViewModel(player: MockMusicPlayer(), mediaDictionary: [.songs: library.collection])
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        sut = nil
+        library = nil
         super.tearDown()
     }
     
     func testTitleForSection_ShouldReturnLetter(){
-        let title = sut.titleForSection(sortType: MediaSortType.songs, section: 0)
-        XCTAssertEqual(title, "A")
-        print(title)
-        let title2 = sut.titleForSection(sortType: MediaSortType.songs, section: 25)
-        XCTAssertEqual(title2, "Z")
-        print("second title: \(title2)")
+        XCTAssertEqual(sut.titleForSection(sortType: .songs, section: 0), "A")
+        XCTAssertEqual(sut.titleForSection(sortType: .songs, section: 25), "Z")
     }
     
     func testNumberOfRowsForSection_ShouldReturnCorrectInt(){
-        let section = 1
-        if let itemSections = MPMediaQuery.songs().itemSections {
-            let itemSection = itemSections[section]
-            let correctNumber: Int = itemSection.range.length
-            let vmNumber = sut.numberOfRowsForSection(sortType: MediaSortType.songs, section: section)
-            
-            XCTAssertEqual(vmNumber, correctNumber)
-            
-        }
+        XCTAssertEqual(sut.numberOfRowsForSection(sortType: .songs, section: 1), 2)
     }
     
     func testSectionIndexTitles_ShouldReturnAllIndexTitles(){
-        var titles: [String] = []
-        if let sections = MPMediaQuery.songs().itemSections {
-            for section in sections {
-                titles.append(section.title)
-            }
-        }
-        
-        let sutTitles = sut.sectionIndexTitles(sortType: MediaSortType.songs)
-        XCTAssertEqual(sutTitles, titles)
+        let sutTitles = sut.sectionIndexTitles(sortType: .songs)
+        XCTAssertEqual(sutTitles, FakeSongLibrary.letters)
         XCTAssertEqual(sutTitles[25], "Z")
     }
     
     func testCellImage_ShouldReturnProperImage(){
-                let mockIndexPath = IndexPath(row: 1, section: 0)
-        guard let mediaSongs = MPMediaQuery.songs().items else { fatalError("error loading songs") }
-            let song = mediaSongs[mockIndexPath.row]
-        guard let songArtwork: MPMediaItemArtwork = song.artwork else { fatalError("error getting song artwork")}
-        guard let songImage = songArtwork.image(at: CGSize(width: 40*0.25, height: 40*0.25)) else { fatalError("error getting image from artwork")}
-        let sutImage: UIImage = sut.cellImage(sortType: .songs, indexPath: mockIndexPath)
-        guard let data1: Data = UIImagePNGRepresentation(songImage) else { fatalError("error converting image to data") }
-        let data2: Data = UIImagePNGRepresentation(sutImage)!;
-        XCTAssertEqual(data1, data2)
+        // Row 1 of section 1 ("B") is the 4th song overall.
+        let indexPath = IndexPath(row: 1, section: 1)
+        let expected = library.artworkImage(forSongAt: 3)
+        let sutImage = sut.cellImage(sortType: .songs, indexPath: indexPath)
+        XCTAssertEqual(sutImage.pngData(), expected.pngData())
+    }
+    
+    func testCellImage_WithoutArtwork_ShouldReturnDefaultImage(){
+        let library = FakeSongLibrary(songsPerSection: 1, includeArtwork: false)
+        let sut = MainMusicViewModel(player: MockMusicPlayer(), mediaDictionary: [.songs: library.collection])
+        let sutImage = sut.cellImage(sortType: .songs, indexPath: IndexPath(row: 0, section: 0))
+        XCTAssertEqual(sutImage.pngData(), UIImage(named: "noteSml.png")?.pngData())
     }
     
     func testCellLabelText_ShouldReturnProperLabel(){
-        let mockIndexPath = IndexPath(row: 1, section: 0)
-        guard let mediaSongs = MPMediaQuery.songs().items else { fatalError("error loading songs") }
-
-            let song = mediaSongs[mockIndexPath.row]
-            let songTitle = song.title
-        
-        XCTAssertEqual(sut.cellLabelText(sortType: MediaSortType.songs, indexPath: mockIndexPath)?.title, songTitle)
-        
+        let label = sut.cellLabelText(sortType: .songs, indexPath: IndexPath(row: 1, section: 1))
+        XCTAssertEqual(label?.title, "B Song 2")
+        XCTAssertEqual(label?.detail, "B Artist--B Album")
     }
-    
-//    func testGetViewModelFromPopUp_ShouldGetSong(){
-//        let viewModel = sut.getViewModelFromPopUp()
-//    }
-    
-    
-    
 }
 
-extension MainMusicViewModelTest {
-//    class MockMusicPlayer: SwiftSimpleMusic.MusicPlayerProtocol {
-//        
-//        //        var currentSong: MPMediaItem? { get }
-//        //        var nextSong: MPMediaItem? { get }
-//        //        var previousSong: MPMediaItem? { get }
-//        //        var collection: MediaCollection { get }
-//        //        func play()
-//        //        func beginSeekingForward()
-//        //        func endSeeking()
-//        //        func beginRewind()
-//        //        func skipToNextItem()
-//        //        func playPreviousItem()
-//        //        func pause()
-//        //        func stop()
-//        //        func toggleShuffleMode()
-//        //        func currentPlaybackState()-> MPMusicPlaybackState
-//    }
+// MARK: - Fixtures
+
+/// MPMediaItem's properties are read-only, so tests subclass it to supply values.
+final class FakeMediaItem: MPMediaItem {
+    private let fakeTitle: String
+    private let fakeArtist: String
+    private let fakeAlbumTitle: String
+    private let fakeArtwork: MPMediaItemArtwork?
+    
+    init(title: String, artist: String, albumTitle: String, artwork: MPMediaItemArtwork?) {
+        fakeTitle = title
+        fakeArtist = artist
+        fakeAlbumTitle = albumTitle
+        fakeArtwork = artwork
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    
+    override var title: String? { fakeTitle }
+    override var artist: String? { fakeArtist }
+    override var albumTitle: String? { fakeAlbumTitle }
+    override var artwork: MPMediaItemArtwork? { fakeArtwork }
+}
+
+struct FakeQuerySection: MediaSection {
+    let title: String
+    let range: NSRange
+}
+
+/// A songs library with one section per letter A–Z, laid out like `MPMediaQuery.songs()`:
+/// a flat item list with each section covering a contiguous range of it.
+struct FakeSongLibrary {
+    static let letters = (65...90).map { String(UnicodeScalar($0)!) }
+    
+    let collection: SubGroupCollection
+    private let artworkImages: [UIImage]
+    
+    init(songsPerSection: Int, includeArtwork: Bool = true) {
+        var items: [MPMediaItem] = []
+        var sections: [MediaSection] = []
+        var images: [UIImage] = []
+        for letter in Self.letters {
+            sections.append(FakeQuerySection(title: letter, range: NSRange(location: items.count, length: songsPerSection)))
+            for number in 1...songsPerSection {
+                let image = Self.solidImage(hue: CGFloat(items.count) / CGFloat(Self.letters.count * songsPerSection))
+                images.append(image)
+                let artwork = includeArtwork ? MPMediaItemArtwork(boundsSize: image.size) { _ in image } : nil
+                items.append(FakeMediaItem(title: "\(letter) Song \(number)", artist: "\(letter) Artist", albumTitle: "\(letter) Album", artwork: artwork))
+            }
+        }
+        // The view model indexes `collections` alongside `items`, so keep them the same length.
+        let collections = items.map { MPMediaItemCollection(items: [$0]) }
+        collection = SubGroupCollection(items: items, collections: collections, sections: sections, sortType: .songs)
+        artworkImages = images
+    }
+    
+    func artworkImage(forSongAt index: Int) -> UIImage {
+        artworkImages[index]
+    }
+    
+    private static func solidImage(hue: CGFloat) -> UIImage {
+        UIGraphicsImageRenderer(size: CGSize(width: 4, height: 4)).image { context in
+            UIColor(hue: hue, saturation: 1, brightness: 1, alpha: 1).setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 4, height: 4))
+        }
+    }
+}
+
+/// No-op player so view model tests don't need real media library access.
+/// Shared with other tests in this target.
+final class MockMusicPlayer: MusicPlayerProtocol {
+    var currentSong: MPMediaItem?
+    var nextSong: MPMediaItem?
+    var previousSong: MPMediaItem?
+    var repeatMode: MPMusicRepeatMode = .none
+    var shuffleMode: MPMusicShuffleMode = .off
+    var collection = MediaCollection(items: [])
+    var playbackState: MPMusicPlaybackState = .stopped
+
+    func play() {}
+    func playItem(_ item: MPMediaItem) {}
+    func beginSeekingForward() {}
+    func endSeeking() {}
+    func beginRewind() {}
+    func skipToNextItem() {}
+    func playPreviousItem() {}
+    func pause() {}
+    func stop() {}
+    func toggleShuffleMode(shuffleButton: UIBarButtonItem) {}
+    func toggleLoopMode(loopButton: UIBarButtonItem) {}
+    func currentPlaybackState() -> MPMusicPlaybackState { playbackState }
+    func setPlayerQueue(with: MPMediaQuery) {}
+    func setPlayerQueue(with: MPMediaItemCollection) {}
 }

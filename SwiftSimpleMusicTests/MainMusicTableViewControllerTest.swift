@@ -10,124 +10,110 @@ import XCTest
 import MediaPlayer
 @testable import SwiftSimpleMusic
 
+@MainActor
 class MainMusicTableViewControllerTest: XCTestCase {
     var sut: MainMusicTableViewController!
     
-    override func setUp() {
-        super.setUp()
-        let storyboard = UIStoryboard(name: "Main",
-                                      bundle: Bundle(for: type(of: self)))
-        let topViewController = storyboard.instantiateInitialViewController() as! TopViewController
-        let player = MusicPlayer()
-        sut = topViewController.container
-        sut.inject(player)
-        let bogusFilteredMedia = FilteredMedia(songs: [], albums: [], artists: [])
-        sut.viewModel = MockMainMusicTableViewModel(appState: .normal, filteredMedia: bogusFilteredMedia)
-        let _ = sut.view
-        
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    // Storyboard lives in the app bundle, not the test bundle.
+    private var storyboard: UIStoryboard {
+        UIStoryboard(name: "Storyboard", bundle: Bundle(for: TopViewController.self))
+    }
+    
+    override func setUp() async throws {
+        try await super.setUp()
+        // Instantiate the list on its own so tests control when dependencies arrive,
+        // rather than racing TopViewController's real MusicPlayer load.
+        sut = storyboard.instantiateViewController(withIdentifier: "MainMusicTableViewController") as? MainMusicTableViewController
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        sut = nil
         super.tearDown()
+    }
+    
+    // MARK: - TopViewController wiring
+    
+    func testTopViewControllerLoad_CapturesMainMusicViewControllerWithoutInjecting() throws {
+        let topViewController = try XCTUnwrap(storyboard.instantiateInitialViewController() as? TopViewController)
+        // Loading the view fires the embed segue synchronously; the player loads later.
+        topViewController.loadViewIfNeeded()
+        let mainVC = try XCTUnwrap(topViewController.mainMusicVC)
+        XCTAssertNil(mainVC.viewModel)
+    }
+    
+    // MARK: - Before injection
+    
+    func testBeforeInjection_TableIsEmpty() {
+        sut.loadViewIfNeeded()
+        XCTAssertNil(sut.viewModel)
+        XCTAssertEqual(sut.numberOfSections(in: sut.tableView), 0)
+        XCTAssertNil(sut.sectionIndexTitles(for: sut.tableView))
+    }
+    
+    func testBeforeInjection_ControlsAreDisabled() {
+        sut.loadViewIfNeeded()
+        assertControlsEnabled(false)
+    }
+    
+    // MARK: - Injection
+    
+    func testInjectAfterViewLoads_ReloadsTableAndEnablesControls() {
+        sut.loadViewIfNeeded()
+        sut.inject(makeDependencies())
+        XCTAssertNotNil(sut.viewModel)
+        XCTAssertEqual(sut.numberOfSections(in: sut.tableView), 1)
+        XCTAssertEqual(sut.tableView(sut.tableView, titleForHeaderInSection: 0), "A")
+        assertControlsEnabled(true)
+    }
+    
+    func testInjectBeforeViewLoads_AppliesWhenViewLoads() {
+        sut.inject(makeDependencies())
+        XCTAssertFalse(sut.isViewLoaded, "inject should not force the view to load")
+        sut.loadViewIfNeeded()
+        XCTAssertEqual(sut.numberOfSections(in: sut.tableView), 1)
+        assertControlsEnabled(true)
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeDependencies() -> MainMusicDependencies {
+        let filteredMedia = FilteredMedia(songs: [], albums: [], artists: [])
+        return MainMusicDependencies(player: MockMusicPlayer(),
+                                     viewModel: MockMainMusicTableViewModel(appState: .normal, filteredMedia: filteredMedia))
+    }
+    
+    private func assertControlsEnabled(_ enabled: Bool, file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertEqual(sut.shuffleButton.isEnabled, enabled, "shuffle", file: file, line: line)
+        XCTAssertEqual(sut.loopButton.isEnabled, enabled, "loop", file: file, line: line)
+        let sortButton = sut.navigationItem.titleView?.subviews.first as? UIButton
+        XCTAssertNotNil(sortButton, file: file, line: line)
+        XCTAssertEqual(sortButton?.isEnabled, enabled, "sort", file: file, line: line)
+        XCTAssertEqual(sut.searchController.searchBar.isUserInteractionEnabled, enabled, "search", file: file, line: line)
     }
 }
 
 extension MainMusicTableViewControllerTest {
     struct MockMainMusicTableViewModel: MainMusicViewModelProtocol {
         var appState: AppState
-        
         var filteredMedia: FilteredMedia
-        
-        func togglePlaying(item: MPMediaItem) {
-            
-        }
-        
-        func togglePlayingSelectedSong() {
-            
-        }
-        
-        func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> (title: String?, detail: String?)? {
-            
-        }
-        
-        func getSong(sortType: MediaSortType, indexPath: IndexPath) -> MPMediaItem? {
-            <#code#>
-        }
-        
-        func getSubViewModelFromSearch(section: SearchSection, indexPath: IndexPath) -> MediaViewModel {
-            <#code#>
-        }
-        
-        func getSubViewModel(sortType: MediaSortType, item: MPMediaItem) -> MediaViewModel {
-            <#code#>
-        }
-        
-        func getSubViewModelFromSelectedRow(sortType: MediaSortType) -> MediaViewModel {
-            <#code#>
-        }
-        
-        mutating func setSelectedItem(sortType: MediaSortType, indexPath: IndexPath) {
-            <#code#>
-        }
-        
-        func playFilteredSong(indexPath: IndexPath) {
-            <#code#>
-        }
-        
-        mutating func searchMedia(searchText: String) {
-            <#code#>
-        }
-        
-        var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { return [ : ] }
-        var player: MusicPlayerProtocol { return MusicPlayer() }
-        func titleForSection(sortType: MediaSortType, section: Int) -> String {
-            return "A"
-        }
-        func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int {
-            return 0
-        }
-        func sectionIndexTitles(sortType: MediaSortType) -> [String] {
-      //      return Array(NSSeyt)
-            return []
-        }
-        func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage {
-            return UIImage()
-        }
-        func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String
-        {
-            let returnString = "zed"
-            return returnString
-        }
-        func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType) {
-        }
-        
-        func setPlayerQueue(with: MPMediaQuery) {
-        }
-        
-        func setPlayerQueue(sortType: MediaSortType) {
-        }
-        
-//        func getSubViewModel(sortType: MediaSortType,  indexPath: IndexPath) -> MediaViewModel {
-//            let groupsStruct = GroupCollection(query: mediaDictionary)
-//            return MediaViewModel(player: player, sortType: sortType, groupStruct: mediaDictionary[sortType]?.items ?? [], firstTimeTap: true)
-//        }
-        
-        func numberOfSections(sortType: MediaSortType) -> Int {
-            return 1
-        }
-//        var mediaDictionary: [MediaSortType : GroupCollectionProtocol] { get }
-//        var player: MusicPlayerProtocol { get }
-//        func numberOfSections(sortType: MediaSortType) -> Int
-//        func titleForSection(sortType: MediaSortType, section: Int) -> String
-//        func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int
-//        func sectionIndexTitles(sortType: MediaSortType) -> [String]
-//        func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage
-//        func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> String
-//        func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType)
-//        func getSubViewModel(sortType: MediaSortType, indexPath: IndexPath) -> MediaViewModel
-//        func setPlayerQueue(sortType: MediaSortType)
+        var mediaDictionary: [MediaSortType: GroupCollectionProtocol] { return [:] }
 
+        func togglePlaying(item: MPMediaItem) {}
+        func togglePlayingSelectedSong() {}
+        func numberOfSections(sortType: MediaSortType) -> Int { return 1 }
+        func titleForSection(sortType: MediaSortType, section: Int) -> String { return "A" }
+        func numberOfRowsForSection(sortType: MediaSortType, section: Int) -> Int { return 0 }
+        func sectionIndexTitles(sortType: MediaSortType) -> [String] { return [] }
+        func cellImage(sortType: MediaSortType, indexPath: IndexPath) -> UIImage { return UIImage() }
+        func cellLabelText(sortType: MediaSortType, indexPath: IndexPath) -> (title: String?, detail: String?)? { return nil }
+        func didSelectSongAtRowAt(indexPath: IndexPath, sortType: MediaSortType) {}
+        func getSong(sortType: MediaSortType, indexPath: IndexPath) -> MPMediaItem? { return nil }
+        func getSubViewModelFromSearch(section: SearchSection, indexPath: IndexPath) -> MediaViewModel { fatalError("Not implemented") }
+        func getSubViewModel(sortType: MediaSortType, item: MPMediaItem) -> MediaViewModel { fatalError("Not implemented") }
+        func getSubViewModelFromSelectedRow(sortType: MediaSortType) -> MediaViewModel { fatalError("Not implemented") }
+        func setPlayerQueue(sortType: MediaSortType) {}
+        mutating func setSelectedItem(sortType: MediaSortType, indexPath: IndexPath) {}
+        func playFilteredSong(indexPath: IndexPath) {}
+        mutating func searchMedia(searchText: String) {}
     }
 }
