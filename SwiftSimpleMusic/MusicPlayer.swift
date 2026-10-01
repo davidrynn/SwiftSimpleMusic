@@ -9,6 +9,7 @@
 import Foundation
 import MediaPlayer
 import AVFAudio
+import StoreKit
 
 enum MusicPlayerError: Error, LocalizedError {
     case mediaLibraryAccessDenied
@@ -28,6 +29,30 @@ enum MusicPlayerError: Error, LocalizedError {
             return "Media Library access failed due to an unknown reason."
         }
     }
+}
+
+enum PlaybackError: Error, LocalizedError {
+    /// The song is Apple Music or iCloud content and this device can't play catalog music.
+    case subscriptionRequired(title: String?)
+    case unavailable(title: String?)
+
+    var errorDescription: String? {
+        switch self {
+        case .subscriptionRequired(let title):
+            return "\(Self.songName(title)) needs an active Apple Music subscription to play."
+        case .unavailable(let title):
+            return "\(Self.songName(title)) can't be played right now. It may need to be downloaded, or require an Apple Music subscription."
+        }
+    }
+
+    private static func songName(_ title: String?) -> String {
+        title.map { "\"\($0)\"" } ?? "This song"
+    }
+}
+
+extension Notification.Name {
+    /// Posted on the main thread when a song fails to prepare. `userInfo[MusicPlayer.playbackErrorKey]` holds a `PlaybackError`.
+    static let musicPlayerPlaybackFailed = Notification.Name("MusicPlayerPlaybackFailed")
 }
 
 protocol MusicPlayerProtocol {
@@ -55,6 +80,9 @@ protocol MusicPlayerProtocol {
     
 }
 
+// MPMusicPlayerController must be created and driven on the main thread;
+// off-main creation leaves the application queue player unable to connect.
+@MainActor
 final class MusicPlayer: @MainActor MusicPlayerProtocol {
     
     private func configureAudioSessionIfNeeded() {
@@ -163,43 +191,23 @@ final class MusicPlayer: @MainActor MusicPlayerProtocol {
             }
         }
     }
-    // Rebuild the queue with on-device playable items only.
+    // Don't filter on assetURL: it's nil for DRM-protected and Apple Music
+    // tracks, which MPMusicPlayerController still plays fine.
     func reloadLibraryQueue() {
-        let query = MPMediaQuery.songs()
-
-        // Exclude cloud-only items.
-        let notCloud = MPMediaPropertyPredicate(value: false, forProperty: MPMediaItemPropertyIsCloudItem)
-        query.addFilterPredicate(notCloud)
-
-        // Filter to items with an asset URL (playable by the app).
-        let playableItems = (query.items ?? []).filter { $0.assetURL != nil }
-
-        self.collection = MediaCollection(items: playableItems)
-        self.player.setQueue(with: MPMediaItemCollection(items: playableItems))
-        self.player.prepareToPlay()
-
-        print("Reloaded queue. Playable items: \(playableItems.count)")
+        setPlayerQueue(with: MPMediaQuery.songs())
     }
 
     func setPlayerQueue(with query: MPMediaQuery) {
-        // Ensure we only queue playable items.
-        let notCloud = MPMediaPropertyPredicate(value: false, forProperty: MPMediaItemPropertyIsCloudItem)
-        query.addFilterPredicate(notCloud)
-        let playableItems = (query.items ?? []).filter { $0.assetURL != nil }
-
-        player.setQueue(with: MPMediaItemCollection(items: playableItems))
-        collection = MediaCollection(items: playableItems)
-        player.prepareToPlay()
-        print("Set queue from query. Playable items: \(playableItems.count)")
+        let items = query.items ?? []
+        player.setQueue(with: query)
+        collection = MediaCollection(items: items)
+        print("Set queue from query. Items: \(items.count)")
     }
 
     func setPlayerQueue(with collection: MPMediaItemCollection) {
-        // Ensure we only queue playable items.
-        let playableItems = collection.items.filter { $0.assetURL != nil }
-        player.setQueue(with: MPMediaItemCollection(items: playableItems))
-        self.collection = MediaCollection(items: playableItems)
-        player.prepareToPlay()
-        print("Set queue from collection. Playable items: \(playableItems.count)")
+        player.setQueue(with: collection)
+        self.collection = MediaCollection(collection: collection)
+        print("Set queue from collection. Items: \(collection.items.count)")
     }
 //    func setPlayerQueue(with query: MPMediaQuery) {
 //        player.setQueue(with: query)
@@ -216,17 +224,56 @@ final class MusicPlayer: @MainActor MusicPlayerProtocol {
             print("No playable items in queue; aborting play()")
             return
         }
-        player.play()
+        prepareAndPlay(player.nowPlayingItem)
     }
     
     func playItem(_ item: MPMediaItem) {
         let currentShuffleMode = player.shuffleMode
         player.shuffleMode = .off
         player.nowPlayingItem = item
-        player.prepareToPlay()
-        print("Attempting to play specific item: \(item.title ?? "<unknown>")")
-        player.play()
-        player.shuffleMode = currentShuffleMode
+        prepareAndPlay(item) { [weak self] in
+            self?.player.shuffleMode = currentShuffleMode
+        }
+    }
+
+    static let playbackErrorKey = "error"
+
+    /// Prepares the queue and plays, or posts `.musicPlayerPlaybackFailed` if the item can't be played.
+    private func prepareAndPlay(_ item: MPMediaItem?, completion: (@MainActor () -> Void)? = nil) {
+        let title = item?.title
+        let needsCatalogAccess = item.map { $0.hasProtectedAsset || $0.isCloudItem } ?? false
+        player.prepareToPlay { [weak self] error in
+            Task { @MainActor in
+                defer { completion?() }
+                guard let self else { return }
+                guard let error else {
+                    self.player.play()
+                    return
+                }
+                print("Failed to prepare \(title ?? "<unknown>"): \(error)")
+                let playbackError: PlaybackError
+                if needsCatalogAccess, await MusicPlayer.canPlayCatalogMusic() == false {
+                    playbackError = .subscriptionRequired(title: title)
+                } else {
+                    playbackError = .unavailable(title: title)
+                }
+                NotificationCenter.default.post(
+                    name: .musicPlayerPlaybackFailed,
+                    object: self,
+                    userInfo: [MusicPlayer.playbackErrorKey: playbackError]
+                )
+            }
+        }
+    }
+
+    /// Whether this device/account can play Apple Music catalog content; nil if it couldn't be determined.
+    static func canPlayCatalogMusic() async -> Bool? {
+        guard SKCloudServiceController.authorizationStatus() == .authorized else { return nil }
+        return await withCheckedContinuation { continuation in
+            SKCloudServiceController().requestCapabilities { capabilities, error in
+                continuation.resume(returning: error == nil ? capabilities.contains(.musicCatalogPlayback) : nil)
+            }
+        }
     }
     
     func stop() {
@@ -295,7 +342,7 @@ final class MusicPlayer: @MainActor MusicPlayerProtocol {
         }
     }
     
-    deinit{
+    isolated deinit {
         player.endGeneratingPlaybackNotifications()
     }
     

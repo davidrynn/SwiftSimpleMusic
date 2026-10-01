@@ -68,6 +68,12 @@ class TopViewController: UIViewController {
             name: .MPMusicPlayerControllerPlaybackStateDidChange,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(playbackDidFail(_:)),
+            name: .musicPlayerPlaybackFailed,
+            object: player
+        )
         let forwardHostingController = UIHostingController(rootView: ForwardButtonSUI(viewModel: forwardVM))
 
         addChild(forwardHostingController)
@@ -208,6 +214,20 @@ class TopViewController: UIViewController {
             guard let self else { return }
             self.playButton.isPlaying = self.player?.currentPlaybackState() == .playing
         }
+    }
+
+    @objc private func playbackDidFail(_ notification: Notification) {
+        guard let error = notification.userInfo?[MusicPlayer.playbackErrorKey] as? PlaybackError else { return }
+        // Don't stack alerts if several taps fail in a row.
+        guard presentedViewController == nil else { return }
+        let title: String
+        switch error {
+        case .subscriptionRequired: title = "Apple Music Required"
+        case .unavailable: title = "Can't Play Song"
+        }
+        let alert = UIAlertController(title: title, message: error.errorDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 
     @IBAction func playButtonTapped(_ sender: AnyObject) {
