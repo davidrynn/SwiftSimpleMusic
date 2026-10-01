@@ -117,7 +117,7 @@
         <!--Main Music Table View Controller-->
         <scene sceneID="jLH-iF-8mN">
             <objects>
-                <tableViewController id="YxJ-GO-XGG" customClass="MainMusicTableViewController" customModule="SwiftSimpleMusic" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="MainMusicTableViewController" id="YxJ-GO-XGG" customClass="MainMusicTableViewController" customModule="SwiftSimpleMusic" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="egP-uf-kBp">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="520.5"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
